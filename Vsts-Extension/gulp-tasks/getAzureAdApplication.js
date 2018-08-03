@@ -13,7 +13,7 @@ var paths = {
   code : {
     root : '../',
     getAzureAdApplication : {
-      v1 : '../Get-AzureAdApplication/v1/'
+      v1 : '../scripts/Get-AzureAdApplication/v1/'
     }
   }
 }
@@ -26,23 +26,23 @@ function cleanGetAzureAdApplication() {
   ]);
 }
 
-function buildCommonAadAppRegistration() {
+function buildPsModulesGetAzureAdApplication() {
   console.log('Fill the ps modules');
   return gulp.src(paths.extension.psModules + '**/*')
     .pipe(gulp.dest(paths.extension.getAzureAdApplication.v1 + psModulesFolderName));
 }
 
 function buildScriptFilesAzureADApplication() {
-  console.log('Fill ' + paths.extension.getAzureAdApplication.v1 + ' scripts from ' + paths.features.getAzureAdApplication.v1);
-  return gulp.src(paths.features.getAzureAdApplication.v1 + 'scripts/**/*')
+  console.log('Fill ' + paths.extension.getAzureAdApplication.v1 + ' scripts from ' + paths.code.getAzureAdApplication.v1);
+  return gulp.src(paths.code.getAzureAdApplication.v1 + '**/*')
     .pipe(gulp.dest(paths.extension.getAzureAdApplication.v1 + 'scripts'));
 }
 
-gulp.task('clean:AadAppReg', cleanAadAppRegistration);
-gulp.task('clean', cleanAadAppRegistration);
+gulp.task('clean:AdApplication', cleanGetAzureAdApplication);
+gulp.task('clean', cleanGetAzureAdApplication);
 
-gulp.task('build:AadAppReg', gulp.parallel(buildCommonAadAppRegistration, buildFeatureFilesAadAppRegistration));
-gulp.task('build', gulp.parallel(buildCommonAadAppRegistration, buildFeatureFilesAadAppRegistration));
+gulp.task('build:AdApplication', gulp.parallel(buildPsModulesGetAzureAdApplication, buildScriptFilesAzureADApplication));
+gulp.task('build', gulp.parallel(buildPsModulesGetAzureAdApplication, buildScriptFilesAzureADApplication));
 
-gulp.task('reset:AadAppReg', gulp.series('clean:AadAppReg', 'build:AadAppReg'));
-gulp.task('reset', gulp.series('clean:AadAppReg', 'build:AadAppReg'));
+gulp.task('reset:AdApplication', gulp.series('clean:AdApplication', 'build:AdApplication'));
+gulp.task('reset', gulp.series('clean:AdApplication', 'build:AdApplication'));
