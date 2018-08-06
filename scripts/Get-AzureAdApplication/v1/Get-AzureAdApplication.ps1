@@ -24,5 +24,5 @@ $application
 Get-AzureRmADApplication -ObjectId $application.ObjectId | Get-AzureRmADServicePrincipal
 
 Write-Host "##vso[task.setvariable variable=ObjectId;]$($application.ObjectId)"
-Write-Host "##vso[task.setvariable variable=ObjectId;]$($application.ApplicationId)"
-Write-Host "##vso[task.setvariable variable=ObjectId;]$($application.DisplayName)"
+Write-Host "##vso[task.setvariable variable=ApplicationId;]$($application.ApplicationId)"
+Write-Host "##vso[task.setvariable variable=Name;]$($application.DisplayName)"

@@ -23,19 +23,19 @@ switch ($method)
     {
         Write-Verbose "Get application by ObjectId"
         
-        .\scripts\Get-AzureAdApplication\v1\Get-AzureAdApplication.ps1 -ObjectId $objectId        
+        .\scripts\Get-AzureAdApplication.ps1 -ObjectId $objectId        
     }
     "applicationid"
     {
         Write-Verbose "Get application by ApplicationId"           
 
-        .\scripts\Get-AzureAdApplication\v1\Get-AzureAdApplication.ps1 -ApplicationId $applicationId
+        .\scripts\Get-AzureAdApplication.ps1 -ApplicationId $applicationId
     }  
     "name"
     {
         Write-Verbose "Get application by Name"
 
-        .\scripts\Get-AzureAdApplication\v1\Get-AzureAdApplication.ps1 -ApplicationName $name
+        .\scripts\Get-AzureAdApplication.ps1 -ApplicationName $name
     }
     default{
         Write-Error "Unknow method '$method'"
