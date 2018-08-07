@@ -38,11 +38,12 @@ function buildScriptFilesAzureADApplication() {
     .pipe(gulp.dest(paths.extension.getAzureAdApplication.v1 + 'scripts'));
 }
 
-gulp.task('clean:AdApplication', cleanGetAzureAdApplication);
+var taskName = "GetAdApplication";
+gulp.task('clean:' + taskName, cleanGetAzureAdApplication);
 gulp.task('clean', cleanGetAzureAdApplication);
 
-gulp.task('build:AdApplication', gulp.parallel(buildPsModulesGetAzureAdApplication, buildScriptFilesAzureADApplication));
+gulp.task('build:' + taskName, gulp.parallel(buildPsModulesGetAzureAdApplication, buildScriptFilesAzureADApplication));
 gulp.task('build', gulp.parallel(buildPsModulesGetAzureAdApplication, buildScriptFilesAzureADApplication));
 
-gulp.task('reset:AdApplication', gulp.series('clean:AdApplication', 'build:AdApplication'));
-gulp.task('reset', gulp.series('clean:AdApplication', 'build:AdApplication'));
+gulp.task('reset:' + taskName, gulp.series('clean:' + taskName, 'build:' + taskName));
+gulp.task('reset', gulp.series('clean:' + taskName, 'build:' + taskName));
