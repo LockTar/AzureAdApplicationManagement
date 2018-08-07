@@ -12,7 +12,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 0
+        "Patch": 1
     },
     "preview": "true",
     "instanceNameFormat": "Remove Azure AD Application",
@@ -50,13 +50,40 @@
             "visibleRule": "ConnectedServiceNameSelector = ConnectedServiceNameARM"
         },
         {
+            "name": "method",
+            "type": "pickList",
+            "label": "Method",
+            "defaultValue": "ObjectId",
+            "required": true,
+            "groupName": "AzureDetails",
+            "helpMarkDown": "Choose the method to get an Azure AD Application.",
+            "properties": {
+                "EditableOptions": "False"
+            },
+            "options": {
+                "objectid": "ObjectId",
+                "applicationid": "ApplicationId"
+            }
+        },
+        {
             "name": "objectId",
             "type": "string",
             "label": "Object Id",
             "defaultValue": "",
             "required": true,
             "groupName": "AzureDetails",
-            "helpMarkDown": "Provide the Application object Id of the Azure AD Application."
+            "helpMarkDown": "Provide the Application object Id of the Azure AD Application.",
+            "visibleRule": "method = ObjectId"
+        },
+        {
+            "name": "applicationId",
+            "type": "string",
+            "label": "Application Id",
+            "defaultValue": "",
+            "required": true,
+            "groupName": "AzureDetails",
+            "helpMarkDown": "Provide the Application Id of the Azure AD Application.",
+            "visibleRule": "method = ApplicationId"
         }
     ],        
     "execution": {
