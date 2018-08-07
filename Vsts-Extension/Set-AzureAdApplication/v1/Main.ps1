@@ -8,7 +8,7 @@ $homePageUrl = Get-VstsInput -Name homePageUrl
 $logoutUrl = Get-VstsInput -Name logoutUrl
 $termsOfServiceUrl = Get-VstsInput -Name termsOfServiceUrl
 $privacyStatementUrl = Get-VstsInput -Name privacyStatementUrl
-$multiTenant = Get-VstsInput -Name multiTenant
+$multiTenant = Get-VstsInput -Name multiTenant -AsBool
 
 # Initialize Azure Connection.
 Write-Verbose "Import module VstsAzureHelpers" 

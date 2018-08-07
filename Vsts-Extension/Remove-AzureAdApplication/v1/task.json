@@ -12,7 +12,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 1
+        "Patch": 2
     },
     "preview": "true",
     "instanceNameFormat": "Remove Azure AD Application",
@@ -35,8 +35,7 @@
             "defaultValue": "ConnectedServiceNameARM",
             "options": {
                 "ConnectedServiceNameARM": "Azure Resource Manager"
-            },
-            "visibleRule": "ConnectedServiceNameSelector = DoesNotExist"
+            }
         },  
         {
             "name": "ConnectedServiceNameARM",
