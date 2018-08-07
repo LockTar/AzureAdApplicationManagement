@@ -1,7 +1,7 @@
 {
     "manifestVersion": 1,
     "id": "Azure-AD-Application-Management",
-    "version": "1.0.8",
+    "version": "1.0.10",
     "name": "Azure AD Application Management",
     "description": "A VSTS extension with build and release tasks to manage Azure AD Applications.",
     "publisher": "RalphJansen",
@@ -25,6 +25,16 @@
         "Application"
     ],
     "contributions": [
+        {
+            "id": "New-Azure-AD-Application",
+            "type": "ms.vss-distributed-task.task",
+            "targets": [
+                "ms.vss-distributed-task.tasks"
+            ],
+            "properties": {
+                "name": "New-AzureAdApplication"
+            }
+        },
         {
             "id": "Get-Azure-AD-Application",
             "type": "ms.vss-distributed-task.task",
@@ -61,6 +71,9 @@
             "path": "node_modules/vss-web-extension-sdk/lib",
             "addressable": true,
             "packagePath": "lib"
+        },
+        {
+            "path": "New-AzureAdApplication"
         },
         {
             "path": "Get-AzureAdApplication"
