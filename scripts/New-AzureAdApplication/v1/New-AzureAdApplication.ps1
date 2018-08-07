@@ -14,7 +14,8 @@ $InformationPreference = "continue"
 
 $applicationCreated = New-AzureRmADApplication `
     -DisplayName $ApplicationName `
-    -HomePage $SignOnUrl
+    -HomePage $SignOnUrl `
+    -IdentifierUris $($SignOnUrl)
 
 Start-Sleep -Seconds 10
 
