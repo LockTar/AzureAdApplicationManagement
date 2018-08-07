@@ -1,7 +1,6 @@
 Param(
     [string]$ObjectId,
-    [string]$ApplicationId,
-    [string]$ApplicationName    
+    [string]$ApplicationId  
 )
 
 $ErrorActionPreference = "Stop"
@@ -16,9 +15,6 @@ if ($ObjectId) {
 }
 elseif ($ApplicationId) {
     $application = Get-AzureRmADApplication -ApplicationId $ApplicationId
-}
-elseif ($ApplicationName) {
-    $application = Get-AzureRmADApplication -DisplayName = $ApplicationName
 }
 else {
     Write-Error "At least one of the fields ObjectId, ApplicationId or ApplicationName must be given"
