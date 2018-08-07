@@ -58,20 +58,6 @@
             "groupName": "AzureDetails",
             "helpMarkDown": "Provide the Application object Id of the Azure AD Application."
         }
-    ],
-    "outputVariables": [
-        {
-            "name": "ObjectId",
-            "description": "The ObjectId of the Azure AD Application"
-        },
-        {
-            "name": "ApplicationId",
-            "description": "The ApplicationId of the Azure AD Application"
-        },
-        {
-            "name": "Name",
-            "description": "The Name of the Azure AD Application"
-        }
     ],        
     "execution": {
         "PowerShell3": {

@@ -12,7 +12,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 0
+        "Patch": 1
     },
     "preview": "true",
     "instanceNameFormat": "Set Azure AD Application",
@@ -66,20 +66,60 @@
             "required": true,
             "groupName": "AzureDetails",
             "helpMarkDown": "Provide the name of the Azure AD Application."
-        }
-    ],
-    "outputVariables": [
-        {
-            "name": "ObjectId",
-            "description": "The ObjectId of the Azure AD Application"
         },
         {
-            "name": "ApplicationId",
-            "description": "The ApplicationId of the Azure AD Application"
+            "name": "appIdUri",
+            "type": "string",
+            "label": "App Id Uri",
+            "defaultValue": "",
+            "required": true,
+            "groupName": "AzureDetails",
+            "helpMarkDown": "Provide the App Id Uri of the Azure AD Application."
         },
         {
-            "name": "Name",
-            "description": "The Name of the Azure AD Application"
+            "name": "homePageUrl",
+            "type": "string",
+            "label": "Home page URL",
+            "defaultValue": "",
+            "required": false,
+            "groupName": "AzureDetails",
+            "helpMarkDown": "Provide the Home page URL of the Azure AD Application."
+        },
+        {
+            "name": "logoutUrl",
+            "type": "string",
+            "label": "Logout URL",
+            "defaultValue": "",
+            "required": false,
+            "groupName": "AzureDetails",
+            "helpMarkDown": "Provide the Logout URL of the Azure AD Application."
+        },
+        {
+            "name": "termsOfServiceUrl",
+            "type": "string",
+            "label": "TermsOfServiceUrl",
+            "defaultValue": "",
+            "required": false,
+            "groupName": "AzureDetails",
+            "helpMarkDown": "Provide the Terms of service URL of the Azure AD Application."
+        },
+        {
+            "name": "privacyStatementUrl",
+            "type": "string",
+            "label": "PrivacyStatementUrl",
+            "defaultValue": "",
+            "required": false,
+            "groupName": "AzureDetails",
+            "helpMarkDown": "Provide the Privacy statement URL of the Azure AD Application."
+        },
+        {
+            "name": "multiTenant",
+            "type": "boolean",
+            "label": "Multi-tenant",
+            "defaultValue": "false",
+            "required": true,
+            "groupName": "AzureDetails",
+            "helpMarkDown": "Designates whether users in externa; organisations are allowed to grant your app access to data in their organization's directory."
         }
     ],        
     "execution": {
