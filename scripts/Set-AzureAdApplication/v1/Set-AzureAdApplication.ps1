@@ -28,7 +28,7 @@ if (!$application) {
 Set-AzureRmADApplication `
     -ObjectId $application.ObjectId `
     -DisplayName $Name `
-    -IdentifierUri = $AppIdUri `
+    -IdentifierUri $AppIdUri `
     -HomePage $HomePageUrl `
     -AvailableToOtherTenants $MultiTenant
 
