@@ -6,6 +6,11 @@ Param(
 
 $ErrorActionPreference = "Stop"
 
+$oldverbose = $VerbosePreference
+$VerbosePreference = "continue"
+$oldinformation = $InformationPreference
+$InformationPreference = "continue"
+
 if ($ObjectId) {
     $application = Get-AzureRmADApplication -ObjectId $ObjectId    
 }
@@ -31,3 +36,6 @@ if ($application) {
 else {
     Write-Verbose "No application found to remove"
 }
+
+$VerbosePreference = $oldverbose
+$InformationPreference = $oldinformation

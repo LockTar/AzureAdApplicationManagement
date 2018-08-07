@@ -14,6 +14,11 @@ Param(
 
 $ErrorActionPreference = "Stop"
 
+$oldverbose = $VerbosePreference
+$VerbosePreference = "continue"
+$oldinformation = $InformationPreference
+$InformationPreference = "continue"
+
 $application = Get-AzureRmADApplication -ObjectId $ObjectId -ErrorAction Continue
 
 if (!$application) {
@@ -26,3 +31,6 @@ Set-AzureRmADApplication `
     -IdentifierUri = $AppIdUri `
     -HomePage $HomePageUrl `
     -AvailableToOtherTenants $MultiTenant
+
+$VerbosePreference = $oldverbose
+$InformationPreference = $oldinformation
