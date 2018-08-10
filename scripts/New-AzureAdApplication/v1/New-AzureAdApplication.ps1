@@ -59,33 +59,35 @@ while (-not $completed) {
     }
 }
 
-$delayInSeconds = 10
-$numberOfRetries = 10
-$retryCount = 0
-$completed = $false
-$application = $null
-$servicePrincipal = $null
+# Below code not working on VSTS agent because of powershell azureRM version
+#$delayInSeconds = 10
+#$numberOfRetries = 10
+#$retryCount = 0
+#$completed = $false
+#$application = $null
+#$servicePrincipal = $null
+#
+#while (-not $completed) {
+#    Write-Verbose "Return application and his service principal"
+#    $application = Get-AzureRmADApplication -ObjectId $applicationCreated.ObjectId
+#    $servicePrincipal = Get-AzureRmADServicePrincipal -ApplicationId $applicationCreated.ApplicationId
+#
+#    if ($null -eq $application -or $null -eq $servicePrincipal) {
+#        if ($retrycount -ge $numberOfRetries) {
+#            Write-Error "Retried $numberOfRetries times but still no result"
+#        }
+#        else {
+#            Write-Verbose "Wait $delayInSeconds seconds before trying again"
+#            Start-Sleep $delayInSeconds
+#            $retrycount++    
+#        }            
+#    }   
+#    else {
+#        $completed = $true
+#    }     
+#}
 
-while (-not $completed) {
-    Write-Verbose "Return application and his service principal"
-    $application = Get-AzureRmADApplication -ObjectId $applicationCreated.ObjectId
-    $servicePrincipal = Get-AzureRmADServicePrincipal -ApplicationId $applicationCreated.ApplicationId
-
-    if ($null -eq $application -or $null -eq $servicePrincipal) {
-        if ($retrycount -ge $numberOfRetries) {
-            Write-Error "Retried $numberOfRetries times but still no result"
-        }
-        else {
-            Write-Verbose "Wait $delayInSeconds seconds before trying again"
-            Start-Sleep $delayInSeconds
-            $retrycount++    
-        }            
-    }   
-    else {
-        $completed = $true
-    }     
-}
-
+$application = $applicationCreated
 $application
 $servicePrincipal
 
