@@ -25,12 +25,14 @@ else {
 }
 
 #Return application and his service principal
+$servicePrincipal = Get-AzureRmADApplication -ObjectId $application.ObjectId | Get-AzureRmADServicePrincipal
 $application
-Get-AzureRmADApplication -ObjectId $application.ObjectId | Get-AzureRmADServicePrincipal
+$servicePrincipal
 
 Write-Host "##vso[task.setvariable variable=ObjectId;]$($application.ObjectId)"
 Write-Host "##vso[task.setvariable variable=ApplicationId;]$($application.ApplicationId)"
 Write-Host "##vso[task.setvariable variable=Name;]$($application.DisplayName)"
+Write-Host "##vso[task.setvariable variable=ServicePrincipalObjectId;]$($servicePrincipal.Id)"
 
 $VerbosePreference = $oldverbose
 $InformationPreference = $oldinformation

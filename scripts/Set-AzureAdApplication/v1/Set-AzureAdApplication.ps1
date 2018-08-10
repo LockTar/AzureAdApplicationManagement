@@ -25,6 +25,8 @@ if (!$application) {
     Write-Error "Azure AD Application with ObjectId '$ObjectId' can't be found"
 }
 
+# Check if Update-AzureRmADApplication is better/newer than Set verion. See:
+# https://docs.microsoft.com/en-us/powershell/module/azurerm.resources/update-azurermadapplication?view=azurermps-6.6.0
 Set-AzureRmADApplication `
     -ObjectId $application.ObjectId `
     -DisplayName $Name `

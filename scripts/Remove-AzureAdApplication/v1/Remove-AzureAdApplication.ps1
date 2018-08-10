@@ -24,10 +24,15 @@ if ($application) {
     $servicePrincipal = Get-AzureRmADApplication -ObjectId $application.ObjectId | Get-AzureRmADServicePrincipal
 
     Write-Verbose "Removing application: $($application.ObjectId)"
-    Write-Verbose "Removing Service Principal connected to Application): $($servicePrincipal.Id)"
-
     Remove-AzureRmADApplication -ObjectId $application.ObjectId -Force
-    Remove-AzureRmADServicePrincipal -ObjectId $servicePrincipal.Id -Force
+    
+    if ($servicePrincipal.Id) {
+        Write-Verbose "Removing Service Principal connected to Application: $($servicePrincipal.Id)"
+        Remove-AzureRmADServicePrincipal -ObjectId $servicePrincipal.Id -Force    
+    }
+    else {
+        Write-Verbose "Not removing Service Principal connected to Application because there is none"
+    }
 }
 else {
     Write-Verbose "No application found to remove"
