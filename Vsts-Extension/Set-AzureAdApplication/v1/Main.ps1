@@ -9,7 +9,7 @@ $logoutUrl = Get-VstsInput -Name logoutUrl
 $termsOfServiceUrl = Get-VstsInput -Name termsOfServiceUrl
 $privacyStatementUrl = Get-VstsInput -Name privacyStatementUrl
 $multiTenant = Get-VstsInput -Name multiTenant -AsBool
-$replyUrls = Get-VstsInput -Name replyUrls -AsBool
+$replyUrls = Get-VstsInput -Name replyUrls
 $replyUrlsArray = $replyUrls.Split("`n")
 
 # Initialize Azure Connection.
