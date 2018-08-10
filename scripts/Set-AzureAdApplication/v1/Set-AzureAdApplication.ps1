@@ -9,7 +9,8 @@ Param(
     [string]$LogoutUrl,
     [string]$TermsOfServiceUrl,
     [string]$PrivacyStatementUrl,
-    [bool]$MultiTenant
+    [bool]$MultiTenant,
+    [string[]]$ReplyUrls
 )
 
 $ErrorActionPreference = "Stop"
@@ -24,15 +25,26 @@ $application = Get-AzureRmADApplication -ObjectId $ObjectId -ErrorAction Continu
 if (!$application) {
     Write-Error "Azure AD Application with ObjectId '$ObjectId' can't be found"
 }
+else {
+    # Check if Update-AzureRmADApplication is better/newer than Set verion. See:
+    # https://docs.microsoft.com/en-us/powershell/module/azurerm.resources/update-azurermadapplication?view=azurermps-6.6.0
+    Set-AzureRmADApplication `
+        -ObjectId $application.ObjectId `
+        -DisplayName $Name `
+        -IdentifierUri $AppIdUri `
+        -HomePage $HomePageUrl `
+        -AvailableToOtherTenants $MultiTenant `
+        -ReplyUrls $ReplyUrls
 
-# Check if Update-AzureRmADApplication is better/newer than Set verion. See:
-# https://docs.microsoft.com/en-us/powershell/module/azurerm.resources/update-azurermadapplication?view=azurermps-6.6.0
-Set-AzureRmADApplication `
-    -ObjectId $application.ObjectId `
-    -DisplayName $Name `
-    -IdentifierUri $AppIdUri `
-    -HomePage $HomePageUrl `
-    -AvailableToOtherTenants $MultiTenant
+    $servicePrincipal = Get-AzureRmADServicePrincipal -ApplicationId $application.ApplicationId
+    Set-AzureRmADServicePrincipal 
+        -ObjectId $servicePrincipal.Id `
+        -DisplayName $Name `
+        -IdentifierUri $AppIdUri `
+        -HomePage $HomePageUrl `
+        -AvailableToOtherTenants $MultiTenant `
+        -ReplyUrls $ReplyUrls
+}
 
 $VerbosePreference = $oldverbose
 $InformationPreference = $oldinformation

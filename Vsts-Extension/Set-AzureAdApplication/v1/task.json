@@ -12,7 +12,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 4
+        "Patch": 5
     },
     "preview": "true",
     "instanceNameFormat": "Set Azure AD Application",
@@ -119,6 +119,15 @@
             "required": true,
             "groupName": "AzureDetails",
             "helpMarkDown": "Designates whether users in externa; organisations are allowed to grant your app access to data in their organization's directory."
+        },
+        {
+            "name": "replyUrls",
+            "type": "multiLine",
+            "label": "Reply URLs",
+            "defaultValue": "",
+            "required": false,
+            "groupName": "AzureDetails",
+            "helpMarkDown": "A list of reply urls."
         }
     ],        
     "execution": {

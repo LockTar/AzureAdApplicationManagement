@@ -1,7 +1,7 @@
 {
     "manifestVersion": 1,
     "id": "Azure-AD-Application-Management",
-    "version": "1.0.19",
+    "version": "1.0.20",
     "name": "Azure AD Application Management",
     "description": "A VSTS extension with build and release tasks to manage Azure AD Applications.",
     "publisher": "RalphJansen",

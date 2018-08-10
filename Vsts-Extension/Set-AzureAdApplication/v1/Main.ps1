@@ -9,6 +9,8 @@ $logoutUrl = Get-VstsInput -Name logoutUrl
 $termsOfServiceUrl = Get-VstsInput -Name termsOfServiceUrl
 $privacyStatementUrl = Get-VstsInput -Name privacyStatementUrl
 $multiTenant = Get-VstsInput -Name multiTenant -AsBool
+$replyUrls = Get-VstsInput -Name replyUrls -AsBool
+$replyUrlsArray = $replyUrls.Split("`n")
 
 # Initialize Azure Connection.
 Write-Verbose "Import module VstsAzureHelpers" 
@@ -24,6 +26,7 @@ Write-Verbose "logoutUrl: $logoutUrl"
 Write-Verbose "termsOfServiceUrl: $termsOfServiceUrl"
 Write-Verbose "privacyStatementUrl: $privacyStatementUrl"
 Write-Verbose "multiTenant: $multiTenant"
+Write-Verbose "replyUrls: $replyUrls"
         
 .\scripts\Set-AzureAdApplication.ps1 `
     -ObjectId $objectId `
@@ -33,4 +36,5 @@ Write-Verbose "multiTenant: $multiTenant"
     -LogoutUrl $logoutUrl `
     -TermsOfServiceUrl $termsOfServiceUrl `
     -PrivacyStatementUrl $privacyStatementUrl `
-    -MultiTenant $multiTenant
+    -MultiTenant $multiTenant `
+    -ReplyUrls $replyUrlsArray
