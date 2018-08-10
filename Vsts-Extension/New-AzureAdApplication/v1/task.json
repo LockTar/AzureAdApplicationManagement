@@ -12,7 +12,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 7
+        "Patch": 8
     },
     "preview": "true",
     "instanceNameFormat": "New Azure AD Application",
@@ -65,6 +65,15 @@
             "required": true,
             "groupName": "AzureDetails",
             "helpMarkDown": "The url where user can sign in and use your app."
+        },
+        {
+            "name": "appIdUri",
+            "type": "string",
+            "label": "App Id Uri",
+            "defaultValue": "",
+            "required": false,
+            "groupName": "AzureDetails",
+            "helpMarkDown": "Provide the App Id Uri of the Azure AD Application. If not given, this will be generated."
         }
     ],
     "outputVariables": [

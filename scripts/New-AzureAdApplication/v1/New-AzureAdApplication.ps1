@@ -2,7 +2,8 @@ Param(
     [Parameter(Mandatory)]
     [string]$ApplicationName,
     [Parameter(Mandatory)]
-    [string]$SignOnUrl
+    [string]$SignOnUrl,
+    [string]$IdentifierUri
 )
 
 $ErrorActionPreference = "Stop"
@@ -12,11 +13,21 @@ $VerbosePreference = "continue"
 $oldinformation = $InformationPreference
 $InformationPreference = "continue"
 
+if (!$IdentifierUri) {
+    Write-Verbose "No IdentifierUri so generate one with format: http://{TenantId}/{ApplicationName}"
+    Write-Verbose "Get context of account"
+    $context = Get-AzureRmContext
+    $context
+    $IdentifierUri = "https://$($context.Account.Tenants[0])/$ApplicationName"
+    Write-Verbose "Generated IdentifierUri: $IdentifierUri"
+}
+
 Write-Verbose "Create application"
 $applicationCreated = New-AzureRmADApplication `
     -DisplayName $ApplicationName `
     -HomePage $SignOnUrl `
-    -IdentifierUris $($SignOnUrl)
+    -IdentifierUris $($IdentifierUri) `
+    -ReplyUrls $($SignOnUrl)
 
 Write-Verbose "Wait 10 seconds until AD processed application creation"
 Start-Sleep -Seconds 10
@@ -29,7 +40,11 @@ Start-Sleep -Seconds 10
 
 #Return application and his service principal
 $application = Get-AzureRmADApplication -ObjectId $applicationCreated.ObjectId
-$servicePrincipal = Get-AzureRmADApplication -ObjectId $application.ObjectId | Get-AzureRmADServicePrincipal
+$servicePrincipal = Get-AzureRmADServicePrincipal -ApplicationId $application.ApplicationId
+
+#this doesn't work on vsts agent
+#$servicePrincipal = Get-AzureRmADApplication -ObjectId $application.ObjectId | Get-AzureRmADServicePrincipal
+
 $application
 $servicePrincipal
 
