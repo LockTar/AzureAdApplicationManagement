@@ -33,21 +33,58 @@ $applicationCreated = New-AzureRmADApplication `
     -IdentifierUris $($IdentifierUri) `
     -ReplyUrls $($SignOnUrl)
 
-Write-Verbose "Wait 10 seconds until AD processed application creation"
-Start-Sleep -Seconds 10
+$delayInSeconds = 10
+$numberOfRetries = 10
+$retryCount = 0
+$completed = $false
+$servicePrincipal = $null
 
-Write-Verbose "Create service principal connected to application"
-$servicePrincipal = Get-AzureRmADApplication -ObjectId $applicationCreated.ObjectId | New-AzureRmADServicePrincipal
+while (-not $completed) {
+    try {
+        Write-Verbose "Create service principal connected to application"
+        $servicePrincipal = Get-AzureRmADApplication -ObjectId $applicationCreated.ObjectId | New-AzureRmADServicePrincipal
 
-Write-Verbose "Wait 10 seconds until AD processed service principal creation"
-Start-Sleep -Seconds 10
+        $completed = $true
+    }
+    catch {
+        if ($retrycount -ge $numberOfRetries) {
+            Write-Error "Tried $numberOfRetries times but still no result"
+            throw
+        }
+        else {
+            Write-Verbose "Wait $delayInSeconds seconds before trying again"
+            Start-Sleep $delayInSeconds
+            $retrycount++    
+        }
+    }
+}
 
-#Return application and his service principal
-$application = Get-AzureRmADApplication -ObjectId $applicationCreated.ObjectId
-$servicePrincipal = Get-AzureRmADServicePrincipal -ApplicationId $application.ApplicationId
+$delayInSeconds = 10
+$numberOfRetries = 10
+$retryCount = 0
+$completed = $false
+$application = $null
+$servicePrincipal = $null
 
-#this doesn't work on vsts agent
-#$servicePrincipal = Get-AzureRmADApplication -ObjectId $application.ObjectId | Get-AzureRmADServicePrincipal
+while (-not $completed) {
+    Write-Verbose "Return application and his service principal"
+    $application = Get-AzureRmADApplication -ObjectId $applicationCreated.ObjectId
+    $servicePrincipal = Get-AzureRmADServicePrincipal -ApplicationId $applicationCreated.ApplicationId
+
+    if ($null -eq $application -or $null -eq $servicePrincipal) {
+        if ($retrycount -ge $numberOfRetries) {
+            Write-Error "Retried $numberOfRetries times but still no result"
+        }
+        else {
+            Write-Verbose "Wait $delayInSeconds seconds before trying again"
+            Start-Sleep $delayInSeconds
+            $retrycount++    
+        }            
+    }   
+    else {
+        $completed = $true
+    }     
+}
 
 $application
 $servicePrincipal
