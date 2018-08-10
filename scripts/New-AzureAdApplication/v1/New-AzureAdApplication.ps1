@@ -13,13 +13,17 @@ $VerbosePreference = "continue"
 $oldinformation = $InformationPreference
 $InformationPreference = "continue"
 
-if (!$IdentifierUri) {
+Write-Verbose "Check if IdentifierUri is given"
+if ($null -eq $IdentifierUri -or $IdentifierUri -eq "") {
     Write-Verbose "No IdentifierUri so generate one with format: http://{TenantId}/{ApplicationName}"
     Write-Verbose "Get context of account"
     $context = Get-AzureRmContext
     $context
     $IdentifierUri = "https://$($context.Account.Tenants[0])/$ApplicationName"
     Write-Verbose "Generated IdentifierUri: $IdentifierUri"
+}
+else {
+    Write-Verbose "Use given IdentifierUri: $IdentifierUri"
 }
 
 Write-Verbose "Create application"
