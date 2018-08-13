@@ -25,7 +25,7 @@ else {
 }
 
 #Return application and his service principal
-$servicePrincipal = Get-AzureRmADServicePrincipal -ApplicationId $application.ApplicationId
+$servicePrincipal = Get-AzureRmADServicePrincipal -ServicePrincipalName $application.ApplicationId
 #this doesn't work on vsts agent
 #$servicePrincipal = Get-AzureRmADApplication -ObjectId $application.ObjectId | Get-AzureRmADServicePrincipal
 

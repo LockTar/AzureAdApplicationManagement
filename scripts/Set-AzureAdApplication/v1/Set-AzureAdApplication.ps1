@@ -36,14 +36,10 @@ else {
         -AvailableToOtherTenants $MultiTenant `
         -ReplyUrls $ReplyUrls
 
-    $servicePrincipal = Get-AzureRmADServicePrincipal -ApplicationId $application.ApplicationId
-    Set-AzureRmADServicePrincipal 
+    $servicePrincipal = Get-AzureRmADServicePrincipal -ServicePrincipalName $application.ApplicationId
+    Set-AzureRmADServicePrincipal `
         -ObjectId $servicePrincipal.Id `
-        -DisplayName $Name `
-        -IdentifierUri $AppIdUri `
-        -HomePage $HomePageUrl `
-        -AvailableToOtherTenants $MultiTenant `
-        -ReplyUrls $ReplyUrls
+        -DisplayName $Name
 }
 
 $VerbosePreference = $oldverbose
