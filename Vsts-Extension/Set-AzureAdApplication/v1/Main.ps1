@@ -10,6 +10,7 @@ $termsOfServiceUrl = Get-VstsInput -Name termsOfServiceUrl
 $privacyStatementUrl = Get-VstsInput -Name privacyStatementUrl
 $multiTenant = Get-VstsInput -Name multiTenant -AsBool
 $replyUrls = Get-VstsInput -Name replyUrls
+$resourceAccessFilePath = Get-VstsInput -Name resourceAccessFilePath
 
 # Create pretty array for optional replyurls array
 $replyUrlsArray = @()
@@ -33,6 +34,7 @@ Write-Verbose "privacyStatementUrl: $privacyStatementUrl"
 Write-Verbose "multiTenant: $multiTenant"
 Write-Verbose "replyUrls: $replyUrls"
 Write-Verbose "replyUrlsArray: $replyUrlsArray"
+Write-Verbose "resourceAccessFilePath: $resourceAccessFilePath"
         
 .\scripts\Set-AzureAdApplication.ps1 `
     -ObjectId $objectId `
@@ -43,4 +45,5 @@ Write-Verbose "replyUrlsArray: $replyUrlsArray"
     -TermsOfServiceUrl $termsOfServiceUrl `
     -PrivacyStatementUrl $privacyStatementUrl `
     -MultiTenant $multiTenant `
-    -ReplyUrls $replyUrlsArray
+    -ReplyUrls $replyUrlsArray `
+    -ResourceAccessFilePath $resourceAccessFilePath
