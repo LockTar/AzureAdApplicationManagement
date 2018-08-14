@@ -28,7 +28,7 @@ if (!$application) {
 }
 else {    
     # For local testing
-    #$ResourceAccessFilePath = Join-Path -Path $PSScriptRoot -ChildPath "..\..\Test-Permissions.json"
+    #$ResourceAccessFilePath = Join-Path -Path $PSScriptRoot -ChildPath "..\..\Test-RequiredResourceAccess.json"
 
     [System.Collections.ArrayList]$requiredResourceAccess = @()
 
