@@ -7,7 +7,7 @@ var paths = {
   extension : {
     psModules : psModulesFolderName + '/',
     removeAzureAdApplication : {
-      v1 : 'Remove-AzureAdApplication/v1/'
+      v1 : 'Remove-AzureAdApplication/Remove-AzureAdApplicationV1/'
     }
   },
   code : {
