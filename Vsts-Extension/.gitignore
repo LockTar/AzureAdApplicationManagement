@@ -3,3 +3,5 @@ node_modules
 
 /**/ps_modules/
 /**/scripts/
+
+!/ps_modules/
