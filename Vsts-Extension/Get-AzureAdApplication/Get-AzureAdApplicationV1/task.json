@@ -1,7 +1,7 @@
 {
     "id": "e3af4e3e-0167-4363-a323-652f3a602b63",
     "name": "Get-Azure-AD-Application",
-    "friendlyName": "Master - Get Azure AD Application",
+    "friendlyName": "Get Azure AD Application",
     "description": "Get an Azure AD Application based on ObjectId, ApplicationId or Name",
     "helpMarkDown": "",
     "category": "Deploy",
@@ -12,7 +12,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 9
+        "Patch": 10
     },
     "preview": "true",
     "instanceNameFormat": "Get Azure AD Application",

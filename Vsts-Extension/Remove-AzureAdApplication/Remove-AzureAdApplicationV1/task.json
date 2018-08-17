@@ -1,7 +1,7 @@
 {
     "id": "5f8dbea9-1132-4440-9acb-bafb0ffcea42",
     "name": "Remove-Azure-AD-Application",
-    "friendlyName": "Master - Remove Azure AD Application",
+    "friendlyName": "Remove Azure AD Application",
     "description": "Remove all the properties of an Azure AD Application",
     "helpMarkDown": "",
     "category": "Deploy",
@@ -12,7 +12,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 6
+        "Patch": 7
     },
     "preview": "true",
     "instanceNameFormat": "Remove Azure AD Application",

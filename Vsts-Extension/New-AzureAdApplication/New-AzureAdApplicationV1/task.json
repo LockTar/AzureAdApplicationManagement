@@ -1,7 +1,7 @@
 {
     "id": "05ee4982-bf91-4cec-879f-df6c083ed38e",
     "name": "New-Azure-AD-Application",
-    "friendlyName": "Master - New Azure AD Application",
+    "friendlyName": "New Azure AD Application",
     "description": "Create a new Azure AD Application",
     "helpMarkDown": "",
     "category": "Deploy",
@@ -12,7 +12,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 13
+        "Patch": 14
     },
     "preview": "true",
     "instanceNameFormat": "New Azure AD Application",
