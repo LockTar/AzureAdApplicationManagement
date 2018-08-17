@@ -1,32 +1,31 @@
 {
     "id": "05ee4982-bf91-4cec-879f-df6c083ed38e",
     "name": "New-Azure-AD-Application",
-    "friendlyName": "New Azure AD Application",
+    "friendlyName": "Master - New Azure AD Application",
     "description": "Create a new Azure AD Application",
     "helpMarkDown": "",
     "category": "Deploy",
-    "visibility": [        
+    "visibility": [
         "Release"
     ],
     "author": "Ralph Jansen",
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 12
+        "Patch": 13
     },
     "preview": "true",
     "instanceNameFormat": "New Azure AD Application",
-    "groups": [
-        {
-            "name": "AzureDetails",
-            "displayName": "Azure Details",
-            "isExpanded": true
-        }
-    ],
-    "inputs": [
-        {
+    "groups": [{
+        "name": "AzureDetails",
+        "displayName": "Azure Details",
+        "isExpanded": true
+    }],
+    "inputs": [{
             "name": "ConnectedServiceNameSelector",
-            "aliases": ["azureConnectionType"],
+            "aliases": [
+                "azureConnectionType"
+            ],
             "type": "pickList",
             "label": "Azure Connection Type",
             "required": false,
@@ -36,10 +35,12 @@
             "options": {
                 "ConnectedServiceNameARM": "Azure Resource Manager"
             }
-        },  
+        },
         {
             "name": "ConnectedServiceNameARM",
-            "aliases": ["azureSubscription"],
+            "aliases": [
+                "azureSubscription"
+            ],
             "type": "connectedService:AzureRM",
             "label": "Azure Subscription",
             "defaultValue": "",
@@ -76,8 +77,7 @@
             "helpMarkDown": "Provide the App Id Uri of the Azure AD Application. If not given, this will be generated."
         }
     ],
-    "outputVariables": [
-        {
+    "outputVariables": [{
             "name": "ObjectId",
             "description": "The ObjectId of the Azure AD Application"
         },
@@ -93,7 +93,7 @@
             "name": "ServicePrincipalObjectId",
             "description": "The ObjectId of the Service Principal connected to the Azure AD Application"
         }
-    ],        
+    ],
     "execution": {
         "PowerShell3": {
             "target": "Main.ps1"

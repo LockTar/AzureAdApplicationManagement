@@ -1,32 +1,31 @@
 {
     "id": "5f8dbea9-1132-4440-9acb-bafb0ffcea42",
     "name": "Remove-Azure-AD-Application",
-    "friendlyName": "Remove Azure AD Application",
+    "friendlyName": "Master - Remove Azure AD Application",
     "description": "Remove all the properties of an Azure AD Application",
     "helpMarkDown": "",
     "category": "Deploy",
-    "visibility": [        
+    "visibility": [
         "Release"
     ],
     "author": "Ralph Jansen",
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 5
+        "Patch": 6
     },
     "preview": "true",
     "instanceNameFormat": "Remove Azure AD Application",
-    "groups": [
-        {
-            "name": "AzureDetails",
-            "displayName": "Azure Details",
-            "isExpanded": true
-        }
-    ],
-    "inputs": [
-        {
+    "groups": [{
+        "name": "AzureDetails",
+        "displayName": "Azure Details",
+        "isExpanded": true
+    }],
+    "inputs": [{
             "name": "ConnectedServiceNameSelector",
-            "aliases": ["azureConnectionType"],
+            "aliases": [
+                "azureConnectionType"
+            ],
             "type": "pickList",
             "label": "Azure Connection Type",
             "required": false,
@@ -36,10 +35,12 @@
             "options": {
                 "ConnectedServiceNameARM": "Azure Resource Manager"
             }
-        },  
+        },
         {
             "name": "ConnectedServiceNameARM",
-            "aliases": ["azureSubscription"],
+            "aliases": [
+                "azureSubscription"
+            ],
             "type": "connectedService:AzureRM",
             "label": "Azure Subscription",
             "defaultValue": "",
@@ -84,7 +85,7 @@
             "helpMarkDown": "Provide the Application Id of the Azure AD Application.",
             "visibleRule": "method = ApplicationId"
         }
-    ],        
+    ],
     "execution": {
         "PowerShell3": {
             "target": "Main.ps1"
