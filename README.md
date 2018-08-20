@@ -9,9 +9,9 @@ This VSTS extension contains the following tasks:
 - Set Azure AD Application
 - Remove Azure AD Application
 
-In order to use these tasks, follow the **prerequisite** steps in the [Getting Started](#getting-started) section.
+In order to use these tasks, follow the **prerequisite** steps in the [Get Started](#get-started) section.
 
-## Getting Started
+## Get Started
 
 In order to use these tasks, a **prerequisite must be done** otherwise you will get an **unauthorized error**. Follow the steps below to fix the permission issue:
 
