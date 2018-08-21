@@ -8,7 +8,7 @@ This VSTS extension contains the following tasks:
 - New Azure AD Application
 - Set Azure AD Application
 - Remove Azure AD Application
- 
+
 In order to use these tasks, follow the **prerequisite** steps in the [Get Started](#get-started) section.
 
 ## Get Started
