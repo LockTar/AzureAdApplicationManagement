@@ -6,13 +6,14 @@
     "helpMarkDown": "",
     "category": "Deploy",
     "visibility": [
-        "Release"
+        "Release",
+        "Build"
     ],
     "author": "Ralph Jansen",
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 8
+        "Patch": 9
     },
     "preview": "true",
     "instanceNameFormat": "Remove Azure AD Application",

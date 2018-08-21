@@ -6,13 +6,14 @@
     "helpMarkDown": "",
     "category": "Deploy",
     "visibility": [
-        "Release"
+        "Release",
+        "Build"
     ],
     "author": "Ralph Jansen",
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 15
+        "Patch": 16
     },
     "preview": "true",
     "instanceNameFormat": "New Azure AD Application",
