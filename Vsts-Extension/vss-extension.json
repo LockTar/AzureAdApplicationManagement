@@ -7,7 +7,7 @@
     "publisher": "RalphJansen",
     "targets": [
         {
-            "id": "Microsoft.VisualStudio.Services.Cloud"
+            "id": "Microsoft.VisualStudio.Services"
         }
     ],
     "icons": {
@@ -84,5 +84,35 @@
         {
             "path": "Remove-AzureAdApplication"
         }
-    ]
+    ],
+    "content": {
+        "details": {
+          "path": "../Readme.md"
+        }
+    },
+    "links": {
+        "home": {
+          "uri": "https://www.locktar.nl"
+        },
+        "getstarted": {
+          "uri": "https://github.com/LockTar/AzureAdApplicationManagement#get-started"
+        },
+        "support": {
+          "uri": "https://github.com/LockTar/AzureAdApplicationManagement/issues"
+        },
+        "issues": {
+          "uri": "https://github.com/LockTar/AzureAdApplicationManagement/issues"
+        }
+      },
+      "repository": {
+        "type": "git",
+        "uri": "https://github.com/LockTar/AzureAdApplicationManagement"
+      },
+      "badges": [
+        {
+          "href": "https://ralphjansen.visualstudio.com/17322302-127a-4675-bb41-f40515256433/_build/definition?definitionId=12",
+          "uri": "https://ralphjansen.visualstudio.com/_apis/public/build/definitions/17322302-127a-4675-bb41-f40515256433/12/badge?branchName=master&api-version=4.1",
+          "description": "Build"
+        }
+    ]    
 }
