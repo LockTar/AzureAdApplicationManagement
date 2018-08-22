@@ -11,11 +11,18 @@ $privacyStatementUrl = Get-VstsInput -Name privacyStatementUrl
 $multiTenant = Get-VstsInput -Name multiTenant -AsBool
 $replyUrls = Get-VstsInput -Name replyUrls
 $resourceAccessFilePath = Get-VstsInput -Name resourceAccessFilePath
+$owners = Get-VstsInput -Name owners
 
 # Create pretty array for optional replyurls array
 $replyUrlsArray = @()
 if ($replyUrls -ne "") {
     $replyUrlsArray = $replyUrls.Split("`n")
+}
+
+# Create pretty array for optional owners array
+$ownersArray = @()
+if ($owners -ne "") {
+    $ownersArray = $owners.Split("`n")
 }
 
 # Initialize Azure Connection.
@@ -35,6 +42,8 @@ Write-Verbose "multiTenant: $multiTenant"
 Write-Verbose "replyUrls: $replyUrls"
 Write-Verbose "replyUrlsArray: $replyUrlsArray"
 Write-Verbose "resourceAccessFilePath: $resourceAccessFilePath"
+Write-Verbose "owners: $owners"
+Write-Verbose "ownersArray: $ownersArray"
 
 Write-Verbose "Import AzureAD module because is not on default VSTS agent"
 $azureAdModulePath = $PSScriptRoot + "\AzureAD\2.0.1.16\AzureAD.psd1"
@@ -75,4 +84,5 @@ Connect-AzureAD -AadAccessToken $token -AccountId $clientId -TenantId $tenantId
     -PrivacyStatementUrl $privacyStatementUrl `
     -MultiTenant $multiTenant `
     -ReplyUrls $replyUrlsArray `
-    -ResourceAccessFilePath $resourceAccessFilePath
+    -ResourceAccessFilePath $resourceAccessFilePath `
+    -Owners $ownersArray
