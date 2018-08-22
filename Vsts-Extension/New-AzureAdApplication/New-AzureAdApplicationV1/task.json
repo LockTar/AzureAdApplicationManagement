@@ -13,7 +13,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 16
+        "Patch": 17
     },
     "preview": "true",
     "instanceNameFormat": "New Azure AD Application",
@@ -85,6 +85,10 @@
         {
             "name": "ApplicationId",
             "description": "The ApplicationId of the Azure AD Application"
+        },
+        {
+            "name": "AppIdUri",
+            "description": "The App Id Uri of the Azure AD Application"
         },
         {
             "name": "Name",
