@@ -11,7 +11,8 @@ Param(
     [string]$PrivacyStatementUrl,
     [bool]$MultiTenant,
     [string[]]$ReplyUrls,
-    [string]$ResourceAccessFilePath
+    [string]$ResourceAccessFilePath,
+    [string[]]$Owners
 )
 
 $ErrorActionPreference = "Stop"
@@ -68,6 +69,11 @@ else {
     Set-AzureRmADServicePrincipal `
         -ObjectId $servicePrincipal.Id `
         -DisplayName $Name
+
+    # Add owners to the application
+    foreach ($owner in $Owners) {
+        Add-AzureADApplicationOwner -ObjectId $application.ObjectId -RefObjectId $owner
+    }    
 }
 
 $VerbosePreference = $oldverbose
