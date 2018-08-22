@@ -94,6 +94,7 @@ $servicePrincipal
 Write-Host "##vso[task.setvariable variable=ObjectId;]$($application.ObjectId)"
 Write-Host "##vso[task.setvariable variable=ApplicationId;]$($application.ApplicationId)"
 Write-Host "##vso[task.setvariable variable=Name;]$($application.DisplayName)"
+Write-Host "##vso[task.setvariable variable=AppIdUri;]$($application.IdentifierUris[0])"
 Write-Host "##vso[task.setvariable variable=ServicePrincipalObjectId;]$($servicePrincipal.Id)"
 
 $VerbosePreference = $oldverbose
