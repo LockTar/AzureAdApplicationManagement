@@ -13,7 +13,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 14
+        "Patch": 15
     },
     "preview": "true",
     "instanceNameFormat": "Get Azure AD Application",
@@ -99,7 +99,7 @@
         },
         {
             "name": "failOnError",
-            "type": "bool",
+            "type": "boolean",
             "label": "Fail build on error",
             "defaultValue": false,
             "groupName": "AzureDetails",
