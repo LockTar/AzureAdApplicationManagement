@@ -47,3 +47,10 @@ Set the [owner of the AD Application to the AD Application](#How-can-I-set-an-AD
 ### How can I set an AD Application as owner of an AD Application
 
 In order to set an AD Application as an owner, you will need to get the **underlying Service Principal**. You can use the following script to get the Service Principal and to set it as owner or you can [follow this blog post](https://www.locktar.nl/programming/powershell/add-azure-ad-application-as-owner-of-another-ad-application) for more information.
+
+```powershell
+$objectIdOfApplicationToChange = "976876-6567-49e0-ab8c-e40848205883"
+$objectIdOfApplicationThatNeedsToBeAdded = "98098897-86b9-4dc5-b447-c94138db3a61"
+
+Add-AzureADApplicationOwner -ObjectId $objectIdOfApplicationToChange -RefObjectId (Get-AzureRmADApplication -ObjectId $objectIdOfApplicationThatNeedsToBeAdded | Get-AzureRmADServicePrincipal).Id
+```
