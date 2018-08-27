@@ -1,7 +1,8 @@
 Param(
     [string]$ObjectId,
     [string]$ApplicationId,
-    [string]$ApplicationName    
+    [string]$ApplicationName,
+    [bool]$FailOnError = $false
 )
 
 $ErrorActionPreference = "SilentlyContinue"
@@ -25,11 +26,17 @@ else {
 }
 
 if ($null -eq $application) {
-    Write-Host "##vso[task.setvariable variable=ObjectId;]"
-    Write-Host "##vso[task.setvariable variable=ApplicationId;]"
-    Write-Host "##vso[task.setvariable variable=Name;]"
-    Write-Host "##vso[task.setvariable variable=AppIdUri;]"
-    Write-Host "##vso[task.setvariable variable=ServicePrincipalObjectId;]"
+    if ($FailOnError) {
+        $ErrorActionPreference = "Stop"
+        Write-Error "The application cannot be found. Check if the application exists and if you search with the right values."
+    }
+    else {
+        Write-Host "##vso[task.setvariable variable=ObjectId;]"
+        Write-Host "##vso[task.setvariable variable=ApplicationId;]"
+        Write-Host "##vso[task.setvariable variable=Name;]"
+        Write-Host "##vso[task.setvariable variable=AppIdUri;]"
+        Write-Host "##vso[task.setvariable variable=ServicePrincipalObjectId;]"
+    }
 }
 else {
     $ErrorActionPreference = "Stop"
