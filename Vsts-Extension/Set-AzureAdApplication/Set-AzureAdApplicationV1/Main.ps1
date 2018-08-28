@@ -76,7 +76,7 @@ Connect-AzureAD -AadAccessToken $token -AccountId $clientId -TenantId $tenantId
 
 Write-Verbose "Add service principal of the azurerm connection to the array of owners"
 $deployServicePrincipalId = (Get-AzureRmADApplication -ApplicationId $clientId | Get-AzureRmADServicePrincipal).Id
-$ownersArray.Add($deployServicePrincipalId)
+$ownersArray += $deployServicePrincipalId
 
 .\scripts\Set-AzureAdApplication.ps1 `
     -ObjectId $objectId `
