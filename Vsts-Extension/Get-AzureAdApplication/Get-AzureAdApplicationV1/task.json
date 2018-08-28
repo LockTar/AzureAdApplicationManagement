@@ -12,8 +12,8 @@
     "author": "Ralph Jansen",
     "version": {
         "Major": 1,
-        "Minor": 0,
-        "Patch": 17
+        "Minor": 1,
+        "Patch": 0
     },
     "preview": "true",
     "instanceNameFormat": "Get Azure AD Application",
@@ -121,6 +121,10 @@
         {
             "name": "AppIdUri",
             "description": "The App Id Uri of the Azure AD Application"
+        },
+        {
+            "name": "HomePageUrl",
+            "description": "The Home page URL of the Azure AD Application"
         },
         {
             "name": "ServicePrincipalObjectId",
