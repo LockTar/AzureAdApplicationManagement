@@ -13,9 +13,9 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 10
+        "Patch": 11
     },
-    "preview": "true",
+    "preview": "false",
     "instanceNameFormat": "Remove Azure AD Application",
     "groups": [{
         "name": "AzureDetails",

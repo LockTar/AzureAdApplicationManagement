@@ -25,21 +25,27 @@ else {
 if ($application) {
     Write-Verbose "Found application: "
     $application
+    $applicationId = $application.ApplicationId
 
-    $servicePrincipal = Get-AzureRmADApplication -ObjectId $application.ObjectId | Get-AzureRmADServicePrincipal
-
+    $servicePrincipal = Get-AzureRmADServicePrincipal -ServicePrincipalName $applicationId
     Write-Verbose "Found service principal: "
     $servicePrincipal
 
     Write-Verbose "Removing application: $($application.ObjectId)"
     Remove-AzureRmADApplication -ObjectId $application.ObjectId -Force
-    
+
+    Write-Verbose "Wait 15 seconds until application removal is done in AD"
+    Start-Sleep -Seconds 15
+
+    Write-Verbose "Check if we find the service principal that was connected to the application or that it is removed with the application directly"
+    $servicePrincipal = Get-AzureRmADServicePrincipal -ServicePrincipalName $applicationId
+   
     if ($servicePrincipal.Id) {
         Write-Verbose "Removing Service Principal connected to Application: $($servicePrincipal.Id)"
         Remove-AzureRmADServicePrincipal -ObjectId $servicePrincipal.Id -Force    
     }
     else {
-        Write-Verbose "Not removing Service Principal connected to Application because there is none"
+        Write-Verbose "Not removing Service Principal connected to Application because there is none or is already removed"
     }
 }
 else {
