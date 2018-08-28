@@ -13,7 +13,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 23
+        "Patch": 24
     },
     "preview": "true",
     "instanceNameFormat": "Set Azure AD Application",
@@ -147,7 +147,7 @@
             "defaultValue": "",
             "required": false,
             "groupName": "AzureDetails",
-            "helpMarkDown": "Add a list of owners (list of ObjectIds of AD Users) to an existing application. The owners will be added and not set!"
+            "helpMarkDown": "Add a list of owners (list of ObjectIds of AD Users) to an existing application"
         }
     ],
     "execution": {
