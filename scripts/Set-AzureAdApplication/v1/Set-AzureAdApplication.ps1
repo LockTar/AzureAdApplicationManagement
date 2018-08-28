@@ -71,9 +71,31 @@ else {
         -DisplayName $Name
 
     # Add owners to the application
+    Write-Verbose "Set owners of the application. Current owners are:"
+    $currentOwners = Get-AzureADApplicationOwner -ObjectId $application.ObjectId -All $True
+    $currentOwners | Select-Object ObjectId, DisplayName, UserPrincipalName | Format-Table
+
+    # Remove owners that should not be owner anymore
+    foreach ($currentOwner in $currentOwners.ObjectId) {
+        if ($Owners.Contains($currentOwner) -eq $false) {
+            Write-Verbose "Remove applicationowner $currentOwner"
+            Remove-AzureADApplicationOwner -ObjectId $application.ObjectId -OwnerId $currentOwner
+        }
+        else {
+            Write-Verbose "Don't remove owner $currentOwner because must stay owner"
+        }
+    }
+    
+    # Add missing owners
     foreach ($owner in $Owners) {
-        Add-AzureADApplicationOwner -ObjectId $application.ObjectId -RefObjectId $owner
-    }    
+        if ($($currentOwners.ObjectId).Contains($owner) -eq $false) {
+            Write-Verbose "Add applicationowner $owner"
+            Add-AzureADApplicationOwner -ObjectId $application.ObjectId -RefObjectId $owner
+        }
+        else {
+            Write-Verbose "Don't add $owner as owner because is already owner"
+        }
+    }
 }
 
 $VerbosePreference = $oldverbose
