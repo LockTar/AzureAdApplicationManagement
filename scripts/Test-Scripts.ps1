@@ -12,7 +12,7 @@ try {
 }
 catch {
     Write-Information "Application doesn't exist, let's create one"
-    & $PSScriptRoot"\New-AzureAdApplication\v1\New-AzureAdApplication.ps1" -ApplicationName $ApplicationName -SignOnUrl "https://$ApplicationName.com"
+    & $PSScriptRoot"\New-AzureAdApplication\v1\New-AzureAdApplication.ps1" -ApplicationName $ApplicationName -SignOnUrl "https://$ApplicationName.com" -AppIdUri "http://ralphjansenoutlook.onmicrosoft.com/$ApplicationName"
     Start-Sleep -Seconds 10
 }
 

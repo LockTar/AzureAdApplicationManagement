@@ -11,9 +11,11 @@ $oldinformation = $InformationPreference
 $InformationPreference = "continue"
 
 if ($ObjectId) {
+    Write-Verbose "Remove application by ObjectId: $ObjectId"
     $application = Get-AzureRmADApplication -ObjectId $ObjectId    
 }
 elseif ($ApplicationId) {
+    Write-Verbose "Remove application by ApplicationId: $ApplicationId"
     $application = Get-AzureRmADApplication -ApplicationId $ApplicationId
 }
 else {
@@ -21,7 +23,13 @@ else {
 }
 
 if ($application) {
+    Write-Verbose "Found application: "
+    $application
+
     $servicePrincipal = Get-AzureRmADApplication -ObjectId $application.ObjectId | Get-AzureRmADServicePrincipal
+
+    Write-Verbose "Found service principal: "
+    $servicePrincipal
 
     Write-Verbose "Removing application: $($application.ObjectId)"
     Remove-AzureRmADApplication -ObjectId $application.ObjectId -Force

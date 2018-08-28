@@ -26,7 +26,7 @@ else {
     Write-Verbose "Use given IdentifierUri: $IdentifierUri"
 }
 
-Write-Verbose "Create application"
+Write-Verbose "Create application $ApplicationName"
 $applicationCreated = New-AzureRmADApplication `
     -DisplayName $ApplicationName `
     -HomePage $SignOnUrl `
@@ -88,7 +88,10 @@ while (-not $completed) {
 #}
 
 $application = $applicationCreated
+Write-Verbose "Created application: "
 $application
+
+Write-Verbose "Created service principal: "
 $servicePrincipal
 
 Write-Host "##vso[task.setvariable variable=ObjectId;]$($application.ObjectId)"

@@ -22,12 +22,16 @@ $VerbosePreference = "continue"
 $oldinformation = $InformationPreference
 $InformationPreference = "continue"
 
+Write-Verbose "Get application by ObjectId: $ObjectId"
 $application = Get-AzureRmADApplication -ObjectId $ObjectId -ErrorAction Continue
 
 if (!$application) {
     Write-Error "Azure AD Application with ObjectId '$ObjectId' can't be found"
 }
-else {    
+else {
+    Write-Verbose "Found application: "
+    $application
+
     # For local testing
     #$ResourceAccessFilePath = Join-Path -Path $PSScriptRoot -ChildPath "..\..\Test-RequiredResourceAccess.json"
 
@@ -52,6 +56,7 @@ else {
         }
     }
 
+    Write-Verbose "Set application properties"
     # Check if Update-AzureRmADApplication is better/newer than Set verion. See:
     # https://docs.microsoft.com/en-us/powershell/module/azurerm.resources/update-azurermadapplication?view=azurermps-6.6.0    
     Set-AzureRmADApplication `
@@ -62,10 +67,16 @@ else {
         -AvailableToOtherTenants $MultiTenant `
         -ReplyUrls $ReplyUrls
 
+    Write-Verbose "Set required resource access to application: "
     # Following can't be done by AzureRM (yet)
     Set-AzureADApplication -ObjectId $application.ObjectId -RequiredResourceAccess $requiredResourceAccess
 
+    Write-Verbose "Set service principal properties"
     $servicePrincipal = Get-AzureRmADServicePrincipal -ServicePrincipalName $application.ApplicationId
+
+    Write-Verbose "Found service principal: "
+    $servicePrincipal
+
     Set-AzureRmADServicePrincipal `
         -ObjectId $servicePrincipal.Id `
         -DisplayName $Name
@@ -75,17 +86,6 @@ else {
     $currentOwners = Get-AzureADApplicationOwner -ObjectId $application.ObjectId -All $True
     $currentOwners | Select-Object ObjectId, DisplayName, UserPrincipalName | Format-Table
 
-    # Remove owners that should not be owner anymore
-    foreach ($currentOwner in $currentOwners.ObjectId) {
-        if ($Owners.Contains($currentOwner) -eq $false) {
-            Write-Verbose "Remove applicationowner $currentOwner"
-            Remove-AzureADApplicationOwner -ObjectId $application.ObjectId -OwnerId $currentOwner
-        }
-        else {
-            Write-Verbose "Don't remove owner $currentOwner because must stay owner"
-        }
-    }
-    
     # Add missing owners
     foreach ($owner in $Owners) {
         if ($($currentOwners.ObjectId).Contains($owner) -eq $false) {
@@ -96,6 +96,17 @@ else {
             Write-Verbose "Don't add $owner as owner because is already owner"
         }
     }
+
+    # Remove owners that should not be owner anymore
+    foreach ($currentOwner in $currentOwners.ObjectId) {
+        if ($Owners.Contains($currentOwner) -eq $false) {
+            Write-Verbose "Remove applicationowner $currentOwner"
+            Remove-AzureADApplicationOwner -ObjectId $application.ObjectId -OwnerId $currentOwner
+        }
+        else {
+            Write-Verbose "Don't remove owner $currentOwner because must stay owner"
+        }
+    }    
 }
 
 $VerbosePreference = $oldverbose

@@ -13,7 +13,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 24
+        "Patch": 25
     },
     "preview": "true",
     "instanceNameFormat": "Set Azure AD Application",
@@ -147,7 +147,7 @@
             "defaultValue": "",
             "required": false,
             "groupName": "AzureDetails",
-            "helpMarkDown": "Add a list of owners (list of ObjectIds of AD Users) to an existing application"
+            "helpMarkDown": "Add a list of owners (list of ObjectIds of AD Users) to an existing application. The connection service principal will always be added to the list of owners."
         }
     ],
     "execution": {

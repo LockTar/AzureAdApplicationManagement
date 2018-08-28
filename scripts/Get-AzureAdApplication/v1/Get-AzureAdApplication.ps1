@@ -13,12 +13,15 @@ $oldinformation = $InformationPreference
 $InformationPreference = "continue"
 
 if ($ObjectId) {
+    Write-Verbose "Get application by ObjectId: $ObjectId"
     $application = Get-AzureRmADApplication -ObjectId $ObjectId    
 }
 elseif ($ApplicationId) {
+    Write-Verbose "Get application by ApplicationId: $ApplicationId"
     $application = Get-AzureRmADApplication -ApplicationId $ApplicationId
 }
 elseif ($ApplicationName) {
+    Write-Verbose "Get application by ApplicationName: $ApplicationName"
     $application = Get-AzureRmADApplication -DisplayName $ApplicationName
 }
 else {
@@ -26,11 +29,17 @@ else {
 }
 
 if ($null -eq $application) {
+    Write-Verbose "Application not found. Check if we should fail the build."
+
     if ($FailOnError) {
+        Write-Verbose "Fail build"
+
         $ErrorActionPreference = "Stop"
         Write-Error "The application cannot be found. Check if the application exists and if you search with the right values."
     }
     else {
+        Write-Verbose "Do not fail build. Just set empty values to vsts variables."
+
         Write-Host "##vso[task.setvariable variable=ObjectId;]"
         Write-Host "##vso[task.setvariable variable=ApplicationId;]"
         Write-Host "##vso[task.setvariable variable=Name;]"
@@ -41,12 +50,15 @@ if ($null -eq $application) {
 else {
     $ErrorActionPreference = "Stop"
 
+    Write-Verbose "Found application: "
+    $application
+
     # Return application and his service principal
     $servicePrincipal = Get-AzureRmADServicePrincipal -ServicePrincipalName $application.ApplicationId
     #this doesn't work on vsts agent
     #$servicePrincipal = Get-AzureRmADApplication -ObjectId $application.ObjectId | Get-AzureRmADServicePrincipal
 
-    $application
+    Write-Verbose "Found service principal: "
     $servicePrincipal
 
     Write-Host "##vso[task.setvariable variable=ObjectId;]$($application.ObjectId)"
