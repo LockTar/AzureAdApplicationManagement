@@ -22,7 +22,7 @@ elseif ($ApplicationId) {
 }
 elseif ($ApplicationName) {
     Write-Verbose "Get application by ApplicationName: $ApplicationName"
-    $application = Get-AzureRmADApplication -DisplayName $ApplicationName
+    $application = Get-AzureRmADApplication -DisplayName $ApplicationName | Where-Object { $_.DisplayName -eq $ApplicationName }
 }
 else {
     Write-Error "At least one of the fields ObjectId, ApplicationId or ApplicationName must be given"
