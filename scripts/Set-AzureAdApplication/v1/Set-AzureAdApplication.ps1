@@ -38,22 +38,27 @@ else {
     [System.Collections.ArrayList]$requiredResourceAccess = @()
 
     if ((Test-Path $ResourceAccessFilePath) -and ($ResourceAccessFilePath -Like "*.json")) {
-        # Get the resources and permissions for app registration and convert into json object
+        Write-Verbose "Get the resources and permissions for app registration and convert into json object"
         $resourceAccessInJson = Get-Content $ResourceAccessFilePath -Raw | ConvertFrom-Json
         
-        # Loop through all resources and permissions
+        Write-Verbose "Loop through all resources and permissions"
         foreach ($resourceInJson in $resourceAccessInJson) {
+            Write-Verbose "Create new 'Microsoft.Open.AzureAD.Model.RequiredResourceAccess' object and set '$($resourceInJson.resourceAppId)' as the ResourceAppId"
             $resource = New-Object -TypeName "Microsoft.Open.AzureAD.Model.RequiredResourceAccess"
             $resource.ResourceAppId = $resourceInJson.resourceAppId
 
+            Write-Verbose "Create new 'System.Collections.Generic.List[Microsoft.Open.AzureAD.Model.ResourceAccess]' object for ResourceAccess"
             $resource.ResourceAccess = New-Object System.Collections.Generic.List[Microsoft.Open.AzureAD.Model.ResourceAccess]            
             foreach ($resourceAccessInJson in $resourceInJson.resourceAccess) {
+                Write-Verbose "Create new 'Microsoft.Open.AzureAD.Model.ResourceAccess' object and set '$($resourceAccessInJson.id),$($resourceAccessInJson.type)'. Add this ResourceAccess to the list"
                 $resourceAccess = New-Object -TypeName "Microsoft.Open.AzureAD.Model.ResourceAccess" -ArgumentList $resourceAccessInJson.id,$resourceAccessInJson.type
                 $resource.ResourceAccess.Add($resourceAccess)
             }
 
             $requiredResourceAccess.Add($resource)
         }
+
+        Write-Verbose "All resources with permissions are created and ready to set to the application"
     }
 
     Write-Verbose "Set application properties"
