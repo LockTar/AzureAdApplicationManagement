@@ -90,7 +90,7 @@ if ($createIfNotExist) {
             -ApplicationName $name `
             -SignOnUrl $homePageUrl
 
-        Start-Sleep -Seconds 15
+        Start-Sleep -Seconds 60
     }
 
     Write-Debug "Get the application '$name' again so we have the ObjectId to alter the application"
