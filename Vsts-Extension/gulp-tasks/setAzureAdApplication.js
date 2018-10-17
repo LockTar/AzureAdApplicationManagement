@@ -17,6 +17,9 @@ var paths = {
     },
     newAzureAdApplication : {
       v1 : '../scripts/New-AzureAdApplication/v1/'
+    },
+    getAzureAdApplication : {
+      v1 : '../scripts/Get-AzureAdApplication/v1/'
     }
   }
 }
@@ -41,7 +44,11 @@ function buildScriptFilesAzureADApplication() {
     .pipe(gulp.dest(paths.extension.setAzureAdApplication.v1 + 'scripts'));
   
   console.log('Fill ' + paths.extension.setAzureAdApplication.v1 + ' scripts from ' + paths.code.newAzureAdApplication.v1);
-  return gulp.src(paths.code.newAzureAdApplication.v1 + '**/*')
+  gulp.src(paths.code.newAzureAdApplication.v1 + '**/*')
+    .pipe(gulp.dest(paths.extension.setAzureAdApplication.v1 + 'scripts'));
+
+  console.log('Fill ' + paths.extension.setAzureAdApplication.v1 + ' scripts from ' + paths.code.getAzureAdApplication.v1);
+  return gulp.src(paths.code.getAzureAdApplication.v1 + '**/*')
     .pipe(gulp.dest(paths.extension.setAzureAdApplication.v1 + 'scripts'));
 }
 

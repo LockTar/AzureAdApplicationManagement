@@ -51,16 +51,14 @@ if ($null -eq $application) {
 else {
     $ErrorActionPreference = "Stop"
 
-    Write-Verbose "Found application: "
-    $application
+    Write-Information ('Found application: {0}' -f $application)
 
     # Return application and his service principal
     $servicePrincipal = Get-AzureRmADServicePrincipal -ServicePrincipalName $application.ApplicationId
     #this doesn't work on vsts agent
     #$servicePrincipal = Get-AzureRmADApplication -ObjectId $application.ObjectId | Get-AzureRmADServicePrincipal
 
-    Write-Verbose "Found service principal: "
-    $servicePrincipal
+    Write-Information ('Found service principal: {0}' -f $servicePrincipal)
 
     Write-Host "##vso[task.setvariable variable=ObjectId;]$($application.ObjectId)"
     Write-Host "##vso[task.setvariable variable=ApplicationId;]$($application.ApplicationId)"
@@ -69,6 +67,13 @@ else {
     Write-Host "##vso[task.setvariable variable=HomePageUrl;]$($application.HomePage)"
     Write-Host "##vso[task.setvariable variable=ServicePrincipalObjectId;]$($servicePrincipal.Id)"
 }
+
+$result = [PSCustomObject]@{
+    Application = $application
+    ServicePrincipal = $servicePrincipal
+}
+
+return $result
 
 $VerbosePreference = $oldverbose
 $InformationPreference = $oldinformation

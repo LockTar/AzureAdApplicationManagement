@@ -51,13 +51,23 @@
             "visibleRule": "ConnectedServiceNameSelector = ConnectedServiceNameARM"
         },
         {
+            "name": "createIfNotExist",
+            "type": "boolean",
+            "label": "Create if not exist",
+            "defaultValue": "false",
+            "required": true,
+            "groupName": "AzureDetails",
+            "helpMarkDown": "Create the Azure AD Application if the application doesn't exist. The check will be done on the name of the application."
+        },
+        {
             "name": "objectId",
             "type": "string",
             "label": "Object Id",
             "defaultValue": "",
             "required": true,
             "groupName": "AzureDetails",
-            "helpMarkDown": "Provide the Application object Id of the Azure AD Application."
+            "helpMarkDown": "Provide the Application object Id of the Azure AD Application.",
+            "visibleRule": "createIfNotExist = false"
         },
         {
             "name": "name",

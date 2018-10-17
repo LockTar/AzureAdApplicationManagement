@@ -1,7 +1,8 @@
 Trace-VstsEnteringInvocation $MyInvocation
 
 # Get inputs.
-$objectId = Get-VstsInput -Name objectId -Require
+$createIfNotExist = Get-VstsInput -Name createIfNotExist -AsBool
+$objectId = Get-VstsInput -Name objectId
 $name = Get-VstsInput -Name name -Require
 $appIdUri = Get-VstsInput -Name appIdUri -Require
 $homePageUrl = Get-VstsInput -Name homePageUrl
@@ -26,26 +27,27 @@ if ($owners -ne "") {
 }
 
 # Initialize Azure Connection.
-Write-Verbose "Import module VstsAzureHelpers" 
+Write-Debug "Import module VstsAzureHelpers" 
 Import-Module $PSScriptRoot\ps_modules\VstsAzureHelpers_
 Initialize-Azure -strict
 
-Write-Verbose "Input variables are: "
-Write-Verbose "objectId: $objectId"
-Write-Verbose "name: $name"
-Write-Verbose "appIdUri: $appIdUri"
-Write-Verbose "homePageUrl: $homePageUrl"
-Write-Verbose "logoutUrl: $logoutUrl"
-Write-Verbose "termsOfServiceUrl: $termsOfServiceUrl"
-Write-Verbose "privacyStatementUrl: $privacyStatementUrl"
-Write-Verbose "multiTenant: $multiTenant"
-Write-Verbose "replyUrls: $replyUrls"
-Write-Verbose "replyUrlsArray: $replyUrlsArray"
-Write-Verbose "resourceAccessFilePath: $resourceAccessFilePath"
-Write-Verbose "owners: $owners"
-Write-Verbose "ownersArray: $ownersArray"
+Write-Debug "Input variables are: "
+Write-Debug "createIfNotExist: $createIfNotExist"
+Write-Debug "objectId: $objectId"
+Write-Debug "name: $name"
+Write-Debug "appIdUri: $appIdUri"
+Write-Debug "homePageUrl: $homePageUrl"
+Write-Debug "logoutUrl: $logoutUrl"
+Write-Debug "termsOfServiceUrl: $termsOfServiceUrl"
+Write-Debug "privacyStatementUrl: $privacyStatementUrl"
+Write-Debug "multiTenant: $multiTenant"
+Write-Debug "replyUrls: $replyUrls"
+Write-Debug "replyUrlsArray: $replyUrlsArray"
+Write-Debug "resourceAccessFilePath: $resourceAccessFilePath"
+Write-Debug "owners: $owners"
+Write-Debug "ownersArray: $ownersArray"
 
-Write-Verbose "Import AzureAD module because is not on default VSTS agent"
+Write-Debug "Import AzureAD module because is not on default VSTS agent"
 $azureAdModulePath = $PSScriptRoot + "\AzureAD\2.0.1.16\AzureAD.psd1"
 Import-Module $azureAdModulePath 
 
@@ -71,12 +73,31 @@ $body = @{
 $response = Invoke-RestMethod -Method 'Post' -Uri $adTokenUrl -ContentType "application/x-www-form-urlencoded" -Body $body
 $token = $response.access_token
 
-Write-Verbose "Login to AzureAD with same application as endpoint"
+Write-Debug "Login to AzureAD with same application as endpoint"
 Connect-AzureAD -AadAccessToken $token -AccountId $clientId -TenantId $tenantId
 
-Write-Verbose "Add service principal of the azurerm connection to the array of owners"
+Write-Debug "Add service principal of the azurerm connection to the array of owners"
 $deployServicePrincipalId = (Get-AzureRmADServicePrincipal -ServicePrincipalName $clientId).Id
 $ownersArray += $deployServicePrincipalId
+
+if ($createIfNotExist) {
+    Write-Debug "Check if the application '$name' exists"
+    $result = .\scripts\Get-AzureAdApplication.ps1 -ApplicationName $name -FailOnError $failOnError
+
+    if (!$result.Application) {
+        Write-Debug "Application doesn't exist. Create the application '$name'"
+        .\scripts\New-AzureAdApplication.ps1 `
+            -ApplicationName $name `
+            -SignOnUrl $homePageUrl
+
+        Start-Sleep -Seconds 15
+    }
+
+    Write-Debug "Get the application '$name' again so we have the ObjectId to alter the application"
+    $result = .\scripts\Get-AzureAdApplication.ps1 -ApplicationName $name -FailOnError $failOnError
+
+    $objectId = $result.Application.ObjectId
+}
 
 .\scripts\Set-AzureAdApplication.ps1 `
     -ObjectId $objectId `
