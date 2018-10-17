@@ -82,7 +82,7 @@ $ownersArray += $deployServicePrincipalId
 
 if ($createIfNotExist) {
     Write-Debug "Check if the application '$name' exists"
-    $result = .\scripts\Get-AzureAdApplication.ps1 -ApplicationName $name -FailOnError $failOnError
+    $result = .\scripts\Get-AzureAdApplication.ps1 -ApplicationName $name -FailOnError $false
 
     if (!$result.Application) {
         Write-Debug "Application doesn't exist. Create the application '$name'"
@@ -94,7 +94,7 @@ if ($createIfNotExist) {
     }
 
     Write-Debug "Get the application '$name' again so we have the ObjectId to alter the application"
-    $result = .\scripts\Get-AzureAdApplication.ps1 -ApplicationName $name -FailOnError $failOnError
+    $result = .\scripts\Get-AzureAdApplication.ps1 -ApplicationName $name -FailOnError $false
 
     $objectId = $result.Application.ObjectId
 }
