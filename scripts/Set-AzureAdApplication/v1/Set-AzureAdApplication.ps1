@@ -113,6 +113,10 @@ else {
         }
     }
 
+    Write-Information "Owners of the application are now:"
+    $currentOwners = Get-AzureADApplicationOwner -ObjectId $application.ObjectId -All $True
+    $currentOwners | Select-Object ObjectId, DisplayName, UserPrincipalName | Format-Table
+
     Write-Host "##vso[task.setvariable variable=ObjectId;]$($application.ObjectId)"
     Write-Host "##vso[task.setvariable variable=ApplicationId;]$($application.ApplicationId)"
     Write-Host "##vso[task.setvariable variable=Name;]$($application.DisplayName)"
