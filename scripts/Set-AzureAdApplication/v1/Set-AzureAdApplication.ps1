@@ -29,7 +29,7 @@ if (!$application) {
     Write-Error "Azure AD Application with ObjectId '$ObjectId' can't be found"
 }
 else {
-    Write-Verbose "Found application: "
+    Write-Information "Found application: "
     $application
 
     # For local testing
@@ -79,7 +79,7 @@ else {
     Write-Verbose "Set service principal properties"
     $servicePrincipal = Get-AzureRmADServicePrincipal -ServicePrincipalName $application.ApplicationId
 
-    Write-Verbose "Found service principal: "
+    Write-Information "Found service principal: "
     $servicePrincipal
 
     Set-AzureRmADServicePrincipal `
@@ -111,7 +111,18 @@ else {
         else {
             Write-Verbose "Don't remove owner $currentOwner because must stay owner"
         }
-    }    
+    }
+
+    Write-Information "Owners of the application are now:"
+    $currentOwners = Get-AzureADApplicationOwner -ObjectId $application.ObjectId -All $True
+    $currentOwners | Select-Object ObjectId, DisplayName, UserPrincipalName | Format-Table
+
+    Write-Host "##vso[task.setvariable variable=ObjectId;]$($application.ObjectId)"
+    Write-Host "##vso[task.setvariable variable=ApplicationId;]$($application.ApplicationId)"
+    Write-Host "##vso[task.setvariable variable=Name;]$($application.DisplayName)"
+    Write-Host "##vso[task.setvariable variable=AppIdUri;]$($application.IdentifierUris[0])"
+    Write-Host "##vso[task.setvariable variable=HomePageUrl;]$($application.HomePage)"
+    Write-Host "##vso[task.setvariable variable=ServicePrincipalObjectId;]$($servicePrincipal.Id)"
 }
 
 $VerbosePreference = $oldverbose

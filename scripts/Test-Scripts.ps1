@@ -8,7 +8,7 @@ $InformationPreference = "continue"
 $ApplicationName = "TestApplicationExtension"
 
 try {
-    & $PSScriptRoot"\Get-AzureAdApplication\v1\Get-AzureAdApplication.ps1" -ApplicationName $ApplicationName -FailOnError $True
+    & $PSScriptRoot"\Get-AzureAdApplication\v1\Get-AzureAdApplication.ps1" -ApplicationName $ApplicationName -FailIfNotFound $True
 }
 catch {
     Write-Information "Application doesn't exist, let's create one"

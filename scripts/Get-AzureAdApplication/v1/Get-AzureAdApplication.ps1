@@ -2,7 +2,7 @@ Param(
     [string]$ObjectId,
     [string]$ApplicationId,
     [string]$ApplicationName,
-    [bool]$FailOnError = $false
+    [bool]$FailIfNotFound = $false
 )
 
 $ErrorActionPreference = "SilentlyContinue"
@@ -31,7 +31,7 @@ else {
 if ($null -eq $application) {
     Write-Verbose "Application not found. Check if we should fail the build."
 
-    if ($FailOnError) {
+    if ($FailIfNotFound) {
         Write-Verbose "Fail build"
 
         $ErrorActionPreference = "Stop"
@@ -51,7 +51,7 @@ if ($null -eq $application) {
 else {
     $ErrorActionPreference = "Stop"
 
-    Write-Verbose "Found application: "
+    Write-Information "Found application: $($application.ObjectId)"
     $application
 
     # Return application and his service principal
@@ -59,7 +59,7 @@ else {
     #this doesn't work on vsts agent
     #$servicePrincipal = Get-AzureRmADApplication -ObjectId $application.ObjectId | Get-AzureRmADServicePrincipal
 
-    Write-Verbose "Found service principal: "
+    Write-Information "Found service principal: $($servicePrincipal.Id)"
     $servicePrincipal
 
     Write-Host "##vso[task.setvariable variable=ObjectId;]$($application.ObjectId)"
@@ -69,6 +69,13 @@ else {
     Write-Host "##vso[task.setvariable variable=HomePageUrl;]$($application.HomePage)"
     Write-Host "##vso[task.setvariable variable=ServicePrincipalObjectId;]$($servicePrincipal.Id)"
 }
+
+$result = [PSCustomObject]@{
+    Application = $application
+    ServicePrincipal = $servicePrincipal
+}
+
+return $result
 
 $VerbosePreference = $oldverbose
 $InformationPreference = $oldinformation

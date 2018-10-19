@@ -3,7 +3,7 @@
     "name": "Remove-Azure-AD-Application",
     "friendlyName": "Remove Azure AD Application",
     "description": "Remove all the properties of an Azure AD Application",
-    "helpMarkDown": "",
+    "helpMarkDown": "Task version: #{Extension.Version}#",
     "category": "Deploy",
     "visibility": [
         "Release",
@@ -13,7 +13,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 11
+        "Patch": 0
     },
     "preview": "false",
     "instanceNameFormat": "Remove Azure AD Application",

@@ -3,7 +3,7 @@
     "name": "Set-Azure-AD-Application",
     "friendlyName": "Set Azure AD Application",
     "description": "Set all the properties of an Azure AD Application",
-    "helpMarkDown": "",
+    "helpMarkDown": "Task version: #{Extension.Version}#",
     "category": "Deploy",
     "visibility": [
         "Release",
@@ -12,8 +12,8 @@
     "author": "Ralph Jansen",
     "version": {
         "Major": 1,
-        "Minor": 1,
-        "Patch": 3
+        "Minor": 0,
+        "Patch": 0
     },
     "preview": "false",
     "instanceNameFormat": "Set Azure AD Application",
@@ -51,13 +51,23 @@
             "visibleRule": "ConnectedServiceNameSelector = ConnectedServiceNameARM"
         },
         {
+            "name": "createIfNotExist",
+            "type": "boolean",
+            "label": "Create if not exist",
+            "defaultValue": "false",
+            "required": true,
+            "groupName": "AzureDetails",
+            "helpMarkDown": "Create the Azure AD Application if the application doesn't exist. The check will be done on the name of the application."
+        },
+        {
             "name": "objectId",
             "type": "string",
             "label": "Object Id",
             "defaultValue": "",
             "required": true,
             "groupName": "AzureDetails",
-            "helpMarkDown": "Provide the Application object Id of the Azure AD Application."
+            "helpMarkDown": "Provide the Application object Id of the Azure AD Application.",
+            "visibleRule": "createIfNotExist = false"
         },
         {
             "name": "name",
@@ -148,6 +158,31 @@
             "required": false,
             "groupName": "AzureDetails",
             "helpMarkDown": "Add a list of owners (list of ObjectIds of AD Users) to an existing application. The connection service principal will always be added to the list of owners."
+        }
+    ],
+    "outputVariables": [{
+            "name": "ObjectId",
+            "description": "The ObjectId of the Azure AD Application"
+        },
+        {
+            "name": "ApplicationId",
+            "description": "The ApplicationId of the Azure AD Application"
+        },
+        {
+            "name": "Name",
+            "description": "The Name of the Azure AD Application"
+        },
+        {
+            "name": "AppIdUri",
+            "description": "The App Id Uri of the Azure AD Application"
+        },
+        {
+            "name": "HomePageUrl",
+            "description": "The Home page URL of the Azure AD Application"
+        },
+        {
+            "name": "ServicePrincipalObjectId",
+            "description": "The ObjectId of the Service Principal connected to the Azure AD Application"
         }
     ],
     "execution": {

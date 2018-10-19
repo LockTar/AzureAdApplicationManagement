@@ -1,5 +1,7 @@
 # Azure AD Application Management
 
+[![Build status](https://ralphjansen.visualstudio.com/AzureAdApplicationManagement/_apis/build/status/Vsts-Extension?branchName=master)](https://ralphjansen.visualstudio.com/AzureAdApplicationManagement/_build/latest?definitionId=12&branchName=master)
+
 Azure AD Application Management with VSTS pipeline tasks. These VSTS tasks are created with and tested on **Hosted Visual Studio 2017** agents.
 
 This VSTS extension contains the following tasks:

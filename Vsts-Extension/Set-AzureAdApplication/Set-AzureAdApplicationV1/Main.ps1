@@ -1,7 +1,8 @@
 Trace-VstsEnteringInvocation $MyInvocation
 
 # Get inputs.
-$objectId = Get-VstsInput -Name objectId -Require
+$createIfNotExist = Get-VstsInput -Name createIfNotExist -AsBool
+$objectId = Get-VstsInput -Name objectId
 $name = Get-VstsInput -Name name -Require
 $appIdUri = Get-VstsInput -Name appIdUri -Require
 $homePageUrl = Get-VstsInput -Name homePageUrl
@@ -31,6 +32,7 @@ Import-Module $PSScriptRoot\ps_modules\VstsAzureHelpers_
 Initialize-Azure -strict
 
 Write-Verbose "Input variables are: "
+Write-Verbose "createIfNotExist: $createIfNotExist"
 Write-Verbose "objectId: $objectId"
 Write-Verbose "name: $name"
 Write-Verbose "appIdUri: $appIdUri"
@@ -77,6 +79,27 @@ Connect-AzureAD -AadAccessToken $token -AccountId $clientId -TenantId $tenantId
 Write-Verbose "Add service principal of the azurerm connection to the array of owners"
 $deployServicePrincipalId = (Get-AzureRmADServicePrincipal -ServicePrincipalName $clientId).Id
 $ownersArray += $deployServicePrincipalId
+
+if ($createIfNotExist) {
+    Write-Verbose "Check if the application '$name' exists"
+    $result = .\scripts\Get-AzureAdApplication.ps1 -ApplicationName $name -FailIfNotFound $false
+
+    if (!$result.Application) {
+        Write-Verbose "Application doesn't exist. Create the application '$name'"
+        .\scripts\New-AzureAdApplication.ps1 `
+            -ApplicationName $name `
+            -SignOnUrl $homePageUrl
+
+        $secondsToWait = 60
+        Write-Verbose "Application '$name' is created but wait $secondsToWait seconds so Azure AD can process it and we can set all the properties"
+        Start-Sleep -Seconds $secondsToWait
+    }
+
+    Write-Verbose "Get the application '$name' again so we have the ObjectId to alter the application"
+    $result = .\scripts\Get-AzureAdApplication.ps1 -ApplicationName $name -FailIfNotFound $false
+
+    $objectId = $result.Application.ObjectId
+}
 
 .\scripts\Set-AzureAdApplication.ps1 `
     -ObjectId $objectId `
