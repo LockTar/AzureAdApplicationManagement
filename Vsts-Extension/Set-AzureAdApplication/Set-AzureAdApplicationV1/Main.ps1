@@ -90,7 +90,9 @@ if ($createIfNotExist) {
             -ApplicationName $name `
             -SignOnUrl $homePageUrl
 
-        Start-Sleep -Seconds 60
+        $secondsToWait = 60
+        Write-Debug "Application '$name' is created but wait $secondsToWait seconds so Azure AD can process it and we can set all the properties"
+        Start-Sleep -Seconds $secondsToWait
     }
 
     Write-Debug "Get the application '$name' again so we have the ObjectId to alter the application"
