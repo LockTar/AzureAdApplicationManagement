@@ -2,7 +2,7 @@ Param(
     [string]$ObjectId,
     [string]$ApplicationId,
     [string]$ApplicationName,
-    [bool]$FailOnError = $false
+    [bool]$FailIfNotFound = $false
 )
 
 $ErrorActionPreference = "SilentlyContinue"
@@ -31,7 +31,7 @@ else {
 if ($null -eq $application) {
     Write-Verbose "Application not found. Check if we should fail the build."
 
-    if ($FailOnError) {
+    if ($FailIfNotFound) {
         Write-Verbose "Fail build"
 
         $ErrorActionPreference = "Stop"

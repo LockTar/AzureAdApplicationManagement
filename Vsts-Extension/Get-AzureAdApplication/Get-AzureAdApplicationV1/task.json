@@ -98,9 +98,9 @@
             "visibleRule": "method = Name"
         },
         {
-            "name": "failOnError",
+            "name": "failIfNotFound",
             "type": "boolean",
-            "label": "Fail build on error",
+            "label": "Fail build if not found",
             "defaultValue": false,
             "groupName": "AzureDetails",
             "helpMarkDown": "Let the build fail if the Azure AD Application cannot be found."
