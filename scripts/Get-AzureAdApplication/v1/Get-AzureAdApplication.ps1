@@ -59,7 +59,7 @@ else {
     #this doesn't work on vsts agent
     #$servicePrincipal = Get-AzureRmADApplication -ObjectId $application.ObjectId | Get-AzureRmADServicePrincipal
 
-    Write-Information "Found service principal: $($servicePrincipal.ObjectId)"
+    Write-Information "Found service principal: $($servicePrincipal.Id)"
     $servicePrincipal
 
     Write-Host "##vso[task.setvariable variable=ObjectId;]$($application.ObjectId)"
