@@ -51,14 +51,16 @@ if ($null -eq $application) {
 else {
     $ErrorActionPreference = "Stop"
 
-    Write-Information ('Found application: {0}' -f $application)
+    Write-Information "Found application: "
+    $application
 
     # Return application and his service principal
     $servicePrincipal = Get-AzureRmADServicePrincipal -ServicePrincipalName $application.ApplicationId
     #this doesn't work on vsts agent
     #$servicePrincipal = Get-AzureRmADApplication -ObjectId $application.ObjectId | Get-AzureRmADServicePrincipal
 
-    Write-Information ('Found service principal: {0}' -f $servicePrincipal)
+    Write-Information "Found service principal: "
+    $servicePrincipal
 
     Write-Host "##vso[task.setvariable variable=ObjectId;]$($application.ObjectId)"
     Write-Host "##vso[task.setvariable variable=ApplicationId;]$($application.ApplicationId)"
