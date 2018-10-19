@@ -160,6 +160,31 @@
             "helpMarkDown": "Add a list of owners (list of ObjectIds of AD Users) to an existing application. The connection service principal will always be added to the list of owners."
         }
     ],
+    "outputVariables": [{
+            "name": "ObjectId",
+            "description": "The ObjectId of the Azure AD Application"
+        },
+        {
+            "name": "ApplicationId",
+            "description": "The ApplicationId of the Azure AD Application"
+        },
+        {
+            "name": "Name",
+            "description": "The Name of the Azure AD Application"
+        },
+        {
+            "name": "AppIdUri",
+            "description": "The App Id Uri of the Azure AD Application"
+        },
+        {
+            "name": "HomePageUrl",
+            "description": "The Home page URL of the Azure AD Application"
+        },
+        {
+            "name": "ServicePrincipalObjectId",
+            "description": "The ObjectId of the Service Principal connected to the Azure AD Application"
+        }
+    ],
     "execution": {
         "PowerShell3": {
             "target": "Main.ps1"
