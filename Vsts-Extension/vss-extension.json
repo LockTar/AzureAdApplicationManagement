@@ -111,7 +111,7 @@
       "badges": [
         {
           "href": "https://ralphjansen.visualstudio.com/17322302-127a-4675-bb41-f40515256433/_build/definition?definitionId=12",
-          "uri": "https://ralphjansen.visualstudio.com/_apis/public/build/definitions/17322302-127a-4675-bb41-f40515256433/12/badge?branchName=master&api-version=4.1",
+          "uri": "https://ralphjansen.visualstudio.com/AzureAdApplicationManagement/_apis/build/status/Vsts-Extension?branchName=master",
           "description": "Build"
         }
     ]    
