@@ -35,7 +35,8 @@
             "defaultValue": "ConnectedServiceNameARM",
             "options": {
                 "ConnectedServiceNameARM": "Azure Resource Manager"
-            }
+            },
+            "visibleRule": "ConnectedServiceNameSelector = IdontWantToShowThisInput"
         },
         {
             "name": "ConnectedServiceNameARM",
