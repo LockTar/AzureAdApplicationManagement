@@ -54,11 +54,9 @@ else {
     Write-Information "Found application: $($application.ObjectId)"
     $application
 
-    # Return application and his service principal
-    $servicePrincipal = Get-AzureRmADServicePrincipal -ServicePrincipalName $application.ApplicationId
-    #this doesn't work on vsts agent
-    #$servicePrincipal = Get-AzureRmADApplication -ObjectId $application.ObjectId | Get-AzureRmADServicePrincipal
-
+    # Return application and his service principal    
+    $servicePrincipal = Get-AzureRmADApplication -ObjectId $application.ObjectId | Get-AzureRmADServicePrincipal
+    
     Write-Information "Found service principal: $($servicePrincipal.Id)"
     $servicePrincipal
 
