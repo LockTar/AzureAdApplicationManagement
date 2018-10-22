@@ -16,7 +16,7 @@ Import-Module $PSScriptRoot\AzureRM\AzureRM.Resources\6.6.0\AzureRM.Resources.ps
 #Initialize-Azure -strict
 
 #$serviceNameInput = Get-VstsInput -Name ConnectedServiceNameSelector -Require
-$serviceName = Get-VstsInput -Name $ConnectedServiceNameARM -Require
+$serviceName = Get-VstsInput -Name ConnectedServiceNameARM -Require
 $endPointRM = Get-VstsEndpoint -Name $serviceName -Require
 
 $endPointRM = Get-VstsEndpoint -Name $serviceName -Require
