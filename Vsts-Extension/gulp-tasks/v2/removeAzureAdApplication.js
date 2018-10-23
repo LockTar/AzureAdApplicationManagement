@@ -29,16 +29,16 @@ function cleanRemoveAzureAdApplication() {
 function buildPsModulesRemoveAzureAdApplication() {
   console.log('Fill the ps modules');
   gulp.src(paths.extension.psModules + '**/*')
-    .pipe(gulp.dest(paths.extension.getAzureAdApplication.v2 + psModulesFolderName + "AzureRM"));
+    .pipe(gulp.dest(paths.extension.removeAzureAdApplication.v2 + psModulesFolderName + "/AzureRM"));
 
   gulp.src(paths.extension.psModules + '**/*')
-    .pipe(gulp.dest(paths.extension.getAzureAdApplication.v2 + psModulesFolderName + "TelemetryHelper"));
+    .pipe(gulp.dest(paths.extension.removeAzureAdApplication.v2 + psModulesFolderName + "/TelemetryHelper"));
     
   gulp.src(paths.extension.psModules + '**/*')
-    .pipe(gulp.dest(paths.extension.getAzureAdApplication.v2 + psModulesFolderName + "VstsAzureRestHelpers_"));
+    .pipe(gulp.dest(paths.extension.removeAzureAdApplication.v2 + psModulesFolderName + "/VstsAzureRestHelpers_"));
 
   return gulp.src(paths.extension.psModules + '**/*')
-    .pipe(gulp.dest(paths.extension.getAzureAdApplication.v2 + psModulesFolderName + "VstsTaskSdk"));
+    .pipe(gulp.dest(paths.extension.removeAzureAdApplication.v2 + psModulesFolderName + "/VstsTaskSdk"));
 }
 
 function buildScriptFilesAzureADApplication() {
