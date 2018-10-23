@@ -25,8 +25,8 @@ Initialize-PackageProvider
 #Get-Module -ListAvailable | Where-Object {$_.Name -like '*AzureRM*'} | Remove-Module -Force 
 
 Write-Output "Install PowerShell modules"
-Initialize-Package -Name "AzureRM.Resources" -RequiredVersion 6.6.0
-Initialize-Package -Name "AzureRM.profile" -RequiredVersion 5.6.0
+Initialize-Package -Name "AzureRM.Resources" -RequiredVersion 6.7.0
+Initialize-Package -Name "AzureRM.profile" -RequiredVersion 5.7.0
 
 #Install-Module -Name AzureRM.profile -RequiredVersion 5.6.0 -Force -Scope CurrentUser -AllowClobber
 #Install-Module -Name AzureRM.Resources -RequiredVersion 6.6.0 -Force -Scope CurrentUser -AllowClobber
