@@ -1,7 +1,6 @@
 Trace-VstsEnteringInvocation $MyInvocation
 
 # Get inputs.
-$serviceName = Get-VstsInput -Name ConnectedServiceNameARM -Require
 $method = Get-VstsInput -Name method
 $objectId = Get-VstsInput -Name objectId
 $applicationId = Get-VstsInput -Name applicationId
@@ -11,24 +10,8 @@ $failIfNotFound = Get-VstsInput -Name failIfNotFound -AsBool
 Import-Module $PSScriptRoot\AzureRM\AzureRM.profile\5.6.0\AzureRM.Profile.psd1
 Import-Module $PSScriptRoot\AzureRM\AzureRM.Resources\6.6.0\AzureRM.Resources.psd1
 
-Write-Verbose "Get endpoint $serviceName"
-$endPointRM = Get-VstsEndpoint -Name $serviceName -Require
-
-Write-Verbose 'Get all values from the endpoint'
-$clientId = $endPointRM.Auth.Parameters.ServicePrincipalId
-$clientSecret = $endPointRM.Auth.Parameters.ServicePrincipalKey
-$tenantId = $endPointRM.Auth.Parameters.TenantId
-$environmentName = "AzureCloud"
-$subscriptionId = $endPointRM.Data.SubscriptionId
-
-$psCredential = New-Object System.Management.Automation.PSCredential(
-    $clientId,
-    (ConvertTo-SecureString $clientSecret -AsPlainText -Force))
-
-Write-Host "##[command] Connect-AzureRMAccount -ServicePrincipal -Tenant $tenantId -Credential $psCredential -Environment $environmentName"
-$null = Connect-AzureRMAccount -ServicePrincipal -Tenant $tenantId -Credential $psCredential -Environment $environmentName
-Write-Host "##[command] Set-AzureRmContext -SubscriptionId $subscriptionId -Tenant $tenantId"
-$null = Set-AzureRmContext -SubscriptionId $subscriptionId -Tenant $tenantId
+Import-Module $PSScriptRoot\VstsAzureHelpers
+Initialize-Azure
 
 Write-Verbose "Input variables are: "
 Write-Verbose "method: $method"

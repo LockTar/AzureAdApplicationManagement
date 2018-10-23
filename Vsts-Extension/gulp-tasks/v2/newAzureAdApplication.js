@@ -28,8 +28,14 @@ function cleanNewAzureAdApplication() {
 
 function buildPsModulesNewAzureAdApplication() {
   console.log('Fill the ps modules');
+  gulp.src(paths.extension.psModules + '**/*')
+    .pipe(gulp.dest(paths.extension.getAzureAdApplication.v2 + psModulesFolderName + "TelemetryHelper"));
+    
+  gulp.src(paths.extension.psModules + '**/*')
+    .pipe(gulp.dest(paths.extension.getAzureAdApplication.v2 + psModulesFolderName + "VstsAzureRestHelpers_"));
+
   return gulp.src(paths.extension.psModules + '**/*')
-    .pipe(gulp.dest(paths.extension.newAzureAdApplication.v2 + psModulesFolderName));
+    .pipe(gulp.dest(paths.extension.getAzureAdApplication.v2 + psModulesFolderName + "VstsTaskSdk"));
 }
 
 function buildScriptFilesAzureADApplication() {
