@@ -9,8 +9,33 @@ $failIfNotFound = Get-VstsInput -Name failIfNotFound -AsBool
 
 # Initialize Azure Connection.
 #Import-Module $PSScriptRoot\ps_modules\AzureRM
-Find-Module -Name "AzureRM.profile" -RequiredVersion 5.6.0 | Install-Module
-Find-Module -Name "AzureRM.Resources" -RequiredVersion 6.6.0 | Install-Module
+#Find-Module -Name "AzureRM.profile" -RequiredVersion 5.6.0 | Install-Module
+#Find-Module -Name "AzureRM.Resources" -RequiredVersion 6.6.0 | Install-Module
+
+Write-Output "------------------ Start: Upgrade AzureRM on build host ------------------"
+
+Write-Output "- - - - - Install package provider"
+Install-PackageProvider -Name NuGet -Force -Scope CurrentUser
+
+Write-Output "- - - - - List Modules Before"
+Get-Module -ListAvailable| where {$_.Name -Like "*AzureRM*"}  | Select Name, Version
+
+Write-Output "- - - - - Remove alll existing AzureRM Modules" 
+Get-Module -ListAvailable | Where-Object {$_.Name -like '*AzureRM*'} | Remove-Module -Force 
+
+Write-Output "- - - - - Install modules"
+Install-Module -Name AzureRM.profile -RequiredVersion 5.6.0 -Force -Scope CurrentUser
+Install-Module -Name AzureRM.Resources -RequiredVersion 6.6.0 -Force -Scope CurrentUser
+
+Write-Output "- - - - - Import downloaded modules"
+Import-Module AzureRM.profile -Force -Verbose -Scope Local
+Import-Module AzureRM.Resources -Force -Verbose -Scope Local
+
+Write-Output "- - - - - List Modules After"
+Get-Module -ListAvailable| where {$_.Name -Like "*AzureRM*"}  | Select Name, Version
+
+Write-Output "------------------ End: Upgrade AzureRM on build host ------------------"
+
 
 Import-Module $PSScriptRoot\VstsAzureHelpers
 Initialize-Azure
