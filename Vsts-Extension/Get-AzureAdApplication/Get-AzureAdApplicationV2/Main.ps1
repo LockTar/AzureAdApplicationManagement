@@ -14,28 +14,27 @@ $failIfNotFound = Get-VstsInput -Name failIfNotFound -AsBool
 
 Write-Output "------------------ Start: Upgrade AzureRM on build host ------------------"
 
-Write-Output "- - - - - Install package provider"
-#Install-PackageProvider -Name NuGet -Force -Scope CurrentUser
-Find-PackageProvider -Name "NuGet" | Install-PackageProvider -Verbose -Scope CurrentUser -Force
+Initialize-PackageProvider
 
-#Write-Output "- - - - - List Modules Before"
+#Write-Output "List Modules Before"
 #Get-Module -ListAvailable| where {$_.Name -Like "*AzureRM*"}  | Select Name, Version
 
-#Write-Output "- - - - - Remove alll existing AzureRM Modules" 
+#Write-Output "Remove alll existing AzureRM Modules" 
 #Get-Module -ListAvailable | Where-Object {$_.Name -like '*AzureRM*'} | Remove-Module -Force 
 
-Write-Output "- - - - - Install modules"
-Find-Package AzureRM.profile -RequiredVersion 5.6.0 | Install-Package -Scope CurrentUser -Force
-Find-Package AzureRM.Resources -RequiredVersion 6.6.0 | Install-Package -Scope CurrentUser -Force
+Write-Output "Install PowerShell modules"
+Initialize-Package -Name "AzureRM.Resources" -RequiredVersion 6.6.0
+Initialize-Package -Name "AzureRM.profile" -RequiredVersion 5.6.0
+
 #Install-Module -Name AzureRM.profile -RequiredVersion 5.6.0 -Force -Scope CurrentUser -AllowClobber
 #Install-Module -Name AzureRM.Resources -RequiredVersion 6.6.0 -Force -Scope CurrentUser -AllowClobber
 
-#Write-Output "- - - - - Import downloaded modules"
+#Write-Output "Import downloaded modules"
 #Import-Module AzureRM.profile -Force -Verbose -Scope Local
 #Import-Module AzureRM.Resources -Force -Verbose -Scope Local
 
-#Write-Output "- - - - - List Modules After"
-#Get-Module -ListAvailable| where {$_.Name -Like "*AzureRM*"}  | Select Name, Version
+Write-Output "List installed AzureRM modules"
+Get-Module -ListAvailable| where {$_.Name -Like "*AzureRM*"}  | Select Name, Version
 
 Write-Output "------------------ End: Upgrade AzureRM on build host ------------------"
 
