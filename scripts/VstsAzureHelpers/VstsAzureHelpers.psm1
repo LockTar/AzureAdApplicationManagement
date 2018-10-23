@@ -44,7 +44,7 @@ function Initialize-PackageProvider {
     }
     else
     {     
-        Write-Verbose "Install package provider $Name"
+        Write-Information "Install package provider $Name"
         Find-PackageProvider -Name $Name | Install-PackageProvider -Verbose -Scope CurrentUser -Force
     }
 }
@@ -69,12 +69,12 @@ function Initialize-Package {
     {        
         if($RequiredVersion)
         {
-            Write-Verbose "Install package $Name with version $RequiredVersion"
+            Write-Information "Install package $Name with version $RequiredVersion"
             Find-Package $Name -RequiredVersion $RequiredVersion | Install-Package -Scope CurrentUser -Force
         }
         else
         {
-            Write-Verbose "Install package $Name"
+            Write-Information "Install package $Name"
             Find-Package $Name | Install-Package -Scope CurrentUser -Force
         }
     }
