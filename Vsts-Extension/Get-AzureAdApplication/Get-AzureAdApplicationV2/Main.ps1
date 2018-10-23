@@ -40,7 +40,7 @@ Find-Package AzureRM.Resources -RequiredVersion 6.6.0 | Install-Package -Scope C
 Write-Output "------------------ End: Upgrade AzureRM on build host ------------------"
 
 
-Import-Module $PSScriptRoot\VstsAzureHelpers
+Import-Module $PSScriptRoot\ps_modules\VstsAzureHelpers
 Initialize-Azure
 
 Write-Verbose "Input variables are: "
