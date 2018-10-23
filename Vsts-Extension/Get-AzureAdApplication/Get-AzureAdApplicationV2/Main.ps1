@@ -12,6 +12,8 @@ $failIfNotFound = Get-VstsInput -Name failIfNotFound -AsBool
 #Find-Module -Name "AzureRM.profile" -RequiredVersion 5.6.0 | Install-Module
 #Find-Module -Name "AzureRM.Resources" -RequiredVersion 6.6.0 | Install-Module
 
+Import-Module $PSScriptRoot\ps_modules\VstsAzureHelpers\VstsAzureHelpers.psm1
+
 Write-Output "------------------ Start: Upgrade AzureRM on build host ------------------"
 
 Initialize-PackageProvider
@@ -38,8 +40,6 @@ Get-Module -ListAvailable| where {$_.Name -Like "*AzureRM*"}  | Select Name, Ver
 
 Write-Output "------------------ End: Upgrade AzureRM on build host ------------------"
 
-
-Import-Module $PSScriptRoot\ps_modules\VstsAzureHelpers\VstsAzureHelpers.psm1
 Initialize-Azure
 
 Write-Verbose "Input variables are: "
