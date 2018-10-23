@@ -24,8 +24,8 @@ Write-Output "- - - - - Remove alll existing AzureRM Modules"
 Get-Module -ListAvailable | Where-Object {$_.Name -like '*AzureRM*'} | Remove-Module -Force 
 
 Write-Output "- - - - - Install modules"
-Install-Module -Name AzureRM.profile -RequiredVersion 5.6.0 -Force -Scope CurrentUser
-Install-Module -Name AzureRM.Resources -RequiredVersion 6.6.0 -Force -Scope CurrentUser
+Install-Module -Name AzureRM.profile -RequiredVersion 5.6.0 -Force -Scope CurrentUser -AllowClobber
+Install-Module -Name AzureRM.Resources -RequiredVersion 6.6.0 -Force -Scope CurrentUser -AllowClobber
 
 Write-Output "- - - - - Import downloaded modules"
 Import-Module AzureRM.profile -Force -Verbose -Scope Local
