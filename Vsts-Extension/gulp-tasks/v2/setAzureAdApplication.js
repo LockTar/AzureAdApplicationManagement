@@ -20,7 +20,8 @@ var paths = {
     },
     getAzureAdApplication : {
       v2 : '../scripts/Get-AzureAdApplication/v2/'
-    }
+    },
+    vstsAzureHelpers : '../scripts/VstsAzureHelpers/'
   }
 }
 
@@ -34,20 +35,20 @@ function cleanSetAzureAdApplication() {
 
 function buildPsModulesSetAzureAdApplication() {
   console.log('Fill the ps modules');
-  gulp.src(paths.extension.psModules + '**/*')
-    .pipe(gulp.dest(paths.extension.setAzureAdApplication.v2 + psModulesFolderName + "/AzureAD"));
-  
-  gulp.src(paths.extension.psModules + '**/*')
+  gulp.src(paths.extension.psModules + 'AzureRM/**/*')
     .pipe(gulp.dest(paths.extension.setAzureAdApplication.v2 + psModulesFolderName + "/AzureRM"));
 
-  gulp.src(paths.extension.psModules + '**/*')
+  gulp.src(paths.extension.psModules + 'TelemetryHelper/**/*')
     .pipe(gulp.dest(paths.extension.setAzureAdApplication.v2 + psModulesFolderName + "/TelemetryHelper"));
     
-  gulp.src(paths.extension.psModules + '**/*')
+  gulp.src(paths.extension.psModules + 'VstsAzureRestHelpers_/**/*')
     .pipe(gulp.dest(paths.extension.setAzureAdApplication.v2 + psModulesFolderName + "/VstsAzureRestHelpers_"));
 
-  return gulp.src(paths.extension.psModules + '**/*')
+  gulp.src(paths.extension.psModules + 'VstsTaskSdk/**/*')
     .pipe(gulp.dest(paths.extension.setAzureAdApplication.v2 + psModulesFolderName + "/VstsTaskSdk"));
+
+  return gulp.src(paths.code.vstsAzureHelpers + '**/*')
+    .pipe(gulp.dest(paths.extension.setAzureAdApplication.v2 + psModulesFolderName + "/VstsAzureHelpers"));
 }
 
 function buildScriptFilesAzureADApplication() {

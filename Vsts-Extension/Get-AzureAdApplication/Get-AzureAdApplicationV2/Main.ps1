@@ -7,9 +7,7 @@ $applicationId = Get-VstsInput -Name applicationId
 $name = Get-VstsInput -Name name
 $failIfNotFound = Get-VstsInput -Name failIfNotFound -AsBool
 
-Import-Module $PSScriptRoot\AzureRM\AzureRM.profile\5.6.0\AzureRM.Profile.psd1
-Import-Module $PSScriptRoot\AzureRM\AzureRM.Resources\6.6.0\AzureRM.Resources.psd1
-
+Import-Module $PSScriptRoot\ps_modules\AzureRM
 Import-Module $PSScriptRoot\VstsAzureHelpers
 Initialize-Azure
 
