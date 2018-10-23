@@ -7,6 +7,7 @@ $applicationId = Get-VstsInput -Name applicationId
 $name = Get-VstsInput -Name name
 $failIfNotFound = Get-VstsInput -Name failIfNotFound -AsBool
 
+# Initialize Azure Connection.
 Import-Module $PSScriptRoot\ps_modules\AzureRM
 Import-Module $PSScriptRoot\VstsAzureHelpers
 Initialize-Azure

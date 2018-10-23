@@ -6,9 +6,9 @@ $objectId = Get-VstsInput -Name objectId
 $applicationId = Get-VstsInput -Name applicationId
 
 # Initialize Azure Connection.
-Write-Verbose "Import module VstsAzureHelpers" 
-Import-Module $PSScriptRoot\ps_modules\VstsAzureHelpers_
-Initialize-Azure -strict
+Import-Module $PSScriptRoot\ps_modules\AzureRM
+Import-Module $PSScriptRoot\VstsAzureHelpers
+Initialize-Azure
 
 Write-Verbose "Input variables are: "
 Write-Verbose "method: $method"
