@@ -29,8 +29,8 @@ function cleanNewAzureAdApplication() {
 
 function buildPsModulesNewAzureAdApplication() {
   console.log('Fill the ps modules');
-  gulp.src(paths.extension.psModules + 'AzureRM/**/*')
-    .pipe(gulp.dest(paths.extension.newAzureAdApplication.v2 + psModulesFolderName + "/AzureRM"));
+  // gulp.src(paths.extension.psModules + 'AzureRM/**/*')
+  //   .pipe(gulp.dest(paths.extension.newAzureAdApplication.v2 + psModulesFolderName + "/AzureRM"));
 
   gulp.src(paths.extension.psModules + 'TelemetryHelper/**/*')
     .pipe(gulp.dest(paths.extension.newAzureAdApplication.v2 + psModulesFolderName + "/TelemetryHelper"));

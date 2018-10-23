@@ -8,7 +8,10 @@ $name = Get-VstsInput -Name name
 $failIfNotFound = Get-VstsInput -Name failIfNotFound -AsBool
 
 # Initialize Azure Connection.
-Import-Module $PSScriptRoot\ps_modules\AzureRM
+#Import-Module $PSScriptRoot\ps_modules\AzureRM
+Find-Module -Name "AzureRM.profile" -RequiredVersion 5.6.0 | Install-Module
+Find-Module -Name "AzureRM.Resources" -RequiredVersion 6.6.0 | Install-Module
+
 Import-Module $PSScriptRoot\VstsAzureHelpers
 Initialize-Azure
 
