@@ -49,7 +49,7 @@ function Initialize-PackageProvider {
     }
 }
 
-function Initialize-Package {
+function Initialize-Module {
     [CmdletBinding()]
     param(
         [Parameter(Mandatory = $true)]
@@ -58,27 +58,41 @@ function Initialize-Package {
         [string]$RequiredVersion
     )
 
-    Write-Verbose "Initialize package $Name"
-    $package = Get-Package -Name $Name -RequiredVersion $RequiredVersion -ErrorAction SilentlyContinue
+    Write-Verbose "Initialize module $Name"
+    $modulePath = 'c:\temp\ps_modules'
 
-    if($package)
+    Write-Verbose "Add custom PowerShell modules path the PSModulePath Environment variable"
+    if (!(Test-Path -Path $modulePath)) {
+        New-Item -Path $modulePath -ItemType Directory
+    }
+    $env:PSModulePath = $env:PSModulePath + ';' + $($modulePath)
+    
+    Write-Verbose "Check if custom Module with correct version is available on system"
+    Get-Module -Name $($customModule.Name) -ListAvailable | Where-Object {$_.Version -eq $($customModule.Version)} -OutVariable module
+    #$module = Get-Module -Name $Name -RequiredVersion $RequiredVersion -ErrorAction SilentlyContinue
+
+    if($module)
     {
-        Write-Verbose "Package $Name with version $($package.Version) already installed"
+        Write-Verbose "Module $Name with version $($module.Version) already installed"
     }
     else
     {        
         if($RequiredVersion)
         {
-            Write-Information "Install package $Name with version $RequiredVersion"
-            Find-Package $Name -RequiredVersion $RequiredVersion | Install-Package -Scope CurrentUser -Force
+            Write-Information "Install module $Name with version $RequiredVersion"
+            Find-Module -Name  $Name -RequiredVersion $RequiredVersion | Save-Module -Path $modulePath
+
+            #Find-Module $Name -RequiredVersion $RequiredVersion | Install-Module -Scope CurrentUser -Force
         }
         else
         {
-            Write-Information "Install package $Name"
-            Find-Package $Name | Install-Package -Scope CurrentUser -Force
+            Write-Information "Install module $Name"
+            Find-Module -Name  $Name | Save-Module -Path $modulePath
+
+            #Find-Module $Name | Install-Module -Scope CurrentUser -Force
         }
     }
 }
 
 # Export only the public function.
-Export-ModuleMember -Function Initialize-Azure, Initialize-PackageProvider, Initialize-Package
+Export-ModuleMember -Function Initialize-Azure, Initialize-PackageProvider, Initialize-Module
