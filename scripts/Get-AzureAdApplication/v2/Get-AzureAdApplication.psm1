@@ -1,3 +1,13 @@
+# Private module-scope variables.
+$script:azureModule = $null
+$script:azureRMProfileModule = $null
+
+# Override the DebugPreference.
+if ($global:DebugPreference -eq 'Continue') {
+    Write-Verbose '$OVERRIDING $global:DebugPreference from ''Continue'' to ''SilentlyContinue''.'
+    $global:DebugPreference = 'SilentlyContinue'
+}
+
 function Get-AzureAdApplication {
     [CmdletBinding()]
     Param(
@@ -80,3 +90,6 @@ function Get-AzureAdApplication {
     $VerbosePreference = $oldverbose
     $InformationPreference = $oldinformation
 }
+
+# Export only the public function.
+Export-ModuleMember -Function Get-AzureAdApplication
