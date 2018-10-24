@@ -65,7 +65,14 @@ function Initialize-Module {
     if (!(Test-Path -Path $modulePath)) {
         New-Item -Path $modulePath -ItemType Directory
     }
-    $env:PSModulePath = $env:PSModulePath + ';' + $modulePath
+
+    if(!$env:PSModulePath.Contains($modulePath))
+    {
+        $env:PSModulePath = $env:PSModulePath + ';' + $modulePath
+    }
+
+    Write-Verbose "Check files in $modulePath"
+    Get-ChildItem -Path $modulePath
     
     Write-Verbose "Check if Module with correct version is available on system"
     Get-Module -Name $Name -ListAvailable | Where-Object {$_.Version -eq $RequiredVersion} -OutVariable module
