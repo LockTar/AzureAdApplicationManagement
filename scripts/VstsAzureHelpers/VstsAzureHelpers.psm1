@@ -71,7 +71,7 @@ function Initialize-Module {
         $env:PSModulePath = $env:PSModulePath + ';' + $modulePath
     }
 
-    Write-Verbose "Check files in $modulePath"
+    Write-Verbose "Show files in $modulePath"
     Get-ChildItem -Path $modulePath
     
     Write-Verbose "Check if Module with correct version $RequiredVersion is available on system"
@@ -80,7 +80,7 @@ function Initialize-Module {
 
     if($module)
     {
-        Write-Verbose ('Module {0} with version {0} already installed' -f  $module.Name, $module.Version)
+        Write-Verbose ('Module {0} with version {1} already installed' -f  $module.Name, $module.Version)
     }
     else
     {        

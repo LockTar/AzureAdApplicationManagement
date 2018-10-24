@@ -12,6 +12,8 @@ $VerbosePreference = "continue"
 $oldinformation = $InformationPreference
 $InformationPreference = "continue"
 
+$env:PSModulePath
+
 if ($ObjectId) {
     Write-Verbose "Get application by ObjectId: $ObjectId"
     $application = Get-AzureRmADApplication -ObjectId $ObjectId    
