@@ -61,13 +61,13 @@ function Initialize-Module {
     Write-Verbose "Initialize module $Name"
     $modulePath = 'c:\temp\ps_modules'
 
-    Write-Verbose "Add custom PowerShell modules path the PSModulePath Environment variable"
+    Write-Verbose "Add PowerShell modules path the PSModulePath Environment variable"
     if (!(Test-Path -Path $modulePath)) {
         New-Item -Path $modulePath -ItemType Directory
     }
-    $env:PSModulePath = $env:PSModulePath + ';' + $($modulePath)
+    $env:PSModulePath = $env:PSModulePath + ';' + $modulePath
     
-    Write-Verbose "Check if custom Module with correct version is available on system"
+    Write-Verbose "Check if Module with correct version is available on system"
     Get-Module -Name $Name -ListAvailable | Where-Object {$_.Version -eq $RequiredVersion} -OutVariable module
     #$module = Get-Module -Name $Name -RequiredVersion $RequiredVersion -ErrorAction SilentlyContinue
 

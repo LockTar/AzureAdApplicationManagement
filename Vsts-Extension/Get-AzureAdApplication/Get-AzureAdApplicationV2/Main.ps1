@@ -20,6 +20,8 @@ Initialize-Module -Name "AzureRM.profile" -RequiredVersion 5.7.0
 Write-Information "List installed AzureRM modules"
 Get-Module -ListAvailable | where {$_.Name -Like "*AzureRM*"}  | Select Name, Version | Format-Table
 
+Get-Command -Name Connect-AzureRmAccount -ListImported
+
 Initialize-Azure
 
 Write-Verbose "Input variables are: "
