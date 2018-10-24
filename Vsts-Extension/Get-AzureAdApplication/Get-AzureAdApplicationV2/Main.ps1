@@ -29,6 +29,8 @@ Write-Verbose "applicationId: $applicationId"
 Write-Verbose "name: $name"
 Write-Verbose "failIfNotFound: $failIfNotFound"
 
+Get-AzureRmADApplication -DisplayName $name | Where-Object { $_.DisplayName -eq $name }
+
 . $PSScriptRoot\scripts\Get-AzureAdApplication.ps1
 
 switch ($method)
