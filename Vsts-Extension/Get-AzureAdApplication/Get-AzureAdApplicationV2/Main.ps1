@@ -29,25 +29,27 @@ Write-Verbose "applicationId: $applicationId"
 Write-Verbose "name: $name"
 Write-Verbose "failIfNotFound: $failIfNotFound"
 
+. $PSScriptRoot\scripts\Get-AzureAdApplication.ps1
+
 switch ($method)
 {
     "objectid"
     {
         Write-Verbose "Get application by ObjectId"
         
-        . .\scripts\Get-AzureAdApplication.ps1 -ObjectId $objectId -FailIfNotFound $failIfNotFound
+        Get-AzureAdApplication -ObjectId $objectId -FailIfNotFound $failIfNotFound
     }
     "applicationid"
     {
         Write-Verbose "Get application by ApplicationId"           
 
-        . .\scripts\Get-AzureAdApplication.ps1 -ApplicationId $applicationId -FailIfNotFound $failIfNotFound
+        Get-AzureAdApplication -ApplicationId $applicationId -FailIfNotFound $failIfNotFound
     }  
     "name"
     {
         Write-Verbose "Get application by Name"
 
-        . .\scripts\Get-AzureAdApplication.ps1 -ApplicationName $name -FailIfNotFound $failIfNotFound
+        Get-AzureAdApplication -ApplicationName $name -FailIfNotFound $failIfNotFound
     }
     default{
         Write-Error "Unknow method '$method'"
