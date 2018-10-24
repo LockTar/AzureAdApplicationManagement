@@ -13,14 +13,12 @@ Initialize-PackageProvider
 
 #Write-Output "Remove alll existing AzureRM Modules" 
 #Get-Module -ListAvailable | Where-Object {$_.Name -like '*AzureRM*'} | Remove-Module -Force 
-$env:PSModulePath
-Initialize-Module -Name "AzureRM.Resources" -RequiredVersion "6.7.0"
-Initialize-Module -Name "AzureRM.profile" -RequiredVersion "5.7.0"
-$env:PSModulePath
-Write-Information "List installed AzureRM modules"
-Get-Module -ListAvailable | where {$_.Name -Like "*AzureRM*"}  | Select Name, Version | Format-Table
 
-Get-Command -Name Connect-AzureRmAccount -ListImported
+Initialize-Module -Name "AzureRM.Resources" -RequiredVersion "6.7.0"
+#Initialize-Module -Name "AzureRM.profile" -RequiredVersion "5.7.0"
+
+Write-Information "List installed AzureRM modules"
+Get-Module -ListAvailable | Where-Object {$_.Name -Like "AzureRM*"}  | Select-Object Name, Version | Format-Table
 
 Initialize-Azure
 
@@ -37,19 +35,19 @@ switch ($method)
     {
         Write-Verbose "Get application by ObjectId"
         
-        .\scripts\Get-AzureAdApplication.ps1 -ObjectId $objectId -FailIfNotFound $failIfNotFound
+        . .\scripts\Get-AzureAdApplication.ps1 -ObjectId $objectId -FailIfNotFound $failIfNotFound
     }
     "applicationid"
     {
         Write-Verbose "Get application by ApplicationId"           
 
-        .\scripts\Get-AzureAdApplication.ps1 -ApplicationId $applicationId -FailIfNotFound $failIfNotFound
+        . .\scripts\Get-AzureAdApplication.ps1 -ApplicationId $applicationId -FailIfNotFound $failIfNotFound
     }  
     "name"
     {
         Write-Verbose "Get application by Name"
 
-        .\scripts\Get-AzureAdApplication.ps1 -ApplicationName $name -FailIfNotFound $failIfNotFound
+        . .\scripts\Get-AzureAdApplication.ps1 -ApplicationName $name -FailIfNotFound $failIfNotFound
     }
     default{
         Write-Error "Unknow method '$method'"
