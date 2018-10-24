@@ -68,7 +68,7 @@ function Initialize-Module {
     $env:PSModulePath = $env:PSModulePath + ';' + $($modulePath)
     
     Write-Verbose "Check if custom Module with correct version is available on system"
-    Get-Module -Name $($customModule.Name) -ListAvailable | Where-Object {$_.Version -eq $($customModule.Version)} -OutVariable module
+    Get-Module -Name $Name -ListAvailable | Where-Object {$_.Version -eq $RequiredVersion} -OutVariable module
     #$module = Get-Module -Name $Name -RequiredVersion $RequiredVersion -ErrorAction SilentlyContinue
 
     if($module)
