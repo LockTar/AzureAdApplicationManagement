@@ -74,13 +74,13 @@ function Initialize-Module {
     Write-Verbose "Check files in $modulePath"
     Get-ChildItem -Path $modulePath
     
-    Write-Verbose "Check if Module with correct version is available on system"
-    Get-Module -Name $Name -ListAvailable | Where-Object {$_.Version -eq $RequiredVersion} -OutVariable module
+    Write-Verbose "Check if Module with correct version $RequiredVersion is available on system"
+    $module = Get-Module -Name $Name -ListAvailable | Where-Object {$_.Version -eq $RequiredVersion}
     #$module = Get-Module -Name $Name -RequiredVersion $RequiredVersion -ErrorAction SilentlyContinue
 
     if($module)
     {
-        Write-Verbose ('Module {0} with version {0} already installed'-f  $module.Name, $module.Version)
+        Write-Verbose ('Module {0} with version {0} already installed' -f  $module.Name, $module.Version)
     }
     else
     {        
