@@ -80,7 +80,7 @@ function Initialize-Module {
 
     if($module)
     {
-        Write-Verbose "Module $Name with version $($module.Version.Major).$($module.Version.Minor).$($module.Version.Revision) already installed"
+        Write-Verbose ('Module {0} with version {0} already installed'-f  $module.Name, $module.Version)
     }
     else
     {        
