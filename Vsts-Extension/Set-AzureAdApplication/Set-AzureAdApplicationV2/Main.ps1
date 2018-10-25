@@ -80,13 +80,17 @@ Write-Verbose "Add service principal of the azurerm connection to the array of o
 $deployServicePrincipalId = (Get-AzureRmADServicePrincipal -ServicePrincipalName $clientId).Id
 $ownersArray += $deployServicePrincipalId
 
+Import-Module $PSScriptRoot\scripts\Get-AzureAdApplication.psm1
+Import-Module $PSScriptRoot\scripts\New-AzureAdApplication.psm1
+Import-Module $PSScriptRoot\scripts\Set-AzureAdApplication.psm1
+
 if ($createIfNotExist) {
     Write-Verbose "Check if the application '$name' exists"
-    $result = .\scripts\Get-AzureAdApplication.ps1 -ApplicationName $name -FailIfNotFound $false
+    $result = Get-AzureAdApplication.ps1 -ApplicationName $name -FailIfNotFound $false
 
     if (!$result.Application) {
         Write-Verbose "Application doesn't exist. Create the application '$name'"
-        .\scripts\New-AzureAdApplication.ps1 `
+        New-AzureAdApplication.ps1 `
             -ApplicationName $name `
             -SignOnUrl $homePageUrl
 
@@ -96,12 +100,12 @@ if ($createIfNotExist) {
     }
 
     Write-Verbose "Get the application '$name' again so we have the ObjectId to alter the application"
-    $result = .\scripts\Get-AzureAdApplication.ps1 -ApplicationName $name -FailIfNotFound $false
+    $result = Get-AzureAdApplication.ps1 -ApplicationName $name -FailIfNotFound $false
 
     $objectId = $result.Application.ObjectId
 }
 
-.\scripts\Set-AzureAdApplication.ps1 `
+Set-AzureAdApplication.ps1 `
     -ObjectId $objectId `
     -Name $name `
     -AppIdUri $appIdUri `

@@ -15,4 +15,6 @@ Write-Verbose "method: $method"
 Write-Verbose "objectId: $objectId"
 Write-Verbose "applicationId: $applicationId"
 
-.\scripts\Remove-AzureAdApplication.ps1 -ObjectId $objectId -ApplicationId $applicationId
+Import-Module $PSScriptRoot\scripts\Remove-AzureAdApplication.psm1
+
+Remove-AzureAdApplication.ps1 -ObjectId $objectId -ApplicationId $applicationId
