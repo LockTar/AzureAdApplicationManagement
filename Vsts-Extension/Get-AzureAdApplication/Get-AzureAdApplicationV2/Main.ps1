@@ -12,7 +12,7 @@ Import-Module $PSScriptRoot\ps_modules\VstsAzureHelpers\VstsAzureHelpers.psm1
 Initialize-PackageProvider
 
 #Write-Output "Remove alll existing AzureRM Modules" 
-#Get-Module -ListAvailable | Where-Object {$_.Name -like '*AzureRM*'} | Remove-Module -Force 
+Get-Module -ListAvailable | Where-Object {$_.Name -like '*AzureRM*'} | Remove-Module -Force 
 
 Initialize-Module -Name "AzureRM.Resources" -RequiredVersion "6.7.0"
 #Initialize-Module -Name "AzureRM.profile" -RequiredVersion "5.7.0"
