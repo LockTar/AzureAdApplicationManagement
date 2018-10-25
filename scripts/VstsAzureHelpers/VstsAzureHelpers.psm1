@@ -68,7 +68,7 @@ function Initialize-Module {
 
     if(!$env:PSModulePath.Contains($modulePath))
     {
-        $env:PSModulePath = $env:PSModulePath + ';' + $modulePath
+        $env:PSModulePath = $modulePath + ';' + $env:PSModulePath
     }
 
     Write-Verbose "Show files in $modulePath"

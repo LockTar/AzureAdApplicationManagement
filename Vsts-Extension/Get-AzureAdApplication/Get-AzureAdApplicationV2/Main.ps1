@@ -35,8 +35,6 @@ Write-Verbose "applicationId: $applicationId"
 Write-Verbose "name: $name"
 Write-Verbose "failIfNotFound: $failIfNotFound"
 
-#Get-AzureRmADApplication -DisplayName $name | Where-Object { $_.DisplayName -eq $name }
-
 Import-Module $PSScriptRoot\scripts\Get-AzureAdApplication.psm1
 
 switch ($method)
