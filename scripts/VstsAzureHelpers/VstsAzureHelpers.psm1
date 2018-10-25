@@ -76,7 +76,6 @@ function Initialize-Module {
     
     Write-Verbose "Check if Module with correct version $RequiredVersion is available on system"
     $module = Get-Module -Name $Name -ListAvailable | Where-Object {$_.Version -eq $RequiredVersion}
-    #$module = Get-Module -Name $Name -RequiredVersion $RequiredVersion -ErrorAction SilentlyContinue
 
     if($module)
     {
@@ -88,15 +87,11 @@ function Initialize-Module {
         {
             Write-Information "Install module $Name with version $RequiredVersion"
             Find-Module -Name  $Name -RequiredVersion $RequiredVersion | Save-Module -Path $modulePath
-
-            #Find-Module $Name -RequiredVersion $RequiredVersion | Install-Module -Scope CurrentUser -Force
         }
         else
         {
             Write-Information "Install module $Name"
             Find-Module -Name  $Name | Save-Module -Path $modulePath
-
-            #Find-Module $Name | Install-Module -Scope CurrentUser -Force
         }
     }
 }

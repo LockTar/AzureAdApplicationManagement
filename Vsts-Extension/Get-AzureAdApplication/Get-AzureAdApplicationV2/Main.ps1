@@ -10,29 +10,7 @@ $failIfNotFound = Get-VstsInput -Name failIfNotFound -AsBool
 # Initialize Azure Connection
 Import-Module $PSScriptRoot\ps_modules\VstsAzureHelpers\VstsAzureHelpers.psm1
 Initialize-PackageProvider
-
-Write-Output "List AzureRM modules in session"
-Get-Module "AzureRM*" | Format-Table
-
-Write-Output "Remove all existing AzureRM Modules" 
-Get-Module "AzureRM*" | Remove-Module -Force 
-
-Write-Output "List AzureRM modules in session"
-Get-Module "AzureRM*" | Format-Table
-
 Initialize-Module -Name "AzureRM.Resources" -RequiredVersion "6.7.0"
-#Initialize-Module -Name "AzureRM.profile" -RequiredVersion "5.7.0"
-
-Write-Output "List AzureRM modules in session"
-Get-Module "AzureRM*" | Format-Table
-
-Write-Information "List installed AzureRM modules"
-Get-Module -ListAvailable | Where-Object {$_.Name -Like "AzureRM*"}  | Select-Object Name, Version | Format-Table
-
-Write-Output "List AzureRM modules in session"
-Get-Module "AzureRM*" | Format-Table
-
-
 Initialize-Azure
 
 Write-Verbose "Input variables are: "
@@ -48,23 +26,22 @@ switch ($method)
 {
     "objectid"
     {
-        Write-Verbose "Get application by ObjectId"
-        
+        Write-Verbose "Get application by ObjectId"        
         Get-AzureAdApplication -ObjectId $objectId -FailIfNotFound $failIfNotFound
     }
     "applicationid"
     {
-        Write-Verbose "Get application by ApplicationId"           
-
+        Write-Verbose "Get application by ApplicationId"
         Get-AzureAdApplication -ApplicationId $applicationId -FailIfNotFound $failIfNotFound
     }  
     "name"
     {
         Write-Verbose "Get application by Name"
-
         Get-AzureAdApplication -ApplicationName $name -FailIfNotFound $failIfNotFound
     }
     default{
         Write-Error "Unknow method '$method'"
     }
 }
+
+Trace-VstsLeavingInvocation $MyInvocation
