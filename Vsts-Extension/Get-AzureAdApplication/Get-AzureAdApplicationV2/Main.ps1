@@ -11,8 +11,14 @@ $failIfNotFound = Get-VstsInput -Name failIfNotFound -AsBool
 Import-Module $PSScriptRoot\ps_modules\VstsAzureHelpers\VstsAzureHelpers.psm1
 Initialize-PackageProvider
 
-#Write-Output "Remove alll existing AzureRM Modules" 
-Get-Module -ListAvailable | Where-Object {$_.Name -like '*AzureRM*'} | Remove-Module -Force 
+Write-Information "List installed AzureRM modules"
+Get-Module -ListAvailable | Where-Object {$_.Name -Like "AzureRM*"}  | Select-Object Name, Version | Format-Table
+
+Write-Output "Remove all existing AzureRM Modules" 
+Get-Module -ListAvailable | Where-Object {$_.Name -like 'AzureRM*'} | Remove-Module -Force 
+
+Write-Information "List installed AzureRM modules"
+Get-Module -ListAvailable | Where-Object {$_.Name -Like "AzureRM*"}  | Select-Object Name, Version | Format-Table
 
 Initialize-Module -Name "AzureRM.Resources" -RequiredVersion "6.7.0"
 #Initialize-Module -Name "AzureRM.profile" -RequiredVersion "5.7.0"
