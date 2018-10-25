@@ -5,9 +5,10 @@ $name = Get-VstsInput -Name name -Require
 $signOnUrl = Get-VstsInput -Name signOnUrl -Require
 $appIdUri = Get-VstsInput -Name appIdUri
 
-# Initialize Azure Connection.
-Import-Module $PSScriptRoot\ps_modules\AzureRM
-Import-Module $PSScriptRoot\VstsAzureHelpers
+# Initialize Azure Connection
+Import-Module $PSScriptRoot\ps_modules\VstsAzureHelpers\VstsAzureHelpers.psm1
+Initialize-PackageProvider
+Initialize-Module -Name "AzureRM.Resources" -RequiredVersion "6.7.0"
 Initialize-Azure
 
 Write-Verbose "Input variables are: "

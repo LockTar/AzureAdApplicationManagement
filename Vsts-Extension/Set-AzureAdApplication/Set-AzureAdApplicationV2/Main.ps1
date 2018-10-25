@@ -26,9 +26,10 @@ if ($owners -ne "") {
     $ownersArray = $owners.Split("`n")
 }
 
-# Initialize Azure Connection.
-Import-Module $PSScriptRoot\ps_modules\AzureRM
-Import-Module $PSScriptRoot\VstsAzureHelpers
+# Initialize Azure Connection
+Import-Module $PSScriptRoot\ps_modules\VstsAzureHelpers\VstsAzureHelpers.psm1
+Initialize-PackageProvider
+Initialize-Module -Name "AzureRM.Resources" -RequiredVersion "6.7.0"
 Initialize-Azure
 
 Write-Verbose "Input variables are: "
@@ -50,6 +51,10 @@ Write-Verbose "ownersArray: $ownersArray"
 Write-Verbose "Import AzureAD module because is not on default VSTS agent"
 $azureAdModulePath = $PSScriptRoot + "\ps_modules\AzureAD\2.0.2.4\AzureAD.psd1"
 Import-Module $azureAdModulePath 
+
+
+
+
 
 # Workaround to use AzureAD in this task. Get an access token and call Connect-AzureAD
 $serviceNameInput = Get-VstsInput -Name ConnectedServiceNameSelector -Require
@@ -75,6 +80,10 @@ $token = $response.access_token
 
 Write-Verbose "Login to AzureAD with same application as endpoint"
 Connect-AzureAD -AadAccessToken $token -AccountId $clientId -TenantId $tenantId
+
+
+
+
 
 Write-Verbose "Add service principal of the azurerm connection to the array of owners"
 $deployServicePrincipalId = (Get-AzureRmADServicePrincipal -ServicePrincipalName $clientId).Id
