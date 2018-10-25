@@ -20,7 +20,8 @@ var paths = {
     },
     getAzureAdApplication : {
       v1 : '../scripts/Get-AzureAdApplication/v1/'
-    }
+    },
+    azureAD : '../scripts/AzureAD/'
   }
 }
 
@@ -34,8 +35,10 @@ function cleanSetAzureAdApplication() {
 
 function buildPsModulesSetAzureAdApplication() {
   console.log('Fill the ps modules');
-  return gulp.src(paths.extension.psModules + '**/*')
+  gulp.src(paths.extension.psModules + '**/*')
     .pipe(gulp.dest(paths.extension.setAzureAdApplication.v1 + psModulesFolderName));
+  return gulp.src(paths.code.azureAD + '**/*')
+    .pipe(gulp.dest(paths.extension.setAzureAdApplication.v1 + psModulesFolderName + '/AzureAD'));
 }
 
 function buildScriptFilesAzureADApplication() {
