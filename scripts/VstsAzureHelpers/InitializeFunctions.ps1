@@ -18,10 +18,10 @@ function Initialize-AzureSubscription {
         $clientId,
         (ConvertTo-SecureString $clientSecret -AsPlainText -Force))
 
-    Write-Host "##[command] Connect-AzureRMAccount -ServicePrincipal -Tenant $tenantId -Credential $psCredential -Environment $environmentName"
+    Write-Verbose "##[command] Connect-AzureRMAccount -ServicePrincipal -Tenant $tenantId -Credential $psCredential -Environment $environmentName"
     $null = Connect-AzureRMAccount -ServicePrincipal -Tenant $tenantId -Credential $psCredential -Environment $environmentName
     
-    Write-Host "##[command] Set-AzureRmContext -SubscriptionId $subscriptionId -Tenant $tenantId"
+    Write-Verbose "##[command] Set-AzureRmContext -SubscriptionId $subscriptionId -Tenant $tenantId"
     $null = Set-AzureRmContext -SubscriptionId $subscriptionId -Tenant $tenantId
 }
 

@@ -63,7 +63,7 @@ function Initialize-Module {
 
     Write-Verbose "Add PowerShell modules path the PSModulePath Environment variable"
     if (!(Test-Path -Path $modulePath)) {
-        New-Item -Path $modulePath -ItemType Directory
+        New-Item -Path $modulePath -ItemType Directory | Out-Null
     }
 
     if(!$env:PSModulePath.Contains($modulePath))
@@ -71,8 +71,8 @@ function Initialize-Module {
         $env:PSModulePath = $modulePath + ';' + $env:PSModulePath
     }
 
-    Write-Verbose "Show files in $modulePath"
-    Get-ChildItem -Path $modulePath
+    #Write-Verbose "Show files in $modulePath"
+    #Get-ChildItem -Path $modulePath
     
     Write-Verbose "Check if Module with correct version $RequiredVersion is available on system"
     $module = Get-Module -Name $Name -ListAvailable | Where-Object {$_.Version -eq $RequiredVersion}
