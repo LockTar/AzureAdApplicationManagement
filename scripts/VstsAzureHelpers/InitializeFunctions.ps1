@@ -23,9 +23,6 @@ function Initialize-AzureSubscription {
     
     Write-Host "##[command] Set-AzureRmContext -SubscriptionId $subscriptionId -Tenant $tenantId"
     $null = Set-AzureRmContext -SubscriptionId $subscriptionId -Tenant $tenantId
-
-    $name = "RalphTest"
-    Get-AzureRmADApplication -DisplayName $name | Where-Object { $_.DisplayName -eq $name }
 }
 
 function Set-UserAgent {
