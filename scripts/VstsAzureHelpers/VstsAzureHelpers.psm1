@@ -61,11 +61,12 @@ function Initialize-Module {
     Write-Verbose "Initialize module $Name"
     $modulePath = 'c:\temp\ps_modules'
 
-    Write-Verbose "Add PowerShell modules path the PSModulePath Environment variable"
+    Write-Verbose "Create custom PowerShell modules path '$modulePath' if not exist"
     if (!(Test-Path -Path $modulePath)) {
-        New-Item -Path $modulePath -ItemType Directory | Out-Null
+        New-Item -Path $modulePath -ItemType Directory
     }
 
+    Write-Verbose "Add custom PowerShell modules path to the PSModulePath Environment variable"
     if(!$env:PSModulePath.Contains($modulePath))
     {
         $env:PSModulePath = $modulePath + ';' + $env:PSModulePath

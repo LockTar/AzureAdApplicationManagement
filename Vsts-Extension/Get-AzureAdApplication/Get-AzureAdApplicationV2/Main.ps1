@@ -27,17 +27,17 @@ switch ($method)
     "objectid"
     {
         Write-Verbose "Get application by ObjectId"        
-        Get-AzureAdApplication -ObjectId $objectId -FailIfNotFound $failIfNotFound
+        $null = Get-AzureAdApplication -ObjectId $objectId -FailIfNotFound $failIfNotFound
     }
     "applicationid"
     {
         Write-Verbose "Get application by ApplicationId"
-        Get-AzureAdApplication -ApplicationId $applicationId -FailIfNotFound $failIfNotFound
+        $null = Get-AzureAdApplication -ApplicationId $applicationId -FailIfNotFound $failIfNotFound
     }  
     "name"
     {
         Write-Verbose "Get application by Name"
-        Get-AzureAdApplication -ApplicationName $name -FailIfNotFound $failIfNotFound
+        $null = Get-AzureAdApplication -ApplicationName $name -FailIfNotFound $failIfNotFound
     }
     default{
         Write-Error "Unknow method '$method'"
