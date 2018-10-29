@@ -39,7 +39,7 @@ function Remove-AzureAdApplication {
         $application
         $applicationId = $application.ApplicationId
 
-        $servicePrincipal = Get-AzureRmADServicePrincipal -ServicePrincipalName $applicationId
+        $servicePrincipal = Get-AzureRmADServicePrincipal -ApplicationId $applicationId
         Write-Verbose "Found service principal: "
         $servicePrincipal
 
@@ -50,7 +50,7 @@ function Remove-AzureAdApplication {
         Start-Sleep -Seconds 15
 
         Write-Verbose "Check if we find the service principal that was connected to the application or that it is removed with the application directly"
-        $servicePrincipal = Get-AzureRmADServicePrincipal -ServicePrincipalName $applicationId
+        $servicePrincipal = Get-AzureRmADServicePrincipal -ApplicationId $applicationId
     
         if ($servicePrincipal.Id) {
             Write-Verbose "Removing Service Principal connected to Application: $($servicePrincipal.Id)"
