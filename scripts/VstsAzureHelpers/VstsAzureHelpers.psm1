@@ -22,7 +22,24 @@ function Initialize-AzureRM {
         $endpoint = Get-VstsEndpoint -Name $serviceName -Require
 
         # Import/initialize the Azure module.
-        Initialize-AzureSubscription -Endpoint $endpoint
+        Initialize-AzureSubscriptionRM -Endpoint $endpoint
+    } finally {
+        Trace-VstsLeavingInvocation $MyInvocation
+    }
+}
+
+function Initialize-AzureAD {
+    [CmdletBinding()]
+    param()
+    Trace-VstsEnteringInvocation $MyInvocation
+    try {
+        $serviceName = Get-VstsInput -Name ConnectedServiceNameARM -Require
+
+        Write-Verbose "Get endpoint $serviceName"
+        $endpoint = Get-VstsEndpoint -Name $serviceName -Require
+
+        # Import/initialize the Azure module.
+        Initialize-AzureSubscriptionAD -Endpoint $endpoint
     } finally {
         Trace-VstsLeavingInvocation $MyInvocation
     }
@@ -98,4 +115,4 @@ function Initialize-Module {
 }
 
 # Export only the public function.
-Export-ModuleMember -Function Initialize-AzureRM, Initialize-PackageProvider, Initialize-Module
+Export-ModuleMember -Function Initialize-AzureRM, Initialize-AzureAD, Initialize-PackageProvider, Initialize-Module
