@@ -89,7 +89,7 @@ function Set-AzureAdApplication {
         Set-AzureADApplication -ObjectId $application.ObjectId -RequiredResourceAccess $requiredResourceAccess
 
         Write-Verbose "Set service principal properties"
-        $servicePrincipal = Get-AzureRmADServicePrincipal -ServicePrincipalName $application.ApplicationId
+        $servicePrincipal = Get-AzureRmADServicePrincipal -ApplicationId $application.ApplicationId
 
         Write-Information "Found service principal: "
         $servicePrincipal

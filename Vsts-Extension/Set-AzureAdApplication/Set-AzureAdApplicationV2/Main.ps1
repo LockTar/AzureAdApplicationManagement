@@ -56,7 +56,7 @@ Write-Verbose "owners: $owners"
 Write-Verbose "ownersArray: $ownersArray"
 
 Write-Verbose "Add service principal of the azurerm connection to the array of owners"
-$deployServicePrincipalId = (Get-AzureRmADServicePrincipal -ServicePrincipalName $clientId).Id
+$deployServicePrincipalId = (Get-AzureRmADServicePrincipal -ApplicationId $clientId).Id
 $ownersArray += $deployServicePrincipalId
 
 Import-Module $PSScriptRoot\scripts\Get-AzureAdApplication.psm1
