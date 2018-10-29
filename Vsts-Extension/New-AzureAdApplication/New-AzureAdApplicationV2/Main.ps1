@@ -9,7 +9,7 @@ $appIdUri = Get-VstsInput -Name appIdUri
 Import-Module $PSScriptRoot\ps_modules\VstsAzureHelpers\VstsAzureHelpers.psm1
 Initialize-PackageProvider
 Initialize-Module -Name "AzureRM.Resources" -RequiredVersion "6.7.0"
-Initialize-Azure
+Initialize-AzureRM
 
 Write-Verbose "Input variables are: "
 Write-Verbose "name: $name"

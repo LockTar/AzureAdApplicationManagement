@@ -11,7 +11,7 @@ if ($global:DebugPreference -eq 'Continue') {
 # Dot source the private functions.
 . $PSScriptRoot/InitializeFunctions.ps1
 
-function Initialize-Azure {
+function Initialize-AzureRM {
     [CmdletBinding()]
     param()
     Trace-VstsEnteringInvocation $MyInvocation
@@ -98,4 +98,4 @@ function Initialize-Module {
 }
 
 # Export only the public function.
-Export-ModuleMember -Function Initialize-Azure, Initialize-PackageProvider, Initialize-Module
+Export-ModuleMember -Function Initialize-AzureRM, Initialize-PackageProvider, Initialize-Module

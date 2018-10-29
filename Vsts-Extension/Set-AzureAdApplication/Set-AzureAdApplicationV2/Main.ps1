@@ -30,7 +30,7 @@ if ($owners -ne "") {
 Import-Module $PSScriptRoot\ps_modules\VstsAzureHelpers\VstsAzureHelpers.psm1
 Initialize-PackageProvider
 Initialize-Module -Name "AzureRM.Resources" -RequiredVersion "6.7.0"
-Initialize-Azure
+Initialize-AzureRM
 
 Write-Verbose "Input variables are: "
 Write-Verbose "createIfNotExist: $createIfNotExist"
@@ -57,8 +57,7 @@ Import-Module $azureAdModulePath
 
 
 # Workaround to use AzureAD in this task. Get an access token and call Connect-AzureAD
-$serviceNameInput = Get-VstsInput -Name ConnectedServiceNameSelector -Require
-$serviceName = Get-VstsInput -Name $serviceNameInput -Require
+$serviceName = Get-VstsInput -Name ConnectedServiceNameARM -Require
 $endPointRM = Get-VstsEndpoint -Name $serviceName -Require
 
 $clientId = $endPointRM.Auth.Parameters.ServicePrincipalId
