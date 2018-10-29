@@ -21,8 +21,7 @@ var paths = {
     getAzureAdApplication : {
       v2 : '../scripts/Get-AzureAdApplication/v2/'
     },
-    vstsAzureHelpers : '../scripts/VstsAzureHelpers/',
-    azureAD : '../scripts/AzureAD/'
+    vstsAzureHelpers : '../scripts/VstsAzureHelpers/'
   }
 }
 
@@ -45,11 +44,8 @@ function buildPsModulesSetAzureAdApplication() {
   gulp.src(paths.extension.psModules + 'VstsTaskSdk/**/*')
     .pipe(gulp.dest(paths.extension.setAzureAdApplication.v2 + psModulesFolderName + "/VstsTaskSdk"));
 
-  gulp.src(paths.code.vstsAzureHelpers + '**/*')
+  return gulp.src(paths.code.vstsAzureHelpers + '**/*')
     .pipe(gulp.dest(paths.extension.setAzureAdApplication.v2 + psModulesFolderName + "/VstsAzureHelpers"));
-
-  return gulp.src(paths.code.azureAD + '**/*')
-    .pipe(gulp.dest(paths.extension.setAzureAdApplication.v2 + psModulesFolderName + '/AzureAD'));
 }
 
 function buildScriptFilesAzureADApplication() {
