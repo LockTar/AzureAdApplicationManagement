@@ -48,7 +48,7 @@ Write-Verbose "owners: $owners"
 Write-Verbose "ownersArray: $ownersArray"
 
 Write-Verbose "Import AzureAD module because is not on default VSTS agent"
-$azureAdModulePath = $PSScriptRoot + "\AzureAD\2.0.1.16\AzureAD.psd1"
+$azureAdModulePath = $PSScriptRoot + "\ps_modules\AzureAD\2.0.2.4\AzureAD.psd1"
 Import-Module $azureAdModulePath 
 
 # Workaround to use AzureAD in this task. Get an access token and call Connect-AzureAD
