@@ -16,9 +16,9 @@ Write-Verbose "name: $name"
 Write-Verbose "signOnUrl: $signOnUrl"
 Write-Verbose "appIdUri: $appIdUri"
 
-Import-Module $PSScriptRoot\scripts\New-AzureAdApplication.psm1
+Import-Module $PSScriptRoot\scripts\New-AadApplication.psm1
 
-New-AzureAdApplication.ps1 `
+New-AadApplication `
     -ApplicationName $name `
     -SignOnUrl $signOnUrl `
     -IdentifierUri $appIdUri

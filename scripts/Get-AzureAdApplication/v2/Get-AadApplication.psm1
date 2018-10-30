@@ -8,7 +8,7 @@ if ($global:DebugPreference -eq 'Continue') {
     $global:DebugPreference = 'SilentlyContinue'
 }
 
-function Get-AzureAdApplication {
+function Get-AadApplication {
     [CmdletBinding()]
     Param(
         [string]$ObjectId,
@@ -92,4 +92,4 @@ function Get-AzureAdApplication {
 }
 
 # Export only the public function.
-Export-ModuleMember -Function Get-AzureAdApplication
+Export-ModuleMember -Function Get-AadApplication

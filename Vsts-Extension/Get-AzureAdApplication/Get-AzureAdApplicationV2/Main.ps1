@@ -20,24 +20,24 @@ Write-Verbose "applicationId: $applicationId"
 Write-Verbose "name: $name"
 Write-Verbose "failIfNotFound: $failIfNotFound"
 
-Import-Module $PSScriptRoot\scripts\Get-AzureAdApplication.psm1
+Import-Module $PSScriptRoot\scripts\Get-AadApplication.psm1
 
 switch ($method)
 {
     "objectid"
     {
         Write-Verbose "Get application by ObjectId"        
-        $null = Get-AzureAdApplication -ObjectId $objectId -FailIfNotFound $failIfNotFound
+        $null = Get-AadApplication -ObjectId $objectId -FailIfNotFound $failIfNotFound
     }
     "applicationid"
     {
         Write-Verbose "Get application by ApplicationId"
-        $null = Get-AzureAdApplication -ApplicationId $applicationId -FailIfNotFound $failIfNotFound
+        $null = Get-AadApplication -ApplicationId $applicationId -FailIfNotFound $failIfNotFound
     }  
     "name"
     {
         Write-Verbose "Get application by Name"
-        $null = Get-AzureAdApplication -ApplicationName $name -FailIfNotFound $failIfNotFound
+        $null = Get-AadApplication -ApplicationName $name -FailIfNotFound $failIfNotFound
     }
     default{
         Write-Error "Unknow method '$method'"
