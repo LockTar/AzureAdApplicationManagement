@@ -10,14 +10,28 @@ $logoutUrl = Get-VstsInput -Name logoutUrl
 $termsOfServiceUrl = Get-VstsInput -Name termsOfServiceUrl
 $privacyStatementUrl = Get-VstsInput -Name privacyStatementUrl
 $multiTenant = Get-VstsInput -Name multiTenant -AsBool
-$replyUrls = Get-VstsInput -Name replyUrls
+$replyUrlsMethod = Get-VstsInput -Name replyUrlsMethod -Require
+$replyUrlsSingleLine = Get-VstsInput -Name replyUrlsSingleLine
+$replyUrlsMultiLine = Get-VstsInput -Name replyUrlsMultiLine
 $resourceAccessFilePath = Get-VstsInput -Name resourceAccessFilePath
 $owners = Get-VstsInput -Name owners
 
 # Create pretty array for optional replyurls array
 $replyUrlsArray = @()
-if ($replyUrls -ne "") {
-    $replyUrlsArray = $replyUrls.Split("`n")
+switch ($replyUrlsMethod)
+{
+    "Singleline"
+    {
+        if ($replyUrlsSingleLine -ne "") {
+            $replyUrlsArray = $replyUrlsSingleLine.Split(";")
+        }
+    }
+    "Multiline"
+    {
+        if ($replyUrlsMultiLine -ne "") {
+            $replyUrlsArray = $replyUrlsMultiLine.Split("`n")
+        }
+    }
 }
 
 # Create pretty array for optional owners array
