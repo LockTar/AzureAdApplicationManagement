@@ -85,7 +85,7 @@ if ($createIfNotExist) {
     $objectId = $result.Application.ObjectId
 }
 
-Set-AzureAdApplication.ps1 `
+Set-AzureAdApplication `
     -ObjectId $objectId `
     -Name $name `
     -AppIdUri $appIdUri `
