@@ -56,6 +56,9 @@ Write-Verbose "owners: $owners"
 Write-Verbose "ownersArray: $ownersArray"
 
 Write-Verbose "Add service principal of the azurerm connection to the array of owners"
+$serviceName = Get-VstsInput -Name ConnectedServiceNameARM -Require
+$endpoint = Get-VstsEndpoint -Name $serviceName -Require
+$clientId = $endpoint.Auth.Parameters.ServicePrincipalId
 $deployServicePrincipalId = (Get-AzureRmADServicePrincipal -ApplicationId $clientId).Id
 $ownersArray += $deployServicePrincipalId
 
