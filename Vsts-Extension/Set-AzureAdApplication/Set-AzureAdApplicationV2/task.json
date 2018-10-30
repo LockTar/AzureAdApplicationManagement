@@ -137,7 +137,7 @@
             "name": "replyUrlsMethod",
             "type": "pickList",
             "label": "Reply URLs Method",
-            "defaultValue": "Multi Line",
+            "defaultValue": "multiLine",
             "required": true,
             "groupName": "AzureDetails",
             "helpMarkDown": "Choose the method to supply the reply urls.",
