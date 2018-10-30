@@ -20,13 +20,13 @@ $owners = Get-VstsInput -Name owners
 $replyUrlsArray = @()
 switch ($replyUrlsMethod)
 {
-    "singleLine"
+    "Singleline"
     {
         if ($replyUrlsSingleLine -ne "") {
             $replyUrlsArray = $replyUrlsSingleLine.Split(";")
         }
     }
-    "multiLine"
+    "Multiline"
     {
         if ($replyUrlsMultiLine -ne "") {
             $replyUrlsArray = $replyUrlsMultiLine.Split("`n")

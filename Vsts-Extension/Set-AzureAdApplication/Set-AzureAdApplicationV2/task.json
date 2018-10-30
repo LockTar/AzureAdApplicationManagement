@@ -137,7 +137,7 @@
             "name": "replyUrlsMethod",
             "type": "pickList",
             "label": "Reply URLs Method",
-            "defaultValue": "multiLine",
+            "defaultValue": "Multiline",
             "required": true,
             "groupName": "AzureDetails",
             "helpMarkDown": "Choose the method to supply the reply urls.",
@@ -145,8 +145,8 @@
                 "EditableOptions": "False"
             },
             "options": {
-                "singleLine": "Single Line",
-                "multiLine": "Multi Line"
+                "Singleline": "Singleline",
+                "Multiline": "Multiline"
             }
         },
         {
@@ -157,7 +157,7 @@
             "required": false,
             "groupName": "AzureDetails",
             "helpMarkDown": "A list of reply urls separated by ';' character.",
-            "visibleRule": "replyUrlsMethod = singleLine"
+            "visibleRule": "replyUrlsMethod = Singleline"
         },
         {
             "name": "replyUrlsMultiLine",
@@ -167,7 +167,7 @@
             "required": false,
             "groupName": "AzureDetails",
             "helpMarkDown": "A list of reply urls.",
-            "visibleRule": "replyUrlsMethod = multiLine"
+            "visibleRule": "replyUrlsMethod = Multiline"
         },
         {
             "name": "resourceAccessFilePath",
