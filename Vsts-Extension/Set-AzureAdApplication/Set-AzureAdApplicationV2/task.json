@@ -134,13 +134,40 @@
             "helpMarkDown": "Designates whether users in externa; organisations are allowed to grant your app access to data in their organization\u0027s directory."
         },
         {
-            "name": "replyUrls",
+            "name": "replyUrlsMethod",
+            "type": "pickList",
+            "label": "Reply URLs Method",
+            "defaultValue": "Multi Line",
+            "required": true,
+            "groupName": "AzureDetails",
+            "helpMarkDown": "Choose the method to supply the reply urls.",
+            "properties": {
+                "EditableOptions": "False"
+            },
+            "options": {
+                "singleLine": "Single Line",
+                "multiLine": "Multi Line"
+            }
+        },
+        {
+            "name": "replyUrlsSingleLine",
+            "type": "string",
+            "label": "Reply URLs",
+            "defaultValue": "",
+            "required": false,
+            "groupName": "AzureDetails",
+            "helpMarkDown": "A list of reply urls separated by ';' character.",
+            "visibleRule": "replyUrlsMethod = Single Line"
+        },
+        {
+            "name": "replyUrlsMultiLine",
             "type": "multiLine",
             "label": "Reply URLs",
             "defaultValue": "",
             "required": false,
             "groupName": "AzureDetails",
-            "helpMarkDown": "A list of reply urls."
+            "helpMarkDown": "A list of reply urls.",
+            "visibleRule": "replyUrlsMethod = Multi Line"
         },
         {
             "name": "resourceAccessFilePath",
