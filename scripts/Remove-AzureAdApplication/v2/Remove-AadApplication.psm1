@@ -8,7 +8,7 @@ if ($global:DebugPreference -eq 'Continue') {
     $global:DebugPreference = 'SilentlyContinue'
 }
 
-function Remove-AzureAdApplication {
+function Remove-AadApplication {
     [CmdletBinding()]
     Param(
         [string]$ObjectId,
@@ -69,4 +69,4 @@ function Remove-AzureAdApplication {
 }
 
 # Export only the public function.
-Export-ModuleMember -Function Remove-AzureAdApplication
+Export-ModuleMember -Function Remove-AadApplication
