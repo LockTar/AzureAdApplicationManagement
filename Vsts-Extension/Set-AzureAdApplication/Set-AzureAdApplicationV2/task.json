@@ -157,7 +157,7 @@
             "required": false,
             "groupName": "AzureDetails",
             "helpMarkDown": "A list of reply urls separated by ';' character.",
-            "visibleRule": "replyUrlsMethod = Single Line"
+            "visibleRule": "replyUrlsMethod = 'Single Line'"
         },
         {
             "name": "replyUrlsMultiLine",
@@ -167,7 +167,7 @@
             "required": false,
             "groupName": "AzureDetails",
             "helpMarkDown": "A list of reply urls.",
-            "visibleRule": "replyUrlsMethod = Multi Line"
+            "visibleRule": "replyUrlsMethod = 'Multi Line'"
         },
         {
             "name": "resourceAccessFilePath",
