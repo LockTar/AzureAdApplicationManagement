@@ -56,20 +56,23 @@ Write-Verbose "owners: $owners"
 Write-Verbose "ownersArray: $ownersArray"
 
 Write-Verbose "Add service principal of the azurerm connection to the array of owners"
+$serviceName = Get-VstsInput -Name ConnectedServiceNameARM -Require
+$endpoint = Get-VstsEndpoint -Name $serviceName -Require
+$clientId = $endpoint.Auth.Parameters.ServicePrincipalId
 $deployServicePrincipalId = (Get-AzureRmADServicePrincipal -ApplicationId $clientId).Id
 $ownersArray += $deployServicePrincipalId
 
-Import-Module $PSScriptRoot\scripts\Get-AzureAdApplication.psm1
-Import-Module $PSScriptRoot\scripts\New-AzureAdApplication.psm1
-Import-Module $PSScriptRoot\scripts\Set-AzureAdApplication.psm1
+Import-Module $PSScriptRoot\scripts\Get-AadApplication.psm1
+Import-Module $PSScriptRoot\scripts\New-AadApplication.psm1
+Import-Module $PSScriptRoot\scripts\Set-AadApplication.psm1
 
 if ($createIfNotExist) {
     Write-Verbose "Check if the application '$name' exists"
-    $result = Get-AzureAdApplication -ApplicationName $name -FailIfNotFound $false
+    $result = Get-AadApplication -ApplicationName $name -FailIfNotFound $false
 
     if (!$result.Application) {
         Write-Verbose "Application doesn't exist. Create the application '$name'"
-        New-AzureAdApplication -ApplicationName $name -SignOnUrl $homePageUrl
+        New-AadApplication -ApplicationName $name -SignOnUrl $homePageUrl
 
         $secondsToWait = 60
         Write-Verbose "Application '$name' is created but wait $secondsToWait seconds so Azure AD can process it and we can set all the properties"
@@ -77,12 +80,12 @@ if ($createIfNotExist) {
     }
 
     Write-Verbose "Get the application '$name' again so we have the ObjectId to alter the application"
-    $result = Get-AzureAdApplication -ApplicationName $name -FailIfNotFound $false
+    $result = Get-AadApplication -ApplicationName $name -FailIfNotFound $false
 
     $objectId = $result.Application.ObjectId
 }
 
-Set-AzureAdApplication.ps1 `
+Set-AadApplication `
     -ObjectId $objectId `
     -Name $name `
     -AppIdUri $appIdUri `

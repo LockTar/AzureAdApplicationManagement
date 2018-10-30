@@ -8,7 +8,7 @@ if ($global:DebugPreference -eq 'Continue') {
     $global:DebugPreference = 'SilentlyContinue'
 }
 
-function New-AzureAdApplication {
+function New-AadApplication {
     [CmdletBinding()]
     Param(
         [Parameter(Mandatory)]
@@ -118,4 +118,4 @@ function New-AzureAdApplication {
 }
 
 # Export only the public function.
-Export-ModuleMember -Function New-AzureAdApplication
+Export-ModuleMember -Function New-AadApplication

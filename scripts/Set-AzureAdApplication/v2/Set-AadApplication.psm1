@@ -8,7 +8,7 @@ if ($global:DebugPreference -eq 'Continue') {
     $global:DebugPreference = 'SilentlyContinue'
 }
 
-function Set-AzureAdApplication {
+function Set-AadApplication {
     [CmdletBinding()]
     Param(
         [Parameter(Mandatory)]
@@ -74,9 +74,7 @@ function Set-AzureAdApplication {
         }
 
         Write-Verbose "Set application properties"
-        # Check if Update-AzureRmADApplication is better/newer than Set verion. See:
-        # https://docs.microsoft.com/en-us/powershell/module/azurerm.resources/update-azurermadapplication?view=azurermps-6.6.0    
-        Set-AzureRmADApplication `
+        Update-AzureRmADApplication `
             -ObjectId $application.ObjectId `
             -DisplayName $Name `
             -IdentifierUri $AppIdUri `
@@ -94,9 +92,10 @@ function Set-AzureAdApplication {
         Write-Information "Found service principal: "
         $servicePrincipal
 
-        Set-AzureRmADServicePrincipal `
+        Update-AzureRmADServicePrincipal `
             -ObjectId $servicePrincipal.Id `
-            -DisplayName $Name
+            -DisplayName $Name `
+            -Homepage $HomePageUrl
 
         # Add owners to the application
         Write-Verbose "Set owners of the application. Current owners are:"
@@ -142,4 +141,4 @@ function Set-AzureAdApplication {
 }
 
 # Export only the public function.
-Export-ModuleMember -Function Set-AzureAdApplication
+Export-ModuleMember -Function Set-AadApplication
