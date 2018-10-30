@@ -51,7 +51,7 @@ function Initialize-AzureSubscriptionAD {
 
     $response = Invoke-RestMethod -Method 'Post' -Uri $adTokenUrl -ContentType "application/x-www-form-urlencoded" -Body $body
     $token = $response.access_token
-    Write-SetSecret -Value $token
+    Write-VstsSetSecret -Value $token
 
     Write-Verbose "##[command] Connect-AzureAD -AadAccessToken $token -AccountId $clientId -TenantId $tenantId"
     $null = Connect-AzureAD -AadAccessToken $token -AccountId $clientId -TenantId $tenantId
