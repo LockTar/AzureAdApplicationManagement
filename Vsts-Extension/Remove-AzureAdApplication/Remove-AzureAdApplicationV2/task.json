@@ -22,22 +22,7 @@
         "displayName": "Azure Details",
         "isExpanded": true
     }],
-    "inputs": [{
-            "name": "ConnectedServiceNameSelector",
-            "aliases": [
-                "azureConnectionType"
-            ],
-            "type": "pickList",
-            "label": "Azure Connection Type",
-            "required": false,
-            "groupName": "AzureDetails",
-            "helpMarkDown": "",
-            "defaultValue": "ConnectedServiceNameARM",
-            "options": {
-                "ConnectedServiceNameARM": "Azure Resource Manager"
-            },
-            "visibleRule": "ConnectedServiceNameSelector = IdontWantToShowThisInput"
-        },
+    "inputs": [
         {
             "name": "ConnectedServiceNameARM",
             "aliases": [
@@ -48,8 +33,7 @@
             "defaultValue": "",
             "required": true,
             "groupName": "AzureDetails",
-            "helpMarkDown": "Azure Resource Manager subscription to configure before running PowerShell.",
-            "visibleRule": "ConnectedServiceNameSelector = ConnectedServiceNameARM"
+            "helpMarkDown": "Azure Resource Manager subscription to configure before running PowerShell."
         },
         {
             "name": "method",
