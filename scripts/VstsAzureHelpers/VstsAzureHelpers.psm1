@@ -93,7 +93,7 @@ function Initialize-Module {
         $env:PSModulePath = $modulePath + ';' + $env:PSModulePath
 
         Write-Verbose "Check if Module with correct version $RequiredVersion is available on system"
-        $module = Get-Module -Name $Name -ListAvailable | Where-Object {$_.Version -eq $RequiredVersion -and $_.Name -eq $_.Name}
+        $module = Get-Module -Name $Name -ListAvailable | Where-Object {$_.Version -eq $RequiredVersion -and $_.Name -eq $Name}
         if (!($module)) {
             Write-Error -Message ('Module {0} with Version {1} is NOT locally available' -f $Name, $RequiredVersion)
             
