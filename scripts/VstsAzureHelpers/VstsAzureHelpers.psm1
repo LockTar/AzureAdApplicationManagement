@@ -176,6 +176,7 @@ function Get-AzureRMVersion {
         Write-Verbose -Message ('Checking AzureRM Module version {0} for Module {1} with version {2}' -f $($AzureRMModule.Version), $($AzureRMModuleName), $($RequiredVersion))
         if ($AzureRMModule.dependencies | Where-Object {($_.Name -eq $($AzureRMModuleName) -and $_.RequiredVersion -eq $RequiredVersion) }) {
             $AzureRMModuleVersion = $AzureRMModule.Version
+            Write-Verbose -Message ('Found AzureRM Module with version {0} for Module {1} with version {2}' -f $($AzureRMModule.Version), $($AzureRMModuleName), $($RequiredVersion))
             return $AzureRMModuleVersion
         }
     }
