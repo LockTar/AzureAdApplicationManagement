@@ -122,7 +122,7 @@ function Set-AzureRmVersionOnDiskInModulePath {
             return $true
         }
         else {
-            Write-Verbose -Message ('Module {0} with Version {1} is not locally available on disk' -f $Name, $RequiredVersion)
+            Write-Verbose -Message ('Module {0} with version {1} is not locally available on disk' -f $Name, $RequiredVersion)
             return $false
         }
     } catch {
@@ -176,7 +176,7 @@ function Get-AzureRMVersion {
         Write-Verbose -Message ('Checking AzureRM Module version {0} for Module {1} with version {2}' -f $($AzureRMModule.Version), $($AzureRMModuleName), $($RequiredVersion))
         if ($AzureRMModule.dependencies | Where-Object {($_.Name -eq $($AzureRMModuleName) -and $_.RequiredVersion -eq $RequiredVersion) }) {
             $AzureRMModuleVersion = $AzureRMModule.Version
-            Write-Verbose -Message ('Found Module {1} with version {2} in AzureRM version {0}' -f $($AzureRMModuleName), $($RequiredVersion), $($AzureRMModule.Version))
+            Write-Verbose -Message ('Found Module {0} with version {1} in AzureRM version {2}' -f $($AzureRMModuleName), $($RequiredVersion), $($AzureRMModule.Version))
             return $AzureRMModuleVersion
         }
     }
