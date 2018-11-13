@@ -86,11 +86,12 @@ function Initialize-Module {
     # Check if AzureRM module is locally available via an already downloaded version on the system drive (hosted microsoft agents)
     $targetAzureRmVersion = Get-AzureRMVersion -AzureRMModuleName $Name -RequiredVersion $RequiredVersion
     $installedAzureRmVersions = "2.1.0","3.8.0","4.2.1","5.1.1","6.7.0"
+    $hostedAgentAzureRMDownloadPath = ('c:\Modules\AzureRM_{0}' -f $targetAzureRmVersion)
         
-    if ($installedAzureRmVersions.Contains($targetAzureRmVersion)) {
+    if ($installedAzureRmVersions.Contains($targetAzureRmVersion) -and (Test-Path -Path $hostedAgentAzureRMDownloadPath)) {
         Write-Verbose -Message ('Module {0} with Version {1} is locally available in AzureRM version {2}' -f $Name, $RequiredVersion, $targetAzureRmVersion)
         Write-Verbose "Add local AzureRM PowerShell modules path to the PSModulePath Environment variable"
-        $modulePath = ('c:\Modules\AzureRM_{0}' -f $targetAzureRmVersion)
+        $modulePath = $hostedAgentAzureRMDownloadPath
         if (!$env:PSModulePath.Contains($modulePath)) {
             $env:PSModulePath = $modulePath + ';' + $env:PSModulePath
         }
