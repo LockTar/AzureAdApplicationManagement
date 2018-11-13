@@ -23,7 +23,8 @@ function Initialize-AzureRM {
 
         # Import/initialize the Azure module.
         Initialize-AzureSubscriptionRM -Endpoint $endpoint
-    } finally {
+    }
+    finally {
         Trace-VstsLeavingInvocation $MyInvocation
     }
 }
@@ -40,7 +41,8 @@ function Initialize-AzureAD {
 
         # Import/initialize the Azure module.
         Initialize-AzureSubscriptionAD -Endpoint $endpoint
-    } finally {
+    }
+    finally {
         Trace-VstsLeavingInvocation $MyInvocation
     }
 }
@@ -55,12 +57,10 @@ function Initialize-PackageProvider {
     Write-Verbose "Initialize package provider $Name"
     $packageProvider = Get-PackageProvider -Name $Name -ListAvailable
     
-    if($packageProvider)
-    {
+    if ($packageProvider) {
         Write-Verbose "Package provider $Name with version $($packageProvider.Version) already installed"
     }
-    else
-    {     
+    else {     
         Write-Information "Install package provider $Name"
         Find-PackageProvider -Name $Name | Install-PackageProvider -Verbose -Scope CurrentUser -Force
     }
@@ -76,40 +76,41 @@ function Initialize-Module {
     )
 
     Write-Verbose "Initialize module $Name"
-    $modulePath = 'c:\temp\ps_modules'
+    $modulePath = 'c:\ps_modules'
 
     Write-Verbose "Create custom PowerShell modules path '$modulePath' if not exist"
     if (!(Test-Path -Path $modulePath)) {
         New-Item -Path $modulePath -ItemType Directory
     }
 
-    Write-Verbose "Add custom PowerShell modules path to the PSModulePath Environment variable"
-    if(!$env:PSModulePath.Contains($modulePath))
-    {
-        $env:PSModulePath = $modulePath + ';' + $env:PSModulePath
+    $moduleSetOnDisk = $false
+
+    if($Name.StartsWith("AzureRM")){
+        $versionSetOnDisk = Set-AzureRmVersionOnDiskInModulePath -Name $Name -RequiredVersion $RequiredVersion
+        $moduleSetOnDisk = $versionSetOnDisk
     }
 
-    #Write-Verbose "Show files in $modulePath"
-    #Get-ChildItem -Path $modulePath
-    
-    Write-Verbose "Check if Module with correct version $RequiredVersion is available on system"
-    $module = Get-Module -Name $Name -ListAvailable | Where-Object {$_.Version -eq $RequiredVersion}
-
-    if($module)
-    {
-        Write-Verbose ('Module {0} with version {1} already installed' -f  $module.Name, $module.Version)
-    }
-    else
-    {        
-        if($RequiredVersion)
-        {
-            Write-Information "Install module $Name with version $RequiredVersion"
-            Find-Module -Name  $Name -RequiredVersion $RequiredVersion | Save-Module -Path $modulePath
+    if (!$moduleSetOnDisk) {
+        Write-Verbose "Add custom PowerShell modules path to the PSModulePath Environment variable"
+        if (!$env:PSModulePath.Contains($modulePath)) {
+            $env:PSModulePath = $modulePath + ';' + $env:PSModulePath
         }
-        else
-        {
-            Write-Information "Install module $Name"
-            Find-Module -Name  $Name | Save-Module -Path $modulePath
+    
+        Write-Verbose -Message  ('Check if Module {0} with correct version {1} is available on system' -f $Name, $RequiredVersion)
+        $module = Get-Module -Name $Name -ListAvailable | Where-Object {$_.Version -eq $RequiredVersion} 
+
+        if ($module) {
+            Write-Verbose ('Module {0} with version {1} already imported' -f $module.Name, $module.Version)
+        }
+        else {        
+            if ($RequiredVersion) {
+                Write-Information "Download module $Name with version $RequiredVersion to '$modulePath'"
+                Find-Module -Name  $Name -RequiredVersion $RequiredVersion | Save-Module -Path $modulePath
+            }
+            else {
+                Write-Information "Download module $Name to '$modulePath'"
+                Find-Module -Name  $Name | Save-Module -Path $modulePath
+            }
         }
     }
 }

@@ -3,7 +3,7 @@
     "id": "Azure-AD-Application-Management",
     "version": "1.0.41",
     "name": "Azure AD Application Management",
-    "description": "A VSTS extension with build and release tasks to manage Azure AD Applications.",
+    "description": "An Azure DevOps extension with Azure Pipelines tasks to manage Azure AD Applications.",
     "publisher": "RalphJansen",
     "targets": [
         {
@@ -15,7 +15,7 @@
         "large": "images/AdApplication-512.png"
     },
     "categories": [
-        "Build and release"
+        "Azure Pipelines"
     ],
     "tags": [
         "Azure",

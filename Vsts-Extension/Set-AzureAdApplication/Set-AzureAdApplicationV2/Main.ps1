@@ -49,10 +49,6 @@ Initialize-AzureRM
 Initialize-Module -Name "AzureAD" -RequiredVersion "2.0.2.4"
 Initialize-AzureAD
 
-# Write-Verbose "Import AzureAD module because is not on default VSTS agent"
-# Import-Module $PSScriptRoot + "\ps_modules\AzureAD\2.0.2.4\AzureAD.psd1"
-# Initialize-AzureAD
-
 Write-Verbose "Input variables are: "
 Write-Verbose "createIfNotExist: $createIfNotExist"
 Write-Verbose "objectId: $objectId"
