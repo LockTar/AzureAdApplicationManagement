@@ -92,10 +92,17 @@ function Set-AadApplication {
         Write-Information "Found service principal: "
         $servicePrincipal
 
-        Update-AzureRmADServicePrincipal `
+        # Do set with AzureAD modules because tags aren't available yet in AzureRM
+        # Update-AzureRmADServicePrincipal `
+        #     -ObjectId $servicePrincipal.Id `
+        #     -DisplayName $Name `
+        #     -Homepage $HomePageUrl
+
+        Set-AzureADServicePrincipal `
             -ObjectId $servicePrincipal.Id `
             -DisplayName $Name `
-            -Homepage $HomePageUrl
+            -Homepage $HomePageUrl `
+            -Tags "WindowsAzureActiveDirectoryIntegratedApp"
 
         # Add owners to the application
         Write-Verbose "Set owners of the application. Current owners are:"
