@@ -100,15 +100,15 @@ function Initialize-Module {
         $module = Get-Module -Name $Name -ListAvailable | Where-Object {$_.Version -eq $RequiredVersion} 
 
         if ($module) {
-            Write-Verbose ('Module {0} with version {1} already installed' -f $module.Name, $module.Version)
+            Write-Verbose ('Module {0} with version {1} already imported' -f $module.Name, $module.Version)
         }
         else {        
             if ($RequiredVersion) {
-                Write-Information "Install module $Name with version $RequiredVersion"
+                Write-Information "Download module $Name with version $RequiredVersion to '$modulePath'"
                 Find-Module -Name  $Name -RequiredVersion $RequiredVersion | Save-Module -Path $modulePath
             }
             else {
-                Write-Information "Install module $Name"
+                Write-Information "Download module $Name to '$modulePath'"
                 Find-Module -Name  $Name | Save-Module -Path $modulePath
             }
         }
