@@ -101,7 +101,7 @@ function Set-AzureRmVersionOnDiskInModulePath {
            
         if ($installedAzureRmVersions.Contains($targetAzureRmVersion) -and (Test-Path -Path $hostedAgentAzureRMDownloadPath)) {
             Write-Verbose -Message ('Module {0} with Version {1} is locally available in AzureRM version {2}' -f $Name, $RequiredVersion, $targetAzureRmVersion)
-            Write-Verbose "Add local AzureRM PowerShell modules path to the PSModulePath Environment variable"
+            Write-Verbose "Add local AzureRM PowerShell modules path '$hostedAgentAzureRMDownloadPath' to the PSModulePath Environment variable"
             $modulePath = $hostedAgentAzureRMDownloadPath
             if (!$env:PSModulePath.Contains($modulePath)) {
                 $env:PSModulePath = $modulePath + ';' + $env:PSModulePath
