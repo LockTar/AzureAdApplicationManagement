@@ -163,13 +163,25 @@
             "helpMarkDown": "Json file with array of Required resource Access. The format should be the same as in the manifest. \u003cbr\u003e\u003cbr\u003eSo in example:\u003cbr\u003e[ { \"resourceAppId\": \"00000002-0000-0000-c000-000000000000\", \"resourceAccess\": [ { \"id\": \"5778995a-e1bf-45b8-affa-663a9f3f4d04\", \"type\": \"Role\" }, { \"id\": \"cba73afc-7f69-4d86-8450-4978e04ecd1a\", \"type\": \"Scope\" } ] }, { \"resourceAppId\": \"00000003-0000-0000-c000-000000000000\", \"resourceAccess\": [ { \"id\": \"7b2449af-6ccd-4f4d-9f78-e550c193f0d1\", \"type\": \"Role\" } ] } ]"
         },
         {
+            "name": "ownerformat",
+            "type": "radio",
+            "label": "The Method to Add Owners",
+            "required": true,
+            "defaultValue": "ObjectId",
+            "helpMarkDown": "Please specify the prefered method to add owners to the application",
+            "options": {
+              "ObjectId": "ObjectId",
+              "Email": "Email"
+            }
+        },
+        {
             "name": "owners",
             "type": "multiLine",
             "label": "Owners",
             "defaultValue": "",
             "required": false,
             "groupName": "AzureDetails",
-            "helpMarkDown": "Add a list of owners (list of ObjectIds of AD Users) to an existing application. The connection service principal will always be added to the list of owners."
+            "helpMarkDown": "Add a list of owners (list of ObjectIds or Emails of AD Users) to an existing application. The connection service principal will always be added to the list of owners."
         }
     ],
     "outputVariables": [{

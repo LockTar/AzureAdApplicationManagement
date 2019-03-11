@@ -14,6 +14,7 @@ $replyUrlsMethod = Get-VstsInput -Name replyUrlsMethod -Require
 $replyUrlsSingleLine = Get-VstsInput -Name replyUrlsSingleLine
 $replyUrlsMultiLine = Get-VstsInput -Name replyUrlsMultiLine
 $resourceAccessFilePath = Get-VstsInput -Name resourceAccessFilePath
+$ownerFormat = Get-VstsInput -Name ownerformat
 $owners = Get-VstsInput -Name owners
 
 # Create pretty array for optional replyurls array
@@ -37,7 +38,7 @@ switch ($replyUrlsMethod)
 # Create pretty array for optional owners array
 $ownersArray = @()
 if ($owners -ne "") {
-    $ownersArray = $owners.Split("`n")
+    $ownersArray = $owners.Split(";")
 }
 
 # Initialize Azure Connection
@@ -62,6 +63,7 @@ Write-Verbose "multiTenant: $multiTenant"
 Write-Verbose "replyUrls: $replyUrls"
 Write-Verbose "replyUrlsArray: $replyUrlsArray"
 Write-Verbose "resourceAccessFilePath: $resourceAccessFilePath"
+Write-Verbose "owner Format: $ownerFormat"
 Write-Verbose "owners: $owners"
 Write-Verbose "ownersArray: $ownersArray"
 
@@ -106,4 +108,5 @@ Set-AadApplication `
     -MultiTenant $multiTenant `
     -ReplyUrls $replyUrlsArray `
     -ResourceAccessFilePath $resourceAccessFilePath `
+    -OwnerFormat $ownerFormat `
     -Owners $ownersArray

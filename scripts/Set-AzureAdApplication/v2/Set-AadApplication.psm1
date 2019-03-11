@@ -24,6 +24,7 @@ function Set-AadApplication {
         [bool]$MultiTenant,
         [string[]]$ReplyUrls,
         [string]$ResourceAccessFilePath,
+        [string]$OwnerFormat,
         [string[]]$Owners
     )
 
@@ -111,13 +112,18 @@ function Set-AadApplication {
 
         # Add missing owners
         foreach ($owner in $Owners) {
-            if ($($currentOwners.ObjectId).Contains($owner) -eq $false) {
-                Write-Verbose "Add applicationowner $owner"
-                Add-AzureADApplicationOwner -ObjectId $application.ObjectId -RefObjectId $owner
+            if($OwnerFormat -eq "ObjectId")
+            {
+                if ($($currentOwners.ObjectId).Contains($owner) -eq $false) {
+                    Write-Verbose "Add applicationowner $owner"
+                    Add-AzureADApplicationOwner -ObjectId $application.ObjectId -RefObjectId $owner
+                }
+                else {
+                    Write-Verbose "Don't add $owner as owner because is already owner"
+                }
+
             }
-            else {
-                Write-Verbose "Don't add $owner as owner because is already owner"
-            }
+            
         }
 
         # Remove owners that should not be owner anymore
