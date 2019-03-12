@@ -14,8 +14,9 @@ $replyUrlsMethod = Get-VstsInput -Name replyUrlsMethod -Require
 $replyUrlsSingleLine = Get-VstsInput -Name replyUrlsSingleLine
 $replyUrlsMultiLine = Get-VstsInput -Name replyUrlsMultiLine
 $resourceAccessFilePath = Get-VstsInput -Name resourceAccessFilePath
-$ownerFormat = Get-VstsInput -Name ownerformat
-$owners = Get-VstsInput -Name owners
+$ownersMethod = Get-VstsInput -Name ownersMethod -Require
+$ownersSingleLine = Get-VstsInput -Name ownersSingleLine
+$ownersMultiLine = Get-VstsInput -Name ownersMultiLine
 
 # Create pretty array for optional replyurls array
 $replyUrlsArray = @()
@@ -37,8 +38,20 @@ switch ($replyUrlsMethod)
 
 # Create pretty array for optional owners array
 $ownersArray = @()
-if ($owners -ne "") {
-    $ownersArray = $owners.Split(";")
+switch ($ownersMethod)
+{
+    "Singleline"
+    {
+        if ($ownersSingleLine -ne "") {
+            $ownersArray = $ownersSingleLine.Split(";")
+        }
+    }
+    "Multiline"
+    {
+        if ($ownersMultiLine -ne "") {
+            $ownersArray = $ownersMultiLine.Split("`n")
+        }
+    }
 }
 
 # Initialize Azure Connection
@@ -60,11 +73,8 @@ Write-Verbose "logoutUrl: $logoutUrl"
 Write-Verbose "termsOfServiceUrl: $termsOfServiceUrl"
 Write-Verbose "privacyStatementUrl: $privacyStatementUrl"
 Write-Verbose "multiTenant: $multiTenant"
-Write-Verbose "replyUrls: $replyUrls"
 Write-Verbose "replyUrlsArray: $replyUrlsArray"
 Write-Verbose "resourceAccessFilePath: $resourceAccessFilePath"
-Write-Verbose "owner Format: $ownerFormat"
-Write-Verbose "owners: $owners"
 Write-Verbose "ownersArray: $ownersArray"
 
 Write-Verbose "Add service principal of the azurerm connection to the array of owners"
@@ -108,5 +118,4 @@ Set-AadApplication `
     -MultiTenant $multiTenant `
     -ReplyUrls $replyUrlsArray `
     -ResourceAccessFilePath $resourceAccessFilePath `
-    -OwnerFormat $ownerFormat `
     -Owners $ownersArray

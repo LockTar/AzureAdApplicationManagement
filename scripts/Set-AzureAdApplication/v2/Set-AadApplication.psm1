@@ -24,7 +24,6 @@ function Set-AadApplication {
         [bool]$MultiTenant,
         [string[]]$ReplyUrls,
         [string]$ResourceAccessFilePath,
-        [string]$OwnerFormat,
         [string[]]$Owners
     )
 
@@ -110,21 +109,25 @@ function Set-AadApplication {
         $currentOwners = Get-AzureADApplicationOwner -ObjectId $application.ObjectId -All $True
         $currentOwners | Select-Object ObjectId, DisplayName, UserPrincipalName | Format-Table
         
-        # Retrieve owner ObjectId based on Email
-        $ownerObjectIds = @()
-        if($OwnerFormat -eq "Email")
+        # Retrieve owner ObjectId based on UserPrincipalName
+        $ownerObjectIds = @()        
+        foreach($owner in $Owners)
+        {
+            Write-Verbose "Check if owner is an Object Id or UserPrincipalName"
+            $result = New-Guid
+            if([Guid]::TryParse($owner, [ref] $result))
             {
-                Write-Verbose "Get the owner Object Id based on email"
-                foreach($owner in $Owners)
-                {
-                    $user = Get-AzureADUser -Filter "UserPrincipalName eq '$owner'"
-                    $ownerObjectIds += $user.ObjectId
-                }
-                
+                Write-Verbose "Owner is an Object Id so add it to the list as desired owners"
+                $ownerObjectIds += $owner
             }
-            else {
-                $ownerObjectIds = $Owners
+            else 
+            {
+                Write-Verbose "Owner is an UserPrincipalName so search for the user and add the ObjectId of the user to the list as desired owners"
+                $user = Get-AzureADUser -Filter "UserPrincipalName eq '$owner'"
+                $ownerObjectIds += $user.ObjectId
             }
+        }
+      
         # Add missing owners
         foreach ($owner in $ownerObjectIds) {
             if ($($currentOwners.ObjectId).Contains($owner) -eq $false) {
