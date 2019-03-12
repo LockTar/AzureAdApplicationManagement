@@ -108,9 +108,28 @@ function Set-AadApplication {
         Write-Verbose "Set owners of the application. Current owners are:"
         $currentOwners = Get-AzureADApplicationOwner -ObjectId $application.ObjectId -All $True
         $currentOwners | Select-Object ObjectId, DisplayName, UserPrincipalName | Format-Table
-
+        
+        # Retrieve owner ObjectId based on UserPrincipalName
+        $ownerObjectIds = @()        
+        foreach($owner in $Owners)
+        {
+            Write-Verbose "Check if owner is an Object Id or UserPrincipalName"
+            $result = New-Guid
+            if([Guid]::TryParse($owner, [ref] $result))
+            {
+                Write-Verbose "Owner is an Object Id so add it to the list as desired owners"
+                $ownerObjectIds += $owner
+            }
+            else 
+            {
+                Write-Verbose "Owner is an UserPrincipalName so search for the user and add the ObjectId of the user to the list as desired owners"
+                $user = Get-AzureADUser -Filter "UserPrincipalName eq '$owner'"
+                $ownerObjectIds += $user.ObjectId
+            }
+        }
+      
         # Add missing owners
-        foreach ($owner in $Owners) {
+        foreach ($owner in $ownerObjectIds) {
             if ($($currentOwners.ObjectId).Contains($owner) -eq $false) {
                 Write-Verbose "Add applicationowner $owner"
                 Add-AzureADApplicationOwner -ObjectId $application.ObjectId -RefObjectId $owner
@@ -122,7 +141,7 @@ function Set-AadApplication {
 
         # Remove owners that should not be owner anymore
         foreach ($currentOwner in $currentOwners.ObjectId) {
-            if ($Owners.Contains($currentOwner) -eq $false) {
+            if ($ownerObjectIds.Contains($currentOwner) -eq $false) {
                 Write-Verbose "Remove applicationowner $currentOwner"
                 Remove-AzureADApplicationOwner -ObjectId $application.ObjectId -OwnerId $currentOwner
             }
