@@ -109,26 +109,36 @@ function Set-AadApplication {
         Write-Verbose "Set owners of the application. Current owners are:"
         $currentOwners = Get-AzureADApplicationOwner -ObjectId $application.ObjectId -All $True
         $currentOwners | Select-Object ObjectId, DisplayName, UserPrincipalName | Format-Table
-
-        # Add missing owners
-        foreach ($owner in $Owners) {
-            if($OwnerFormat -eq "ObjectId")
+        
+        # Retrieve owner ObjectId based on Email
+        $ownerObjectIds = @()
+        if($OwnerFormat -eq "Email")
             {
-                if ($($currentOwners.ObjectId).Contains($owner) -eq $false) {
-                    Write-Verbose "Add applicationowner $owner"
-                    Add-AzureADApplicationOwner -ObjectId $application.ObjectId -RefObjectId $owner
+                Write-Verbose "Get the owner Object Id based on email"
+                foreach($owner in $Owners)
+                {
+                    $user = Get-AzureADUser -Filter "UserPrincipalName eq '$owner'"
+                    $ownerObjectIds += $user.ObjectId
                 }
-                else {
-                    Write-Verbose "Don't add $owner as owner because is already owner"
-                }
-
+                
             }
-            
+            else {
+                $ownerObjectIds = $Owners
+            }
+        # Add missing owners
+        foreach ($owner in $ownerObjectIds) {
+            if ($($currentOwners.ObjectId).Contains($owner) -eq $false) {
+                Write-Verbose "Add applicationowner $owner"
+                Add-AzureADApplicationOwner -ObjectId $application.ObjectId -RefObjectId $owner
+            }
+            else {
+                Write-Verbose "Don't add $owner as owner because is already owner"
+            }
         }
 
         # Remove owners that should not be owner anymore
         foreach ($currentOwner in $currentOwners.ObjectId) {
-            if ($Owners.Contains($currentOwner) -eq $false) {
+            if ($ownerObjectIds.Contains($currentOwner) -eq $false) {
                 Write-Verbose "Remove applicationowner $currentOwner"
                 Remove-AzureADApplicationOwner -ObjectId $application.ObjectId -OwnerId $currentOwner
             }
