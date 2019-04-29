@@ -24,7 +24,8 @@ function Set-AadApplication {
         [bool]$MultiTenant,
         [string[]]$ReplyUrls,
         [string]$ResourceAccessFilePath,
-        [string[]]$Owners
+        [string[]]$Owners,
+        [string[]]$Secrets
     )
 
     $ErrorActionPreference = "Stop"
@@ -52,7 +53,7 @@ function Set-AadApplication {
         if ((Test-Path $ResourceAccessFilePath) -and ($ResourceAccessFilePath -Like "*.json")) {
             Write-Verbose "Get the resources and permissions for app registration and convert into json object"
             $resourceAccessInJson = Get-Content $ResourceAccessFilePath -Raw | ConvertFrom-Json
-            
+
             Write-Verbose "Loop through all resources and permissions"
             foreach ($resourceInJson in $resourceAccessInJson) {
                 Write-Verbose "Create new 'Microsoft.Open.AzureAD.Model.RequiredResourceAccess' object and set '$($resourceInJson.resourceAppId)' as the ResourceAppId"
@@ -60,7 +61,7 @@ function Set-AadApplication {
                 $resource.ResourceAppId = $resourceInJson.resourceAppId
 
                 Write-Verbose "Create new 'System.Collections.Generic.List[Microsoft.Open.AzureAD.Model.ResourceAccess]' object for ResourceAccess"
-                $resource.ResourceAccess = New-Object System.Collections.Generic.List[Microsoft.Open.AzureAD.Model.ResourceAccess]            
+                $resource.ResourceAccess = New-Object System.Collections.Generic.List[Microsoft.Open.AzureAD.Model.ResourceAccess]
                 foreach ($resourceAccessInJson in $resourceInJson.resourceAccess) {
                     Write-Verbose "Create new 'Microsoft.Open.AzureAD.Model.ResourceAccess' object and set '$($resourceAccessInJson.id),$($resourceAccessInJson.type)'. Add this ResourceAccess to the list"
                     $resourceAccess = New-Object -TypeName "Microsoft.Open.AzureAD.Model.ResourceAccess" -ArgumentList $resourceAccessInJson.id,$resourceAccessInJson.type
@@ -108,9 +109,9 @@ function Set-AadApplication {
         Write-Verbose "Set owners of the application. Current owners are:"
         $currentOwners = Get-AzureADApplicationOwner -ObjectId $application.ObjectId -All $True
         $currentOwners | Select-Object ObjectId, DisplayName, UserPrincipalName | Format-Table
-        
+
         # Retrieve owner ObjectId based on UserPrincipalName
-        $ownerObjectIds = @()        
+        $ownerObjectIds = @()
         foreach($owner in $Owners)
         {
             Write-Verbose "Check if owner is an Object Id or UserPrincipalName"
@@ -120,14 +121,14 @@ function Set-AadApplication {
                 Write-Verbose "Owner is an Object Id so add it to the list as desired owners"
                 $ownerObjectIds += $owner
             }
-            else 
+            else
             {
                 Write-Verbose "Owner is an UserPrincipalName so search for the user and add the ObjectId of the user to the list as desired owners"
                 $user = Get-AzureADUser -Filter "UserPrincipalName eq '$owner'"
                 $ownerObjectIds += $user.ObjectId
             }
         }
-      
+
         # Add missing owners
         foreach ($owner in $ownerObjectIds) {
             if ($($currentOwners.ObjectId).Contains($owner) -eq $false) {
@@ -148,6 +149,32 @@ function Set-AadApplication {
             else {
                 Write-Verbose "Don't remove owner $currentOwner because must stay owner"
             }
+        }
+
+        # Check for existing secrets and remove them so they can be re-created
+        Write-Verbose "Checking for existing secrets"
+        $appKeySecrets = Get-AzureADApplicationPasswordCredential -ObjectId $application.ObjectId
+
+        if($appKeySecrets)  {
+            foreach($existingSecret in $appKeySecrets) {
+                foreach($secret in $Secrets) {
+                    $jsonSecret = $Secret | ConvertFrom-Json
+                    if([System.Text.Encoding]::ASCII.GetString($existingSecret.CustomKeyIdentifier) -eq $jsonSecret.Description) {
+                        Write-Verbose "Removing existing key with description: $jsonSecret.Description"
+                        Remove-AzureADApplicationPasswordCredential  -ObjectId $application.ObjectId -KeyId $existingSecret.KeyId
+                    }
+                }
+            }
+        }
+
+        # Create new secrets
+        foreach($secret in $Secrets) {
+            $jsonSecret = $Secret | ConvertFrom-Json
+            $endDate = [datetime]::ParseExact($jsonSecret.EndDate,'dd/MM/yyyy',[Globalization.CultureInfo]::InvariantCulture)
+            Write-Verbose "Creating new key with description: $jsonSecret.Description and end date $jsonSecret.EndDate"
+            $appKeySecret = New-AzureADApplicationPasswordCredential -ObjectId $application.ObjectId -CustomKeyIdentifier $jsonSecret.Description -EndDate $endDate
+
+            Write-Host "##vso[task.setvariable variable=Secret.$jsonSecret.Description;]$($appKeySecret.Value)"
         }
 
         Write-Information "Owners of the application are now:"
