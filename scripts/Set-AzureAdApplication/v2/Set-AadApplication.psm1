@@ -25,7 +25,7 @@ function Set-AadApplication {
         [string[]]$ReplyUrls,
         [string]$ResourceAccessFilePath,
         [string[]]$Owners,
-        [string[]]$Secrets
+        [Microsoft.PowerShell.Commands.JsonObject]$Secrets
     )
 
     $ErrorActionPreference = "Stop"
