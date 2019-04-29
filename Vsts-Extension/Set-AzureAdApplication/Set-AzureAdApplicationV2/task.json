@@ -197,6 +197,15 @@
             "groupName": "AzureDetails",
             "helpMarkDown": "Add a list of owners (list of ObjectIds or Service Principal Names (username) of AD Users) to an existing application. The connection service principal will always be added to the list of owners. Put every owner on a new line.",
             "visibleRule": "ownersMethod = Multiline"
+        },
+        {
+            "name": "secrets",
+            "type": "string",
+            "label": "Secrets",
+            "defaultValue": "",
+            "required": false,
+            "groupName": "AzureDetails",
+            "helpMarkDown": "Add a json array of secrets to be created (existing secrets with matching descriptions will be replaced) using the following format: [{ 'Description': 'MyDescription', 'EndDate': 'dd/MM/yyyy' }]"            
         }
     ],
     "outputVariables": [{
