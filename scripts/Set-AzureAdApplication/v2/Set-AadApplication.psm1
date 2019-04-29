@@ -172,7 +172,8 @@ function Set-AadApplication {
             Write-Verbose "Creating new key with description: $secret.Description and end date $secret.EndDate"
             $appKeySecret = New-AzureADApplicationPasswordCredential -ObjectId $application.ObjectId -CustomKeyIdentifier $secret.Description -EndDate $endDate
 
-            Write-Host "##vso[task.setvariable variable=Secret.$secret.Description;]$($appKeySecret.Value)"
+            $stringDescription = $secret.Description | Out-String
+            Write-Host "##vso[task.setvariable variable=Secret.$stringDescription;]$($appKeySecret.Value)"
         }
 
         Write-Information "Owners of the application are now:"
