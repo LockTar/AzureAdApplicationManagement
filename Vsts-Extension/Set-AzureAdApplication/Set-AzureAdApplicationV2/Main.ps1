@@ -55,8 +55,11 @@ switch ($ownersMethod)
     }
 }
 
-# Create JSON array for secrets
-$secretsArray = $secrets | ConvertFrom-Json
+$secretsArray
+if($secrets) {
+    # Create JSON array for secrets
+    $secretsArray = $secrets | ConvertFrom-Json
+}
 
 # Initialize Azure Connection
 Import-Module $PSScriptRoot\ps_modules\VstsAzureHelpers\VstsAzureHelpers.psm1
