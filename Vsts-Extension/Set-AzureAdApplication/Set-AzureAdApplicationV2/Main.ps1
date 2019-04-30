@@ -17,6 +17,7 @@ $resourceAccessFilePath = Get-VstsInput -Name resourceAccessFilePath
 $ownersMethod = Get-VstsInput -Name ownersMethod -Require
 $ownersSingleLine = Get-VstsInput -Name ownersSingleLine
 $ownersMultiLine = Get-VstsInput -Name ownersMultiLine
+$secrets = Get-VstsInput -Name secrets
 
 # Create pretty array for optional replyurls array
 $replyUrlsArray = @()
@@ -54,6 +55,12 @@ switch ($ownersMethod)
     }
 }
 
+$secretsArray
+if($secrets) {
+    # Create JSON array for secrets
+    $secretsArray = $secrets | ConvertFrom-Json
+}
+
 # Initialize Azure Connection
 Import-Module $PSScriptRoot\ps_modules\VstsAzureHelpers\VstsAzureHelpers.psm1
 Initialize-PackageProvider
@@ -76,6 +83,7 @@ Write-Verbose "multiTenant: $multiTenant"
 Write-Verbose "replyUrlsArray: $replyUrlsArray"
 Write-Verbose "resourceAccessFilePath: $resourceAccessFilePath"
 Write-Verbose "ownersArray: $ownersArray"
+Write-Verbose "secretsArray: $secretsArray"
 
 Write-Verbose "Add service principal of the azurerm connection to the array of owners"
 $serviceName = Get-VstsInput -Name ConnectedServiceNameARM -Require
@@ -118,4 +126,5 @@ Set-AadApplication `
     -MultiTenant $multiTenant `
     -ReplyUrls $replyUrlsArray `
     -ResourceAccessFilePath $resourceAccessFilePath `
-    -Owners $ownersArray
+    -Owners $ownersArray `
+    -Secrets $secretsArray
