@@ -234,7 +234,7 @@
         },
         {
             "name": "Secret.MyDescription",
-            "description": "The secret generated for the Azure AD Application. If multiple secrets are requested, an output variable for each secret will be available (convention .Secret.[Description] where [Description] is equal to the Description provided in the 'Secrets' input field)"
+            "description": "The secret generated for the Azure AD Application. If multiple secrets are requested, an output variable for each secret will be available (convention: .Secret.[Description] where [Description] is equal to the Description provided in the 'Secrets' input field)"
         }
     ],
     "execution": {

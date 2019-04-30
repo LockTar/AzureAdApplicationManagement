@@ -159,7 +159,11 @@ function Set-AadApplication {
             foreach($existingSecret in $appKeySecrets) {
                 foreach($secret in $Secrets) {
                     if([System.Text.Encoding]::ASCII.GetString($existingSecret.CustomKeyIdentifier) -eq $secret.Description) {
-                        Write-Verbose "Removing existing key with description: $secret.Description"
+
+                        $stringDescription = $secret.Description | Out-String
+                        $trimmedStringDescription = $stringDescription -replace [Environment]::NewLine,"";
+
+                        Write-Verbose "Removing existing key with description: $trimmedStringDescription"
                         Remove-AzureADApplicationPasswordCredential  -ObjectId $application.ObjectId -KeyId $existingSecret.KeyId
                     }
                 }
@@ -169,11 +173,14 @@ function Set-AadApplication {
         # Create new secrets
         foreach($secret in $Secrets) {
             $endDate = [datetime]::ParseExact($secret.EndDate,'dd/MM/yyyy',[Globalization.CultureInfo]::InvariantCulture)
-            Write-Verbose "Creating new key with description: $secret.Description and end date $secret.EndDate"
-            $appKeySecret = New-AzureADApplicationPasswordCredential -ObjectId $application.ObjectId -CustomKeyIdentifier $secret.Description -EndDate $endDate
-
+            
             $stringDescription = $secret.Description | Out-String
-            Write-Host "##vso[task.setvariable variable=Secret.$stringDescription;]$($appKeySecret.Value)"
+            $trimmedStringDescription = $stringDescription -replace [Environment]::NewLine,"";
+            
+            Write-Verbose "Creating new key with description: $trimmedStringDescription and end date $endDate"
+            $appKeySecret = New-AzureADApplicationPasswordCredential -ObjectId $application.ObjectId -CustomKeyIdentifier $secret.Description -EndDate $endDate
+            
+            Write-Host "##vso[task.setvariable variable=Secret.$trimmedStringDescription;isOutput=true]$($appKeySecret.Value)"
         }
 
         Write-Information "Owners of the application are now:"
