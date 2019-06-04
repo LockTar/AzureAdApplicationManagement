@@ -20,9 +20,9 @@ In order to use these tasks, a **prerequisite must be done** otherwise you will 
 1. Create an Azure Resource Manager endpoint in your VSTS team project manually or let VSTS create one for you.
 2. Go to the [Azure portal](https://portal.azure.com)
 3. In the Azure portal, navigate to **App Registrations**
-4. Select the created app registration. If you can't find it, you probably don't have the right permissions. You can still find the app registration by changing the filter dropdown box to **All apps**.
+4. Select the created app registration. If you can't find it, you probably don't have the right permissions. You can still find the app registration by changing the tab to **All applications**.
 5. Check the **Owners** of the selected app registration (application). If your not an owner, find an **owner** or a **Global Administrator** (you will need a Global Admin in the next steps).
-6. Set the **Required Permissions** at least with the following Resource Access **Windows Azure Active Directory (Microsoft.Azure.ActiveDirectory)** with the **application** permission **Manage apps that this app creates or owns**. When you save this, this will result in the following array in the **manifest**:
+6. Set the **API Permissions** at least with the following permissions **Azure Active Directory Graph** with the **application** permissions **Manage apps that this app creates or owns (Application.ReadWrite.OwnedBy)** and **Read directory data (Directory.Read.All)**. When you save this, this will result in the following array in the **manifest**:
 
     ```json
     "requiredResourceAccess": [
@@ -42,7 +42,7 @@ In order to use these tasks, a **prerequisite must be done** otherwise you will 
     ]
     ```
 
-7. **Very important** Request an Azure Global Administrator to hit the button **Grant permissions** in the **Required Permissions** view. This only has to be done once.
+7. **Very important** Request an Azure Global Administrator to hit the button **Grant admin consent for {your company}** in the **API permissions** view. This only has to be done once.
 8. Use any task of this extension.
 
 ## FAQ
