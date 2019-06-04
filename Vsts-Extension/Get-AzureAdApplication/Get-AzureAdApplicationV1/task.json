@@ -3,7 +3,8 @@
     "name": "Get-Azure-AD-Application",
     "friendlyName": "Get Azure AD Application",
     "description": "Get an Azure AD Application based on ObjectId, ApplicationId or Name",
-    "helpMarkDown": "Task version: #{Extension.Version}#",
+    "helpMarkDown": "Task version: #{Extension.Version}#. This version is deprecated and will be removed.",
+    "deprecated": true,
     "category": "Deploy",
     "visibility": [
         "Release",

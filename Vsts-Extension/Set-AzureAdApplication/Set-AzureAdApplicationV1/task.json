@@ -3,7 +3,8 @@
     "name": "Set-Azure-AD-Application",
     "friendlyName": "Set Azure AD Application",
     "description": "Set all the properties of an Azure AD Application",
-    "helpMarkDown": "Task version: #{Extension.Version}#",
+    "helpMarkDown": "Task version: #{Extension.Version}#. This version is deprecated and will be removed.",
+    "deprecated": true,
     "category": "Deploy",
     "visibility": [
         "Release",
