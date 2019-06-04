@@ -32,11 +32,16 @@ In order to use these tasks, a **prerequisite must be done** otherwise you will 
           {
             "id": "824c81eb-e3f8-4ee6-8f6d-de7f50d565b7",
             "type": "Role"
+          },
+          {
+            "id": "5778995a-e1bf-45b8-affa-663a9f3f4d04",
+            "type": "Role"
           }
         ]
       }
     ]
     ```
+
 7. **Very important** Request an Azure Global Administrator to hit the button **Grant permissions** in the **Required Permissions** view. This only has to be done once.
 8. Use any task of this extension.
 
