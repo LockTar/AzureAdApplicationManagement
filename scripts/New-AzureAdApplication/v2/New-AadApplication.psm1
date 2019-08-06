@@ -27,7 +27,7 @@ function New-AadApplication {
 
     Write-Verbose "Check if IdentifierUri is given"
     if ($null -eq $IdentifierUri -or $IdentifierUri -eq "") {
-        Write-Verbose "No IdentifierUri so generate one with format: http://{TenantId}/{ApplicationName}"
+        Write-Verbose "No IdentifierUri so generate one with format: https://{TenantId}/{ApplicationName}"
         Write-Verbose "Get context of account"
         $context = Get-AzureRmContext
         $context
