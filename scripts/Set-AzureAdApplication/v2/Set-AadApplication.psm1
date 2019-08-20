@@ -134,6 +134,7 @@ function Set-AadApplication {
             if ($($currentOwners.ObjectId).Contains($owner) -eq $false) {
                 Write-Verbose "Add applicationowner $owner"
                 Add-AzureADApplicationOwner -ObjectId $application.ObjectId -RefObjectId $owner
+                Add-AzureADServicePrincipalOwner -ObjectId $servicePrincipal.Id -RefObjectId $owner
             }
             else {
                 Write-Verbose "Don't add $owner as owner because is already owner"
@@ -145,6 +146,7 @@ function Set-AadApplication {
             if ($ownerObjectIds.Contains($currentOwner) -eq $false) {
                 Write-Verbose "Remove applicationowner $currentOwner"
                 Remove-AzureADApplicationOwner -ObjectId $application.ObjectId -OwnerId $currentOwner
+                Remove-AzureADServicePrincipalOwner -ObjectId $servicePrincipal.Id -OwnerId $currentOwner
             }
             else {
                 Write-Verbose "Don't remove owner $currentOwner because must stay owner"
