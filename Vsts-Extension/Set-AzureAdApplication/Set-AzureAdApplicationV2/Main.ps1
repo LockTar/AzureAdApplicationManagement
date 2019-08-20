@@ -67,7 +67,7 @@ Initialize-PackageProvider
 Initialize-Module -Name "AzureRM.Resources" -RequiredVersion "6.7.0"
 Initialize-AzureRM
 
-Initialize-Module -Name "AzureAD" -RequiredVersion "2.0.2.4"
+Initialize-Module -Name "AzureAD" -RequiredVersion "2.0.2.31"
 Initialize-AzureAD
 
 Write-Verbose "Input variables are: "
