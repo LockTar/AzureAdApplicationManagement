@@ -1,0 +1,3 @@
+variables:
+- name: ENVIRONMENT_SUFFIX
+  value: acc

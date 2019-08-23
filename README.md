@@ -8,7 +8,7 @@ This VSTS extension contains the following tasks:
 
 - Get Azure AD Application
 - New Azure AD Application
-- Set Azure AD Application
+- Set Azure AD Application (recommended)
 - Remove Azure AD Application
 
 In order to use these tasks, follow the **prerequisite** steps in the [Get Started](#get-started) section.
@@ -61,3 +61,8 @@ $objectIdOfApplicationThatNeedsToBeAdded = "98098897-86b9-4dc5-b447-c94138db3a61
 
 Add-AzureADApplicationOwner -ObjectId $objectIdOfApplicationToChange -RefObjectId (Get-AzureRmADApplication -ObjectId $objectIdOfApplicationThatNeedsToBeAdded | Get-AzureRmADServicePrincipal).Id
 ```
+
+### How can I use Azure Pipelines and YAML for these tasks
+
+Microsoft introduced YAML build pipelines a while ago. But there is now a **preview** for multi stage pipelines as well. See the Samples folder for a generic setup to use Azure Pipelines multi stage pipeline for build and release.
+Don't forget to enable the preview feature!

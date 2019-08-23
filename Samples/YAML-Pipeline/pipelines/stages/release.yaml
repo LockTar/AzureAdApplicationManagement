@@ -1,0 +1,31 @@
+stages:
+- stage: Deploy_${{parameters.environmentName}}
+  condition: ${{parameters.condition}} 
+  variables:
+    - template: ../variables/base.yaml
+    - template: ../variables/${{parameters.environmentName}}.yaml
+
+  jobs:
+  - deployment: Deploy_${{parameters.environmentName}}
+
+    pool:
+      vmImage: ${{parameters.pool}}
+
+    environment: 'YourApp-${{parameters.environmentName}}'
+    strategy:
+      runOnce:
+        deploy:
+          steps:
+
+          - task: RalphJansen.Azure-AD-Application-Management.Set-Azure-AD-Application.Set-Azure-AD-Application@2
+            displayName: 'Set Azure AD Application'
+            inputs:
+              azureSubscription: 'subscription name'
+              createIfNotExist: true
+              name: '$(APPLICATION_NAME)'
+              appIdUri: 'https://$(TENANTID)/$(APPLICATION_NAME)'
+              homePageUrl: 'https://YourHomePage.com'
+              replyUrlsMultiLine: 'https://YourReplyUrl.com'
+              resourceAccessFilePath: '$(Pipeline.Workspace)/drop/RequiredResourceAccess.json'
+              ownersMethod: Singleline
+              ownersSingleLine: '$(APPLICATION_OWNERS)'

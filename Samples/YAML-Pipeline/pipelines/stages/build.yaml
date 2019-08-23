@@ -1,0 +1,12 @@
+stages: 
+- stage: Build
+  jobs:
+
+  - job: Build
+    pool:
+      vmImage: windows-2019
+
+    steps:
+    
+    - publish: $(System.DefaultWorkingDirectory)
+      artifact: 'drop'

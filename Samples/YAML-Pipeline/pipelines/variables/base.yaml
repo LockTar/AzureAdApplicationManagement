@@ -1,0 +1,7 @@
+variables:
+- name: APPLICATION_NAME
+  value: 'sample-name-$(ENVIRONMENT_SUFFIX)'
+- name: TENANTID
+  value: 'Your tenant id'
+- name: APPLICATION_OWNERS
+  value: 'Email or User ObjectId'
