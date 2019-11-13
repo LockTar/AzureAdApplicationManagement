@@ -17,15 +17,42 @@ stages:
         deploy:
           steps:
 
-          - task: RalphJansen.Azure-AD-Application-Management.Set-Azure-AD-Application.Set-Azure-AD-Application@2
+          - task: Set-Azure-AD-Application@2
             displayName: 'Set Azure AD Application'
+            name: app
             inputs:
               azureSubscription: 'subscription name'
               createIfNotExist: true
               name: '$(APPLICATION_NAME)'
               appIdUri: 'https://$(TENANTID)/$(APPLICATION_NAME)'
               homePageUrl: 'https://YourHomePage.com'
+              logoutUrl: 'https://YourLogoutUrl.com'
+              termsOfServiceUrl: 'https://YourTermsUrl.com'
+              privacyStatementUrl: 'https://YourPrivacyStatementUrl.com'
+              multiTenant: false
+              replyUrlsMethod: 'Multiline'
               replyUrlsMultiLine: 'https://YourReplyUrl.com'
               resourceAccessFilePath: '$(Pipeline.Workspace)/drop/RequiredResourceAccess.json'
-              ownersMethod: Singleline
+              ownersMethod: 'Singleline'
               ownersSingleLine: '$(APPLICATION_OWNERS)'
+              secrets: '[{ ''Description'': ''testkey'', ''EndDate'': ''01/12/2019'' }]'
+
+          - task: PowerShell@2
+            displayName: 'Print output variables'
+            inputs:
+              targetType: 'inline'
+              script: |
+                Write-Host "ObjectId- $(app.ObjectId)"
+                Write-Host "ApplicationId- $(app.ApplicationId)"
+                Write-Host "Name- $(app.Name)"
+                Write-Host "AppIdUri- $(app.AppIdUri)"
+                Write-Host "HomePageUrl- $(app.HomePageUrl)" 
+                Write-Host "ServicePrincipalObjectId- $(app.ServicePrincipalObjectId)"
+                Write-Host "The Secret with the name 'testkey'- $(app.Secret.testkey)"
+
+          - task: Remove-Azure-AD-Application@2
+            displayName: 'Remove Azure AD Application'
+            inputs:
+              azureSubscription: 'subscription name'
+              method: 'ObjectId'
+              objectId: '$(app.ObjectId)'
