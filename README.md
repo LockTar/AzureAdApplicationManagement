@@ -1,6 +1,6 @@
 # Azure AD Application Management
 
-[![Build status](https://ralphjansen.visualstudio.com/AzureAdApplicationManagement/_apis/build/status/Vsts-Extension?branchName=master)](https://ralphjansen.visualstudio.com/AzureAdApplicationManagement/_build/latest?definitionId=12&branchName=master)
+[![Build status](https://ralphjansen.visualstudio.com/AzureAdApplicationManagement/_apis/build/status/Vsts-Extension?branchName=master)](https://ralphjansen.visualstudio.com/AzureAdApplicationManagement/_build/latest?definitionId=12&branchName=master) [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=LockTar_AzureAdApplicationManagement&metric=alert_status)](https://sonarcloud.io/dashboard?id=LockTar_AzureAdApplicationManagement)
 
 Azure AD Application Management with VSTS pipeline tasks. These VSTS tasks are created with and tested on **Hosted Visual Studio 2017** agents.
 
