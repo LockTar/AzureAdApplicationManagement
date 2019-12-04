@@ -109,6 +109,10 @@ function Set-AadApplication {
         Write-Verbose "Set owners of the application. Current owners are:"
         $currentOwners = Get-AzureADApplicationOwner -ObjectId $application.ObjectId -All $True
         $currentOwners | Select-Object ObjectId, DisplayName, UserPrincipalName | Format-Table
+        if ($null -eq $currentOwners) {
+            # Current owners can be null with existing application so create empty list
+            $currentOwners = @()
+        }
 
         # Retrieve owner ObjectId based on UserPrincipalName
         $ownerObjectIds = @()
