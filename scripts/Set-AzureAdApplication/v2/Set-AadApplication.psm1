@@ -109,10 +109,6 @@ function Set-AadApplication {
         Write-Verbose "Set owners of the application. Current owners are:"
         $currentOwners = Get-AzureADApplicationOwner -ObjectId $application.ObjectId -All $True
         $currentOwners | Select-Object ObjectId, DisplayName, UserPrincipalName | Format-Table
-        if ($null -eq $currentOwners) {
-            # Current owners can be null with existing application so create empty list
-            $currentOwners = @()
-        }
 
         # Retrieve owner ObjectId based on UserPrincipalName
         $ownerObjectIds = @()
@@ -135,7 +131,7 @@ function Set-AadApplication {
 
         # Add missing owners
         foreach ($owner in $ownerObjectIds) {
-            if ($($currentOwners.ObjectId).Contains($owner) -eq $false) {
+            if ($null -eq $currentOwners -or $($currentOwners.ObjectId).Contains($owner) -eq $false) {
                 Write-Verbose "Add applicationowner $owner"
                 Add-AzureADApplicationOwner -ObjectId $application.ObjectId -RefObjectId $owner
                 Add-AzureADServicePrincipalOwner -ObjectId $servicePrincipal.Id -RefObjectId $owner
@@ -145,15 +141,17 @@ function Set-AadApplication {
             }
         }
 
-        # Remove owners that should not be owner anymore
-        foreach ($currentOwner in $currentOwners.ObjectId) {
-            if ($ownerObjectIds.Contains($currentOwner) -eq $false) {
-                Write-Verbose "Remove applicationowner $currentOwner"
-                Remove-AzureADApplicationOwner -ObjectId $application.ObjectId -OwnerId $currentOwner
-                Remove-AzureADServicePrincipalOwner -ObjectId $servicePrincipal.Id -OwnerId $currentOwner
-            }
-            else {
-                Write-Verbose "Don't remove owner $currentOwner because must stay owner"
+        if ($null -ne $currentOwners) {
+            # Remove owners that should not be owner anymore
+            foreach ($currentOwner in $currentOwners.ObjectId) {
+                if ($ownerObjectIds.Contains($currentOwner) -eq $false) {
+                    Write-Verbose "Remove applicationowner $currentOwner"
+                    Remove-AzureADApplicationOwner -ObjectId $application.ObjectId -OwnerId $currentOwner
+                    Remove-AzureADServicePrincipalOwner -ObjectId $servicePrincipal.Id -OwnerId $currentOwner
+                }
+                else {
+                    Write-Verbose "Don't remove owner $currentOwner because must stay owner"
+                }
             }
         }
 
