@@ -206,6 +206,15 @@
             "required": false,
             "groupName": "AzureDetails",
             "helpMarkDown": "Add a json array of secrets to be created (existing secrets with matching descriptions will be replaced) using the following format: [{ 'Description': 'MyDescription', 'EndDate': 'dd/MM/yyyy' }]. Existing secrets with description not used here will be skipped."            
+        },
+        {
+            "name": "oauth2AllowImplicitFlow",
+            "type": "boolean",
+            "label": "Allow Implicit Flow",
+            "defaultValue": "false",
+            "required": true,
+            "groupName": "AzureDetails",
+            "helpMarkDown": "Specifies whether this web application can request OAuth2.0 implicit flow tokens. The default is false."
         }
     ],
     "outputVariables": [{

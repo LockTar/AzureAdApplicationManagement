@@ -18,6 +18,7 @@ $ownersMethod = Get-VstsInput -Name ownersMethod -Require
 $ownersSingleLine = Get-VstsInput -Name ownersSingleLine
 $ownersMultiLine = Get-VstsInput -Name ownersMultiLine
 $secrets = Get-VstsInput -Name secrets
+$oauth2AllowImplicitFlow = Get-VstsInput -Name oauth2AllowImplicitFlow -AsBool
 
 # Create pretty array for optional replyurls array
 $replyUrlsArray = @()
@@ -84,6 +85,7 @@ Write-Verbose "replyUrlsArray: $replyUrlsArray"
 Write-Verbose "resourceAccessFilePath: $resourceAccessFilePath"
 Write-Verbose "ownersArray: $ownersArray"
 Write-Verbose "secretsArray: $secretsArray"
+Write-Verbose "oauth2AllowImplicitFlow: $oauth2AllowImplicitFlow"
 
 Write-Verbose "Add service principal of the azurerm connection to the array of owners"
 $serviceName = Get-VstsInput -Name ConnectedServiceNameARM -Require
@@ -127,4 +129,5 @@ Set-AadApplication `
     -ReplyUrls $replyUrlsArray `
     -ResourceAccessFilePath $resourceAccessFilePath `
     -Owners $ownersArray `
-    -Secrets $secretsArray
+    -Secrets $secretsArray `
+    -Oauth2AllowImplicitFlow $oauth2AllowImplicitFlow

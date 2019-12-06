@@ -25,7 +25,8 @@ function Set-AadApplication {
         [string[]]$ReplyUrls,
         [string]$ResourceAccessFilePath,
         [string[]]$Owners,
-        [Object[]]$Secrets
+        [Object[]]$Secrets,
+        [bool]$Oauth2AllowImplicitFlow
     )
 
     $ErrorActionPreference = "Stop"
@@ -83,9 +84,9 @@ function Set-AadApplication {
             -AvailableToOtherTenants $MultiTenant `
             -ReplyUrls $ReplyUrls
 
-        Write-Verbose "Set required resource access to application: "
+        Write-Verbose "Set required resource access to application and Oauth2AllowImplicitFlow: "
         # Following can't be done by AzureRM (yet)
-        Set-AzureADApplication -ObjectId $application.ObjectId -RequiredResourceAccess $requiredResourceAccess
+        Set-AzureADApplication -ObjectId $application.ObjectId -Oauth2AllowImplicitFlow $Oauth2AllowImplicitFlow -RequiredResourceAccess $requiredResourceAccess
 
         Write-Verbose "Set service principal properties"
         $servicePrincipal = Get-AzureRmADServicePrincipal -ApplicationId $application.ApplicationId
