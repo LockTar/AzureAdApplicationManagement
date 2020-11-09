@@ -40,30 +40,28 @@ if ($targetAzurePs -eq $latestVersion) {
 
 . "$PSScriptRoot\Utility.ps1"
 
-$serviceName = Get-VstsInput -Name ConnectedServiceNameARM -Require
-$endpointObject = Get-VstsEndpoint -Name $serviceName -Require
-$endpoint = ConvertTo-Json $endpointObject
+$connectedServiceName = Get-VstsInput -Name ConnectedServiceNameARM -Require
+$endpoint = Get-VstsEndpoint -Name $connectedServiceName -Require
+Initialize-AzModule -Endpoint $endpoint
+
+
+
+# $serviceName = Get-VstsInput -Name ConnectedServiceNameARM -Require
+# $endpointObject = Get-VstsEndpoint -Name $serviceName -Require
+# $endpoint = ConvertTo-Json $endpointObject
 
 try 
 {
-    # # Generate the script contents.
-    # Write-Host (Get-VstsLocString -Key 'GeneratingScript')
-    # $contents = @()
-    # $contents += "`$ErrorActionPreference = '$__vsts_input_errorActionPreference'"
-    # if ($env:system_debug -eq "true") {
-    #     $contents += "`$VerbosePreference = 'continue'"
-    # }
+#     $CoreAzArgument = $null;
+#     if ($targetAzurePs) {
+#         $CoreAzArgument = "-endpoint '$endpoint' -targetAzurePs $targetAzurePs"
+#     } else {
+#         $CoreAzArgument = "-endpoint '$endpoint'"
+#     }
 
-    $CoreAzArgument = $null;
-    if ($targetAzurePs) {
-        $CoreAzArgument = "-endpoint '$endpoint' -targetAzurePs $targetAzurePs"
-    } else {
-        $CoreAzArgument = "-endpoint '$endpoint'"
-    }
-
-    Write-Host "CoreAzArgument: " $CoreAzArgument
-    #$contents += ". $PSScriptRoot\CoreAz.ps1 $CoreAzArgument"
-    . $PSScriptRoot\CoreAz.ps1 $CoreAzArgument
+#     Write-Host "CoreAzArgument: " $CoreAzArgument
+#     #$contents += ". $PSScriptRoot\CoreAz.ps1 $CoreAzArgument"
+#     . $PSScriptRoot\CoreAz.ps1 $CoreAzArgument
 
 
 
