@@ -33,6 +33,9 @@ function cleanGetAzureAdApplication() {
 function buildPsModulesGetAzureAdApplication() {
   console.log('Fill the ps modules');
   
+  gulp.src(paths.code.scripts + 'CustomAzureDevOpsAzureHelpers/**/*')
+    .pipe(gulp.dest(paths.extension.getAzureAdApplication.v3 + psModulesFolderName + "/CustomAzureDevOpsAzureHelpers"));
+
   gulp.src(paths.extension.psModules + 'TlsHelper_/**/*')
     .pipe(gulp.dest(paths.extension.getAzureAdApplication.v3 + psModulesFolderName + "/TlsHelper_"));
 
