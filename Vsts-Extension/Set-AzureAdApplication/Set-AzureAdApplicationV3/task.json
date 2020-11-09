@@ -205,7 +205,7 @@
             "defaultValue": "",
             "required": false,
             "groupName": "AzureDetails",
-            "helpMarkDown": "Add a json array of secrets to be created (existing secrets with matching descriptions will be replaced) using the following format: [{ 'Description': 'MyDescription', 'EndDate': 'dd/MM/yyyy' }]. Existing secrets with description not used here will be skipped."            
+            "helpMarkDown": "Add a json array of secrets to be created (existing secrets with matching descriptions will be replaced) using the following format: [{ 'Description': 'MyDescription', 'EndDate': 'dd/MM/yyyy', 'Action': 'Refresh/Create/Remove' }]. Existing secrets with description not used here will be skipped. Action acts on the secret. So refresh, create or remove secret."
         },
         {
             "name": "oauth2AllowImplicitFlow",

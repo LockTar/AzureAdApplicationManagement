@@ -7,75 +7,21 @@ $applicationId = Get-VstsInput -Name applicationId
 $name = Get-VstsInput -Name name
 $failIfNotFound = Get-VstsInput -Name failIfNotFound -AsBool
 
-# Initialize Azure Connection
-#Import-Module $PSScriptRoot\ps_modules\VstsAzureHelpers\VstsAzureHelpers.psm1
-#Initialize-PackageProvider
-#Initialize-Module -Name "Az" -RequiredVersion "5.0.0"
-#Initialize-AzureAz
-
 $requiredAzVersion = "5.0.0"
 
-# Initialize Azure.
+# Initialize Azure helpers
 Import-Module $PSScriptRoot\ps_modules\VstsAzureHelpers_
 Import-Module $PSScriptRoot\ps_modules\CustomAzureDevOpsAzureHelpers\CustomAzureDevOpsAzureHelpers.psm1
-Initialize-PackageProvider
-Initialize-Module -Name "Az" -RequiredVersion $requiredAzVersion
-
-$connectedServiceName = Get-VstsInput -Name ConnectedServiceNameARM -Require
-$endpoint = Get-VstsEndpoint -Name $connectedServiceName -Require
-Initialize-AzModule -Endpoint $endpoint -azVersion $requiredAzVersion
-
-
-
-
-
-# # Mock values like you would get from task.json like https://github.com/microsoft/azure-pipelines-tasks/blob/master/Tasks/AzurePowerShellV5/AzurePowerShell.ps1
-# $targetAzurePs = "OtherVersion" 
-# $customTargetAzurePs = "5.0.0" # This is the version of the Azure Az PowerShell module
-
-# # string constants
-# $otherVersion = "OtherVersion"
-# $latestVersion = "LatestVersion"
-
-# if ($targetAzurePs -eq $otherVersion) {
-#     if ($customTargetAzurePs -eq $null) {
-#         throw (Get-VstsLocString -Key InvalidAzurePsVersion $customTargetAzurePs)
-#     } else {
-#         $targetAzurePs = $customTargetAzurePs.Trim()
-#     }
-# }
-
-# $pattern = "^[0-9]+\.[0-9]+\.[0-9]+$"
-# $regex = New-Object -TypeName System.Text.RegularExpressions.Regex -ArgumentList $pattern
-
-# if ($targetAzurePs -eq $latestVersion) {
-#     $targetAzurePs = ""
-# } elseif (-not($regex.IsMatch($targetAzurePs))) {
-#     throw (Get-VstsLocString -Key InvalidAzurePsVersion -ArgumentList $targetAzurePs)
-# }
-
-#. "$PSScriptRoot\Utility.ps1"
-
-# $serviceName = Get-VstsInput -Name ConnectedServiceNameARM -Require
-# $endpointObject = Get-VstsEndpoint -Name $serviceName -Require
-# $endpoint = ConvertTo-Json $endpointObject
 
 try 
 {
-#     $CoreAzArgument = $null;
-#     if ($targetAzurePs) {
-#         $CoreAzArgument = "-endpoint '$endpoint' -targetAzurePs $targetAzurePs"
-#     } else {
-#         $CoreAzArgument = "-endpoint '$endpoint'"
-#     }
+    # Login
+    Initialize-PackageProvider
+    Initialize-Module -Name "Az" -RequiredVersion $requiredAzVersion
 
-#     Write-Host "CoreAzArgument: " $CoreAzArgument
-#     #$contents += ". $PSScriptRoot\CoreAz.ps1 $CoreAzArgument"
-#     . $PSScriptRoot\CoreAz.ps1 $CoreAzArgument
-
-
-
-
+    $connectedServiceName = Get-VstsInput -Name ConnectedServiceNameARM -Require
+    $endpoint = Get-VstsEndpoint -Name $connectedServiceName -Require
+    Initialize-AzModule -Endpoint $endpoint -azVersion $requiredAzVersion
 
     
     Write-Verbose "Input variables are: "
@@ -110,11 +56,6 @@ try
     }
 }
 finally {
-    if ($__vstsAzPSInlineScriptPath -and (Test-Path -LiteralPath $__vstsAzPSInlineScriptPath) ) {
-        Remove-Item -LiteralPath $__vstsAzPSInlineScriptPath -ErrorAction 'SilentlyContinue'
-    }
-
-    Import-Module $PSScriptRoot\ps_modules\VstsAzureHelpers_
     Remove-EndpointSecrets
     Disconnect-AzureAndClearContext -ErrorAction SilentlyContinue
 }

@@ -62,72 +62,89 @@ if($secrets) {
     $secretsArray = $secrets | ConvertFrom-Json
 }
 
-# Initialize Azure Connection
-Import-Module $PSScriptRoot\ps_modules\VstsAzureHelpers\VstsAzureHelpers.psm1
-Initialize-PackageProvider
-Initialize-Module -Name "AzureRM.Resources" -RequiredVersion "6.7.0"
-Initialize-AzureRM
+$requiredAzVersion = "5.0.0"
 
-Initialize-Module -Name "AzureAD" -RequiredVersion "2.0.2.31"
-Initialize-AzureAD
+# Initialize Azure helpers
+Import-Module $PSScriptRoot\ps_modules\VstsAzureHelpers_
+Import-Module $PSScriptRoot\ps_modules\CustomAzureDevOpsAzureHelpers\CustomAzureDevOpsAzureHelpers.psm1
 
-Write-Verbose "Input variables are: "
-Write-Verbose "createIfNotExist: $createIfNotExist"
-Write-Verbose "objectId: $objectId"
-Write-Verbose "name: $name"
-Write-Verbose "appIdUri: $appIdUri"
-Write-Verbose "homePageUrl: $homePageUrl"
-Write-Verbose "logoutUrl: $logoutUrl"
-Write-Verbose "termsOfServiceUrl: $termsOfServiceUrl"
-Write-Verbose "privacyStatementUrl: $privacyStatementUrl"
-Write-Verbose "multiTenant: $multiTenant"
-Write-Verbose "replyUrlsArray: $replyUrlsArray"
-Write-Verbose "resourceAccessFilePath: $resourceAccessFilePath"
-Write-Verbose "ownersArray: $ownersArray"
-Write-Verbose "secretsArray: $secretsArray"
-Write-Verbose "oauth2AllowImplicitFlow: $oauth2AllowImplicitFlow"
+try 
+{
+    # Login
+    Initialize-PackageProvider
+    Initialize-Module -Name "Az" -RequiredVersion $requiredAzVersion
 
-Write-Verbose "Add service principal of the azurerm connection to the array of owners"
-$serviceName = Get-VstsInput -Name ConnectedServiceNameARM -Require
-$endpoint = Get-VstsEndpoint -Name $serviceName -Require
-$clientId = $endpoint.Auth.Parameters.ServicePrincipalId
-$deployServicePrincipalId = (Get-AzureRmADServicePrincipal -ApplicationId $clientId).Id
-$ownersArray += $deployServicePrincipalId
+    $connectedServiceName = Get-VstsInput -Name ConnectedServiceNameARM -Require
+    $endpoint = Get-VstsEndpoint -Name $connectedServiceName -Require
+    Initialize-AzModule -Endpoint $endpoint -azVersion $requiredAzVersion
 
-Import-Module $PSScriptRoot\scripts\Get-AadApplication.psm1
-Import-Module $PSScriptRoot\scripts\New-AadApplication.psm1
-Import-Module $PSScriptRoot\scripts\Set-AadApplication.psm1
+    # Login into old AzureAD because Az still doesn't have all the functions
+    Initialize-Module -Name "AzureAD" -RequiredVersion "2.0.2.118"
+    Initialize-AzureAD
 
-if ($createIfNotExist) {
-    Write-Verbose "Check if the application '$name' exists"
-    $result = Get-AadApplication -ApplicationName $name -FailIfNotFound $false
 
-    if (!$result.Application) {
-        Write-Verbose "Application doesn't exist. Create the application '$name'"
-        New-AadApplication -ApplicationName $name -SignOnUrl $homePageUrl
+    Write-Verbose "Input variables are: "
+    Write-Verbose "createIfNotExist: $createIfNotExist"
+    Write-Verbose "objectId: $objectId"
+    Write-Verbose "name: $name"
+    Write-Verbose "appIdUri: $appIdUri"
+    Write-Verbose "homePageUrl: $homePageUrl"
+    Write-Verbose "logoutUrl: $logoutUrl"
+    Write-Verbose "termsOfServiceUrl: $termsOfServiceUrl"
+    Write-Verbose "privacyStatementUrl: $privacyStatementUrl"
+    Write-Verbose "multiTenant: $multiTenant"
+    Write-Verbose "replyUrlsArray: $replyUrlsArray"
+    Write-Verbose "resourceAccessFilePath: $resourceAccessFilePath"
+    Write-Verbose "ownersArray: $ownersArray"
+    Write-Verbose "secretsArray: $secretsArray"
+    Write-Verbose "oauth2AllowImplicitFlow: $oauth2AllowImplicitFlow"
 
-        $secondsToWait = 60
-        Write-Verbose "Application '$name' is created but wait $secondsToWait seconds so Azure AD can process it and we can set all the properties"
-        Start-Sleep -Seconds $secondsToWait
+    Write-Verbose "Add service principal of the azurerm connection to the array of owners"
+    $serviceName = Get-VstsInput -Name ConnectedServiceNameARM -Require
+    $endpoint = Get-VstsEndpoint -Name $serviceName -Require
+    $clientId = $endpoint.Auth.Parameters.ServicePrincipalId
+    $deployServicePrincipalId = (Get-AzureRmADServicePrincipal -ApplicationId $clientId).Id
+    $ownersArray += $deployServicePrincipalId
+
+    Import-Module $PSScriptRoot\scripts\Get-AadApplication.psm1
+    Import-Module $PSScriptRoot\scripts\New-AadApplication.psm1
+    Import-Module $PSScriptRoot\scripts\Set-AadApplication.psm1
+
+    if ($createIfNotExist) {
+        Write-Verbose "Check if the application '$name' exists"
+        $result = Get-AadApplication -ApplicationName $name -FailIfNotFound $false
+
+        if (!$result.Application) {
+            Write-Verbose "Application doesn't exist. Create the application '$name'"
+            New-AadApplication -ApplicationName $name -SignOnUrl $homePageUrl
+
+            $secondsToWait = 60
+            Write-Verbose "Application '$name' is created but wait $secondsToWait seconds so Azure AD can process it and we can set all the properties"
+            Start-Sleep -Seconds $secondsToWait
+        }
+
+        Write-Verbose "Get the application '$name' again so we have the ObjectId to alter the application"
+        $result = Get-AadApplication -ApplicationName $name -FailIfNotFound $false
+
+        $objectId = $result.Application.ObjectId
     }
 
-    Write-Verbose "Get the application '$name' again so we have the ObjectId to alter the application"
-    $result = Get-AadApplication -ApplicationName $name -FailIfNotFound $false
-
-    $objectId = $result.Application.ObjectId
+    Set-AadApplication `
+        -ObjectId $objectId `
+        -Name $name `
+        -AppIdUri $appIdUri `
+        -HomePageUrl $homePageUrl `
+        -LogoutUrl $logoutUrl `
+        -TermsOfServiceUrl $termsOfServiceUrl `
+        -PrivacyStatementUrl $privacyStatementUrl `
+        -MultiTenant $multiTenant `
+        -ReplyUrls $replyUrlsArray `
+        -ResourceAccessFilePath $resourceAccessFilePath `
+        -Owners $ownersArray `
+        -Secrets $secretsArray `
+        -Oauth2AllowImplicitFlow $oauth2AllowImplicitFlow
 }
-
-Set-AadApplication `
-    -ObjectId $objectId `
-    -Name $name `
-    -AppIdUri $appIdUri `
-    -HomePageUrl $homePageUrl `
-    -LogoutUrl $logoutUrl `
-    -TermsOfServiceUrl $termsOfServiceUrl `
-    -PrivacyStatementUrl $privacyStatementUrl `
-    -MultiTenant $multiTenant `
-    -ReplyUrls $replyUrlsArray `
-    -ResourceAccessFilePath $resourceAccessFilePath `
-    -Owners $ownersArray `
-    -Secrets $secretsArray `
-    -Oauth2AllowImplicitFlow $oauth2AllowImplicitFlow
+finally {
+    Remove-EndpointSecrets
+    Disconnect-AzureAndClearContext -ErrorAction SilentlyContinue
+}
