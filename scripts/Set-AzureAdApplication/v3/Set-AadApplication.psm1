@@ -169,8 +169,13 @@ function Set-AadApplication {
                         $trimmedStringDescription = $stringDescription -replace [Environment]::NewLine,"";
 
                         if([System.Text.Encoding]::ASCII.GetString($existingSecret.DisplayName) -eq $trimmedStringDescription) {
-                            Write-Verbose "Removing existing key with description: $trimmedStringDescription"
-                            Remove-AzADAppCredential -ObjectId $application.ObjectId -KeyId $existingSecret.KeyId
+                            if ($secret.Action -eq "Refresh" -or $secret.Action -eq "Remove") {   
+                                Write-Verbose "Removing existing secret with description: $trimmedStringDescription"
+                                Remove-AzADAppCredential -ObjectId $application.ObjectId -KeyId $existingSecret.KeyId
+                            }
+                            else {
+                                Write-Verbose "Skip removing secret with description $trimmedStringDescription because secret action is not 'Refresh' or 'Remove'"
+                            }
                         }
                     }
                 }
@@ -183,11 +188,16 @@ function Set-AadApplication {
                 $stringDescription = $secret.Description | Out-String
                 $trimmedStringDescription = $stringDescription -replace [Environment]::NewLine,"";
                 
-                Write-Verbose "Creating new key with description: $trimmedStringDescription and end date $endDate"
-                $SecureStringPassword = ConvertTo-SecureString -String "password" -AsPlainText -Force
-                New-AzADAppCredential -ObjectId $application.ObjectId -DisplayName $trimmedStringDescription -Password $SecureStringPassword -EndDate $endDate
-                
-                Write-Host "##vso[task.setvariable variable=Secret.$trimmedStringDescription;isOutput=true;issecret=true]$SecureStringPassword"
+                if ($secret.Action -eq "Refresh" -or $secret.Action -eq "Create") {
+                    Write-Verbose "Creating new key with description: $trimmedStringDescription and end date $endDate"
+                    $SecureStringPassword = ConvertTo-SecureString -String "password" -AsPlainText -Force
+                    New-AzADAppCredential -ObjectId $application.ObjectId -DisplayName $trimmedStringDescription -Password $SecureStringPassword -EndDate $endDate
+                    
+                    Write-Host "##vso[task.setvariable variable=Secret.$trimmedStringDescription;isOutput=true;issecret=true]$SecureStringPassword"
+                }
+                else {
+                    Write-Verbose "Skip creating secret with description $trimmedStringDescription because secret action is not 'Refresh' or 'Create'"
+                }
             }
         }
 
