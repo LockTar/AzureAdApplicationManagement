@@ -160,18 +160,17 @@ function Set-AadApplication {
         if($Secrets){ 
             # Check for existing secrets and remove them so they can be re-created
             Write-Verbose "Checking for existing secrets"
-            $appKeySecrets = Get-AzureADApplicationPasswordCredential -ObjectId $application.ObjectId
+            $appKeySecrets = Get-AzADAppCredential -ObjectId $application.ObjectId
 
             if($appKeySecrets)  {
                 foreach($existingSecret in $appKeySecrets) {
                     foreach($secret in $Secrets) {
-                        if([System.Text.Encoding]::ASCII.GetString($existingSecret.CustomKeyIdentifier) -eq $secret.Description) {
+                        $stringDescription = $secret.Description | Out-String
+                        $trimmedStringDescription = $stringDescription -replace [Environment]::NewLine,"";
 
-                            $stringDescription = $secret.Description | Out-String
-                            $trimmedStringDescription = $stringDescription -replace [Environment]::NewLine,"";
-
+                        if([System.Text.Encoding]::ASCII.GetString($existingSecret.DisplayName) -eq $trimmedStringDescription) {
                             Write-Verbose "Removing existing key with description: $trimmedStringDescription"
-                            Remove-AzureADApplicationPasswordCredential  -ObjectId $application.ObjectId -KeyId $existingSecret.KeyId
+                            Remove-AzADAppCredential -ObjectId $application.ObjectId -KeyId $existingSecret.KeyId
                         }
                     }
                 }
@@ -185,9 +184,10 @@ function Set-AadApplication {
                 $trimmedStringDescription = $stringDescription -replace [Environment]::NewLine,"";
                 
                 Write-Verbose "Creating new key with description: $trimmedStringDescription and end date $endDate"
-                $appKeySecret = New-AzureADApplicationPasswordCredential -ObjectId $application.ObjectId -CustomKeyIdentifier $secret.Description -EndDate $endDate
+                $SecureStringPassword = ConvertTo-SecureString -String "password" -AsPlainText -Force
+                New-AzADAppCredential -ObjectId $application.ObjectId -DisplayName $trimmedStringDescription -Password $SecureStringPassword -EndDate $endDate
                 
-                Write-Host "##vso[task.setvariable variable=Secret.$trimmedStringDescription;isOutput=true;issecret=true]$($appKeySecret.Value)"
+                Write-Host "##vso[task.setvariable variable=Secret.$trimmedStringDescription;isOutput=true;issecret=true]$SecureStringPassword"
             }
         }
 
