@@ -13,38 +13,46 @@ $failIfNotFound = Get-VstsInput -Name failIfNotFound -AsBool
 #Initialize-Module -Name "Az" -RequiredVersion "5.0.0"
 #Initialize-AzureAz
 
-# Mock values like you would get from task.json like https://github.com/microsoft/azure-pipelines-tasks/blob/master/Tasks/AzurePowerShellV5/AzurePowerShell.ps1
-$targetAzurePs = "OtherVersion" 
-$customTargetAzurePs = "5.0.0" # This is the version of the Azure Az PowerShell module
-
-# string constants
-$otherVersion = "OtherVersion"
-$latestVersion = "LatestVersion"
-
-if ($targetAzurePs -eq $otherVersion) {
-    if ($customTargetAzurePs -eq $null) {
-        throw (Get-VstsLocString -Key InvalidAzurePsVersion $customTargetAzurePs)
-    } else {
-        $targetAzurePs = $customTargetAzurePs.Trim()
-    }
-}
-
-$pattern = "^[0-9]+\.[0-9]+\.[0-9]+$"
-$regex = New-Object -TypeName System.Text.RegularExpressions.Regex -ArgumentList $pattern
-
-if ($targetAzurePs -eq $latestVersion) {
-    $targetAzurePs = ""
-} elseif (-not($regex.IsMatch($targetAzurePs))) {
-    throw (Get-VstsLocString -Key InvalidAzurePsVersion -ArgumentList $targetAzurePs)
-}
+$requiredAzVersion = "5.0.0"
 
 # Initialize Azure.
 Import-Module $PSScriptRoot\ps_modules\VstsAzureHelpers_
+Import-Module $PSScriptRoot\ps_modules\CustomAzureDevOpsAzureHelpers\CustomAzureDevOpsAzureHelpers.psm1
+Initialize-PackageProvider
+Initialize-Module -Name "Az" -RequiredVersion $requiredAzVersion
 
 $connectedServiceName = Get-VstsInput -Name ConnectedServiceNameARM -Require
 $endpoint = Get-VstsEndpoint -Name $connectedServiceName -Require
-Initialize-AzModule -Endpoint $endpoint
+Initialize-AzModule -Endpoint $endpoint -azVersion $requiredAzVersion
 
+
+
+
+
+# # Mock values like you would get from task.json like https://github.com/microsoft/azure-pipelines-tasks/blob/master/Tasks/AzurePowerShellV5/AzurePowerShell.ps1
+# $targetAzurePs = "OtherVersion" 
+# $customTargetAzurePs = "5.0.0" # This is the version of the Azure Az PowerShell module
+
+# # string constants
+# $otherVersion = "OtherVersion"
+# $latestVersion = "LatestVersion"
+
+# if ($targetAzurePs -eq $otherVersion) {
+#     if ($customTargetAzurePs -eq $null) {
+#         throw (Get-VstsLocString -Key InvalidAzurePsVersion $customTargetAzurePs)
+#     } else {
+#         $targetAzurePs = $customTargetAzurePs.Trim()
+#     }
+# }
+
+# $pattern = "^[0-9]+\.[0-9]+\.[0-9]+$"
+# $regex = New-Object -TypeName System.Text.RegularExpressions.Regex -ArgumentList $pattern
+
+# if ($targetAzurePs -eq $latestVersion) {
+#     $targetAzurePs = ""
+# } elseif (-not($regex.IsMatch($targetAzurePs))) {
+#     throw (Get-VstsLocString -Key InvalidAzurePsVersion -ArgumentList $targetAzurePs)
+# }
 
 #. "$PSScriptRoot\Utility.ps1"
 
