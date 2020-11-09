@@ -38,13 +38,15 @@ if ($targetAzurePs -eq $latestVersion) {
     throw (Get-VstsLocString -Key InvalidAzurePsVersion -ArgumentList $targetAzurePs)
 }
 
-. "$PSScriptRoot\Utility.ps1"
+# Initialize Azure.
+Import-Module $PSScriptRoot\ps_modules\VstsAzureHelpers_
 
 $connectedServiceName = Get-VstsInput -Name ConnectedServiceNameARM -Require
 $endpoint = Get-VstsEndpoint -Name $connectedServiceName -Require
 Initialize-AzModule -Endpoint $endpoint
 
 
+#. "$PSScriptRoot\Utility.ps1"
 
 # $serviceName = Get-VstsInput -Name ConnectedServiceNameARM -Require
 # $endpointObject = Get-VstsEndpoint -Name $serviceName -Require
