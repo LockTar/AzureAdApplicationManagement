@@ -32,18 +32,15 @@ function cleanGetAzureAdApplication() {
 
 function buildPsModulesGetAzureAdApplication() {
   console.log('Fill the ps modules');
+  
+  gulp.src(paths.extension.psModules + 'VstsAzureHelpers_/**/*')
+    .pipe(gulp.dest(paths.extension.getAzureAdApplication.v3 + psModulesFolderName + "/VstsAzureHelpers_"));
 
-  // gulp.src(paths.extension.psModules + 'TelemetryHelper/**/*')
-  //   .pipe(gulp.dest(paths.extension.getAzureAdApplication.v3 + psModulesFolderName + "/TelemetryHelper"));
-    
   gulp.src(paths.extension.psModules + 'VstsAzureRestHelpers_/**/*')
     .pipe(gulp.dest(paths.extension.getAzureAdApplication.v3 + psModulesFolderName + "/VstsAzureRestHelpers_"));
 
-  // gulp.src(paths.extension.psModules + 'VstsTaskSdk/**/*')
-  //   .pipe(gulp.dest(paths.extension.getAzureAdApplication.v3 + psModulesFolderName + "/VstsTaskSdk"));
-
-  return gulp.src(paths.extension.psModules + 'VstsAzureHelpers_/**/*')
-    .pipe(gulp.dest(paths.extension.getAzureAdApplication.v3 + psModulesFolderName + "/VstsAzureHelpers_"));
+  return gulp.src(paths.extension.psModules + 'VstsTaskSdk/**/*')
+    .pipe(gulp.dest(paths.extension.getAzureAdApplication.v3 + psModulesFolderName + "/VstsTaskSdk"));
 }
 
 function buildScriptFilesAzureADApplication() {
