@@ -11,11 +11,11 @@
     ],
     "author": "Ralph Jansen",
     "version": {
-        "Major": 2,
+        "Major": 3,
         "Minor": 0,
         "Patch": 0
     },
-    "preview": "false",
+    "preview": "true",
     "instanceNameFormat": "Remove Azure AD Application",
     "groups": [{
         "name": "AzureDetails",
