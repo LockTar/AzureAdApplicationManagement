@@ -42,7 +42,7 @@ function buildPsModulesGetAzureAdApplication() {
   // gulp.src(paths.extension.psModules + 'VstsTaskSdk/**/*')
   //   .pipe(gulp.dest(paths.extension.getAzureAdApplication.v3 + psModulesFolderName + "/VstsTaskSdk"));
 
-  gulp.src(paths.extension.psModules + 'VstsAzureHelpers_/**/*')
+  return gulp.src(paths.extension.psModules + 'VstsAzureHelpers_/**/*')
     .pipe(gulp.dest(paths.extension.getAzureAdApplication.v3 + psModulesFolderName + "/VstsAzureHelpers_"));
 }
 
