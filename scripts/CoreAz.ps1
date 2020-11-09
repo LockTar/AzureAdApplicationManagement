@@ -16,6 +16,7 @@ Import-VstsLocStrings -LiteralPath "$PSScriptRoot\task.json"
 CleanUp-PSModulePathForHostedAgent
 Update-PSModulePathForHostedAgent -targetAzurePs $targetAzurePs
 
-$endpointObject =  ConvertFrom-Json  $endpoint
+Write-Host $endpoint
+$endpointObject = ConvertFrom-Json $endpoint
 Import-Module "$PSScriptRoot\ps_modules\VstsAzureHelpers_"
 Initialize-AzModule -Endpoint $endpointObject -azVersion $targetAzurePs

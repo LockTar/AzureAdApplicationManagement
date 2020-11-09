@@ -60,6 +60,8 @@ try
     } else {
         $CoreAzArgument = "-endpoint '$endpoint'"
     }
+
+    Write-Host "CoreAzArgument: " $CoreAzArgument
     #$contents += ". $PSScriptRoot\CoreAz.ps1 $CoreAzArgument"
     . $PSScriptRoot\CoreAz.ps1 $CoreAzArgument
 
