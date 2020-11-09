@@ -4,5 +4,7 @@ Readme.md
 
 /**/ps_modules/
 /**/scripts/
+/**/CoreAz.ps1
+/**/Utility.ps1
 
 !/ps_modules/
