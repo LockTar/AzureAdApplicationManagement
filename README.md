@@ -2,12 +2,11 @@
 
 [![Build status](https://ralphjansen.visualstudio.com/AzureAdApplicationManagement/_apis/build/status/Vsts-Extension?branchName=master)](https://ralphjansen.visualstudio.com/AzureAdApplicationManagement/_build/latest?definitionId=12&branchName=master) [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=LockTar_AzureAdApplicationManagement&metric=alert_status)](https://sonarcloud.io/dashboard?id=LockTar_AzureAdApplicationManagement)
 
-Azure AD Application Management with VSTS pipeline tasks. These VSTS tasks are created with and tested on **Hosted Visual Studio 2017** agents.
+Azure AD Application Management with Azure DevOps pipeline tasks. These Azure DevOps tasks are created with and tested on **Hosted windows-2019** agents.
 
-This VSTS extension contains the following tasks:
+This Azure DevOps extension contains the following tasks:
 
 - Get Azure AD Application
-- New Azure AD Application
 - Set Azure AD Application (recommended)
 - Remove Azure AD Application
 
@@ -17,7 +16,7 @@ In order to use these tasks, follow the **prerequisite** steps in the [Get Start
 
 In order to use these tasks, a **prerequisite must be done** otherwise you will get an **unauthorized error**. Follow the steps below to fix the permission issue:
 
-1. Create an Azure Resource Manager endpoint in your VSTS team project manually or let VSTS create one for you.
+1. Create an Azure Resource Manager endpoint in your Azure DevOps team project manually or let Azure DevOps create one for you.
 2. Go to the [Azure portal](https://portal.azure.com)
 3. In the Azure portal, navigate to **App Registrations**
 4. Select the created app registration. If you can't find it, you probably don't have the right permissions. You can still find the app registration by changing the tab to **All applications**.
@@ -51,6 +50,8 @@ In order to use these tasks, a **prerequisite must be done** otherwise you will 
     ]
     ```
 
+**NOTE** The `resourceAppId` with value `00000003-0000-0000-c000-000000000000` is optional for now but will be needed in the future by Microsoft. Is exactly the same permissions as `resourceAppId` with value `00000002-0000-0000-c000-000000000000` and id `5778995a-e1bf-45b8-affa-663a9f3f4d04` but then with the new Microsoft Graph instead of the old Azure AD graph.
+
 7. **Very important** Request an Azure Global Administrator to hit the button **Grant admin consent for {your company}** in the **API permissions** view. This only has to be done once.
 8. Use any task of this extension.
 
@@ -62,7 +63,7 @@ In order to use these tasks, a **prerequisite must be done** otherwise you will 
 - Remove AzureRm modules everywere
 - Manage AppRoles in the 'Set' task
 - Manage 'User assignment required?' in the 'Set' task
-- No 'New' task for v3. Can be done with the 'Set' task (was already preferred way)
+- No 'New' task for v3. Can be done with the 'Set' task (was already recommended way)
 - Update documentation
 - Deprecate all v2 tasks
 
