@@ -10,9 +10,6 @@ $applicationId = Get-VstsInput -Name applicationId
 . "$PSScriptRoot\Utility.ps1"
 CleanUp-PSModulePathForHostedAgent
 
-
-$requiredAzVersion = "5.0.0"
-
 # Initialize Azure helpers
 Import-Module $PSScriptRoot\ps_modules\VstsAzureHelpers_
 Import-Module $PSScriptRoot\ps_modules\CustomAzureDevOpsAzureHelpers\CustomAzureDevOpsAzureHelpers.psm1
@@ -21,11 +18,12 @@ try
 {
     # Login
     Initialize-PackageProvider
-    Initialize-Module -Name "Az" -RequiredVersion $requiredAzVersion
+    Initialize-Module -Name "Az.Accounts" -RequiredVersion "2.1.2"
+    Initialize-Module -Name "Az.Resources" -RequiredVersion "3.0.0"
 
     $connectedServiceName = Get-VstsInput -Name ConnectedServiceNameARM -Require
     $endpoint = Get-VstsEndpoint -Name $connectedServiceName -Require
-    Initialize-AzModule -Endpoint $endpoint -azVersion $requiredAzVersion
+    Initialize-AzModule -Endpoint $endpoint
 
     
     Write-Verbose "Input variables are: "

@@ -68,9 +68,6 @@ if($secrets) {
 . "$PSScriptRoot\Utility.ps1"
 CleanUp-PSModulePathForHostedAgent
 
-
-$requiredAzVersion = "5.0.0"
-
 # Initialize Azure helpers
 Import-Module $PSScriptRoot\ps_modules\VstsAzureHelpers_
 Import-Module $PSScriptRoot\ps_modules\CustomAzureDevOpsAzureHelpers\CustomAzureDevOpsAzureHelpers.psm1
@@ -84,7 +81,7 @@ try
     
     $connectedServiceName = Get-VstsInput -Name ConnectedServiceNameARM -Require
     $endpoint = Get-VstsEndpoint -Name $connectedServiceName -Require
-    Initialize-AzModule -Endpoint $endpoint #-azVersion $requiredAzVersion
+    Initialize-AzModule -Endpoint $endpoint
 
     # Login into old AzureAD because Az still doesn't have all the functions
     Initialize-Module -Name "AzureAD" -RequiredVersion "2.0.2.118"
