@@ -230,7 +230,7 @@
             "type": "boolean",
             "label": "Application role assignment required",
             "defaultValue": "false",
-            "required": true,
+            "required": false,
             "groupName": "AzureDetails",
             "helpMarkDown": "Indicates whether an application role assignment is required."
         }
