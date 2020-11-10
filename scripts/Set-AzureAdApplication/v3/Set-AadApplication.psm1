@@ -8,21 +8,6 @@
 #     $global:DebugPreference = 'SilentlyContinue'
 # }
 
-# Create an application role
-Function CreateAppRole([string] $Id, [string] $DisplayName, [string] $Value, [string] $Description)
-{
-    $appRole = New-Object Microsoft.Open.AzureAD.Model.AppRole
-    $appRole.AllowedMemberTypes = New-Object System.Collections.Generic.List[string]
-    $appRole.AllowedMemberTypes.Add("Application");
-    $appRole.DisplayName = $DisplayName
-    $appRole.Id = $Id
-    $appRole.IsEnabled = $true
-    $appRole.Description = $Description
-    $appRole.Value = $Value;
-
-    return $appRole
-}
-
 function Set-AadApplication {
     [CmdletBinding()]
     Param(
@@ -100,12 +85,20 @@ function Set-AadApplication {
         if ((Test-Path $AppRolesFilePath) -and ($AppRolesFilePath -Like "*.json")) {
             Write-Verbose "Get the approles for app registration and convert into json object"
             $appRolesInJson = Get-Content $AppRolesFilePath -Raw | ConvertFrom-Json
+            $appRoles = New-Object System.Collections.Generic.List[Microsoft.Open.AzureAD.Model.AppRole]
 
             Write-Verbose "Loop through all approles"
             foreach ($appRoleInJson in $appRolesInJson) {
-                $newRole = CreateAppRole -Id $appRoleInJson.id -DisplayName $appRoleInJson.displayName -Value $appRoleInJson.value -Description $appRoleInJson.description
-                $appRoles = New-Object System.Collections.Generic.List[Microsoft.Open.AzureAD.Model.AppRole]
-                $appRoles.Add($newRole)       
+                $appRole = New-Object Microsoft.Open.AzureAD.Model.AppRole
+                $appRole.AllowedMemberTypes = New-Object System.Collections.Generic.List[string]
+                $appRole.AllowedMemberTypes.Add("Application")
+                $appRole.DisplayName = $appRoleInJson.displayName
+                $appRole.Id = $appRoleInJson.id
+                $appRole.IsEnabled = $true
+                $appRole.Description = $appRoleInJson.description
+                $appRole.Value = $appRoleInJson.value
+                
+                $appRoles.Add($appRole)       
             }
 
             Write-Verbose "All approles are created and ready to set to the application"     
