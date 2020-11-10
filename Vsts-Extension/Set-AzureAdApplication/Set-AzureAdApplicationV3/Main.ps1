@@ -20,6 +20,7 @@ $ownersSingleLine = Get-VstsInput -Name ownersSingleLine
 $ownersMultiLine = Get-VstsInput -Name ownersMultiLine
 $secrets = Get-VstsInput -Name secrets
 $oauth2AllowImplicitFlow = Get-VstsInput -Name oauth2AllowImplicitFlow -AsBool
+$appRoleAssignmentRequired = Get-VstsInput -Name appRoleAssignmentRequired -AsBool
 
 # Create pretty array for optional replyurls array
 $replyUrlsArray = @()
@@ -104,6 +105,7 @@ try
     Write-Verbose "ownersArray: $ownersArray"
     Write-Verbose "secretsArray: $secretsArray"
     Write-Verbose "oauth2AllowImplicitFlow: $oauth2AllowImplicitFlow"
+    Write-Verbose "appRoleAssignmentRequired: $appRoleAssignmentRequired"
 
     Write-Verbose "Add service principal of the ARM connection to the array of owners"
     $serviceName = Get-VstsInput -Name ConnectedServiceNameARM -Require
@@ -149,7 +151,8 @@ try
         -AppRolesFilePath $appRolesFilePath `
         -Owners $ownersArray `
         -Secrets $secretsArray `
-        -Oauth2AllowImplicitFlow $oauth2AllowImplicitFlow
+        -Oauth2AllowImplicitFlow $oauth2AllowImplicitFlow `
+        -AppRoleAssignmentRequired $appRoleAssignmentRequired
 }
 finally {
     Remove-EndpointSecrets

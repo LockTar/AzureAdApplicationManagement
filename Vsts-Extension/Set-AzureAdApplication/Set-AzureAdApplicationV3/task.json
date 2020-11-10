@@ -224,6 +224,15 @@
             "required": true,
             "groupName": "AzureDetails",
             "helpMarkDown": "Specifies whether this web application can request OAuth2.0 implicit flow tokens. The default is false."
+        },
+        {
+            "name": "appRoleAssignmentRequired",
+            "type": "boolean",
+            "label": "Application role assignment required",
+            "defaultValue": "false",
+            "required": true,
+            "groupName": "AzureDetails",
+            "helpMarkDown": "Indicates whether an application role assignment is required."
         }
     ],
     "outputVariables": [{

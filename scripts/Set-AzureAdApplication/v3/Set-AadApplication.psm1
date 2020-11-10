@@ -27,7 +27,8 @@ function Set-AadApplication {
         [string]$AppRolesFilePath,
         [string[]]$Owners,
         [Object[]]$Secrets,
-        [bool]$Oauth2AllowImplicitFlow
+        [bool]$Oauth2AllowImplicitFlow,
+        [bool]$AppRoleAssignmentRequired
     )
 
     $ErrorActionPreference = "Stop"
@@ -134,7 +135,8 @@ function Set-AadApplication {
             -ObjectId $servicePrincipal.Id `
             -DisplayName $Name `
             -Homepage $HomePageUrl `
-            -Tags "WindowsAzureActiveDirectoryIntegratedApp"
+            -Tags "WindowsAzureActiveDirectoryIntegratedApp" `
+            -AppRoleAssignmentRequired 
 
         # Add owners to the application
         Write-Verbose "Set owners of the application. Current owners are:"
