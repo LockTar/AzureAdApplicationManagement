@@ -38,6 +38,15 @@ In order to use these tasks, a **prerequisite must be done** otherwise you will 
             "type": "Role"
           }
         ]
+      },
+      {
+        "resourceAppId": "00000003-0000-0000-c000-000000000000",
+        "resourceAccess": [
+          {
+            "id": "7ab1d382-f21e-4acd-a863-ba3e13f7da61",
+            "type": "Role"
+          }
+        ]
       }
     ]
     ```
