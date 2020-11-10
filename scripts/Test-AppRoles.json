@@ -1,14 +1,12 @@
 [
   {
     "allowedMemberTypes": [
-      "Application"
+      "Application", "User"
     ],
     "description": "Ability to delete all users",
     "displayName": "Delete All Users",
     "id": "829efba8-0659-40be-8a4a-cb338271ef9d",
     "isEnabled": true,
-    "lang": null,
-    "origin": "Application",
     "value": "Users.Delete.All"
   },
   {
@@ -18,9 +16,7 @@
     "description": "Ability to create and update all users",
     "displayName": "Write All Users",
     "id": "883ffdfd-45d3-47a2-94f2-5b90c6c7a60e",
-    "isEnabled": true,
-    "lang": null,
-    "origin": "Application",
+    "isEnabled": false,
     "value": "Users.Write.All"
   },
   {
@@ -31,8 +27,6 @@
     "displayName": "Read All Users",
     "id": "0c8ac4d2-17c6-4bc4-bc25-31346400de0a",
     "isEnabled": true,
-    "lang": null,
-    "origin": "Application",
     "value": "Users.Read.All"
   }
 ]

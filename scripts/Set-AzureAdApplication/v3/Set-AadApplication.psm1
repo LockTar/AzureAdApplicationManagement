@@ -91,11 +91,10 @@ function Set-AadApplication {
             Write-Verbose "Loop through all approles"
             foreach ($appRoleInJson in $appRolesInJson) {
                 $appRole = New-Object Microsoft.Open.AzureAD.Model.AppRole
-                $appRole.AllowedMemberTypes = New-Object System.Collections.Generic.List[string]
-                $appRole.AllowedMemberTypes.Add("Application")
+                $appRole.AllowedMemberTypes = $appRoleInJson.allowedMemberTypes
                 $appRole.DisplayName = $appRoleInJson.displayName
                 $appRole.Id = $appRoleInJson.id
-                $appRole.IsEnabled = $true
+                $appRole.IsEnabled = $appRoleInJson.isEnabled
                 $appRole.Description = $appRoleInJson.description
                 $appRole.Value = $appRoleInJson.value
                 
