@@ -223,7 +223,7 @@ function Set-AadApplication {
                     #Can't set the secret yet with a name in the Az Modules...
                     # $SecureStringPassword = ConvertTo-SecureString -String "password" -AsPlainText -Force
                     # New-AzADAppCredential -ObjectId $application.ObjectId -DisplayName $trimmedStringDescription -Password $SecureStringPassword -EndDate $endDate
-                    $appKeySecret = New-AzureADApplicationPasswordCredential -ObjectId $application.ObjectId -CustomKeyIdentifier $secret.Description -EndDate $endDate
+                    $appKeySecret = New-AzureADApplicationPasswordCredential -ObjectId $application.ObjectId -CustomKeyIdentifier $trimmedStringDescription -EndDate $endDate
                     
                     Write-Host "##vso[task.setvariable variable=Secret.$trimmedStringDescription;isOutput=true;issecret=true]$($appKeySecret.Value)"
                 }
