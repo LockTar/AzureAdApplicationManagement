@@ -220,10 +220,13 @@ function Set-AadApplication {
                 
                 if ($secret.Action -eq "Refresh" -or $secret.Action -eq "Create") {
                     Write-Verbose "Creating new key with description: $trimmedStringDescription and end date $endDate"
-                    $SecureStringPassword = ConvertTo-SecureString -String "password" -AsPlainText -Force
-                    New-AzADAppCredential -ObjectId $application.ObjectId -DisplayName $trimmedStringDescription -Password $SecureStringPassword -EndDate $endDate
+
+                    #Can't set the secret yet with a name in the Az Modules...
+                    # $SecureStringPassword = ConvertTo-SecureString -String "password" -AsPlainText -Force
+                    # New-AzADAppCredential -ObjectId $application.ObjectId -DisplayName $trimmedStringDescription -Password $SecureStringPassword -EndDate $endDate
+                    $appKeySecret = New-AzureADApplicationPasswordCredential -ObjectId $application.ObjectId -CustomKeyIdentifier $secret.Description -EndDate $endDate
                     
-                    Write-Host "##vso[task.setvariable variable=Secret.$trimmedStringDescription;isOutput=true;issecret=true]$SecureStringPassword"
+                    Write-Host "##vso[task.setvariable variable=Secret.$trimmedStringDescription;isOutput=true;issecret=true]$($appKeySecret.Value)"
                 }
                 else {
                     Write-Verbose "Skip creating secret with description $trimmedStringDescription because secret action is not 'Refresh' or 'Create'"
