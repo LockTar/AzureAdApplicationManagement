@@ -79,12 +79,12 @@ try
 {
     # Login
     Initialize-PackageProvider
-    Initialize-Module -Name "Az.Accounts" -RequiredVersion $requiredAzVersion
-    Initialize-Module -Name "Az.Resources" -RequiredVersion $requiredAzVersion
+    Initialize-Module -Name "Az.Accounts" -RequiredVersion "2.1.2"
+    Initialize-Module -Name "Az.Resources" -RequiredVersion "3.0.0"
     
     $connectedServiceName = Get-VstsInput -Name ConnectedServiceNameARM -Require
     $endpoint = Get-VstsEndpoint -Name $connectedServiceName -Require
-    Initialize-AzModule -Endpoint $endpoint -azVersion $requiredAzVersion
+    Initialize-AzModule -Endpoint $endpoint #-azVersion $requiredAzVersion
 
     # Login into old AzureAD because Az still doesn't have all the functions
     Initialize-Module -Name "AzureAD" -RequiredVersion "2.0.2.118"
