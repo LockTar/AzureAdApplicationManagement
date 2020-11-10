@@ -71,7 +71,7 @@ function Set-AadApplication {
                 $resource.ResourceAccess = New-Object System.Collections.Generic.List[Microsoft.Open.AzureAD.Model.ResourceAccess]
                 foreach ($resourceAccessInJson in $resourceInJson.resourceAccess) {
                     Write-Verbose "Create new 'Microsoft.Open.AzureAD.Model.ResourceAccess' object and set '$($resourceAccessInJson.id),$($resourceAccessInJson.type)'. Add this ResourceAccess to the list"
-                    $resourceAccess = New-Object -TypeName "Microsoft.Open.AzureAD.Model.ResourceAccess" -ArgumentList $resourceAccessInJson.id,$resourceAccessInJson.type
+                    $resourceAccess = New-Object -TypeName "Microsoft.Open.AzureAD.Model.ResourceAccess" -ArgumentList $resourceAccessInJson.id, $resourceAccessInJson.type
                     $resource.ResourceAccess.Add($resourceAccess)
                 }
 
@@ -143,17 +143,14 @@ function Set-AadApplication {
 
         # Retrieve owner ObjectId based on UserPrincipalName
         $ownerObjectIds = @()
-        foreach($owner in $Owners)
-        {
+        foreach ($owner in $Owners) {
             Write-Verbose "Check if owner is an Object Id or UserPrincipalName"
             $result = New-Guid
-            if([Guid]::TryParse($owner, [ref] $result))
-            {
+            if ([Guid]::TryParse($owner, [ref] $result)) {
                 Write-Verbose "Owner is an Object Id so add it to the list as desired owners"
                 $ownerObjectIds += $owner
             }
-            else
-            {
+            else {
                 Write-Verbose "Owner is an UserPrincipalName so search for the user and add the ObjectId of the user to the list as desired owners"
                 $user = Get-AzADUser -UserPrincipalName $owner
                 $ownerObjectIds += $user.Id
@@ -186,50 +183,36 @@ function Set-AadApplication {
             }
         }
 
-        if($Secrets){ 
+        if ($Secrets) { 
             # Check for existing secrets and remove them so they can be re-created
             Write-Verbose "Checking for existing secrets"
-            $appKeySecrets = Get-AzADAppCredential -ObjectId $application.ObjectId
+            $appKeySecrets = Get-AzureADApplicationPasswordCredential -ObjectId $application.ObjectId
 
-            if($appKeySecrets)  {
-                foreach($existingSecret in $appKeySecrets) {
-                    foreach($secret in $Secrets) {
+            if ($appKeySecrets) {
+                foreach ($existingSecret in $appKeySecrets) {
+                    foreach ($secret in $Secrets) {
                         $stringDescription = $secret.Description | Out-String
-                        $trimmedStringDescription = $stringDescription -replace [Environment]::NewLine,"";
+                        $trimmedStringDescription = $stringDescription -replace [Environment]::NewLine, "";
 
-                        if([System.Text.Encoding]::ASCII.GetString($existingSecret.DisplayName) -eq $trimmedStringDescription) {
-                            if ($secret.Action -eq "Refresh" -or $secret.Action -eq "Remove") {   
-                                Write-Verbose "Removing existing secret with description: $trimmedStringDescription"
-                                Remove-AzADAppCredential -ObjectId $application.ObjectId -KeyId $existingSecret.KeyId
-                            }
-                            else {
-                                Write-Verbose "Skip removing secret with description $trimmedStringDescription because secret action is not 'Refresh' or 'Remove'"
-                            }
+                        if ([System.Text.Encoding]::ASCII.GetString($existingSecret.CustomKeyIdentifier) -eq $trimmedStringDescription) {
+                            Write-Verbose "Removing existing key with description: $trimmedStringDescription"
+                            Remove-AzureADApplicationPasswordCredential  -ObjectId $application.ObjectId -KeyId $existingSecret.KeyId
                         }
                     }
                 }
             }
 
             # Create new secrets
-            foreach($secret in $Secrets) {
-                $endDate = [datetime]::ParseExact($secret.EndDate,'dd/MM/yyyy',[Globalization.CultureInfo]::InvariantCulture)
+            foreach ($secret in $Secrets) {
+                $endDate = [datetime]::ParseExact($secret.EndDate, 'dd/MM/yyyy', [Globalization.CultureInfo]::InvariantCulture)
                 
                 $stringDescription = $secret.Description | Out-String
-                $trimmedStringDescription = $stringDescription -replace [Environment]::NewLine,"";
+                $trimmedStringDescription = $stringDescription -replace [Environment]::NewLine, "";
                 
-                if ($secret.Action -eq "Refresh" -or $secret.Action -eq "Create") {
-                    Write-Verbose "Creating new key with description: $trimmedStringDescription and end date $endDate"
-
-                    #Can't set the secret yet with a name in the Az Modules...
-                    # $SecureStringPassword = ConvertTo-SecureString -String "password" -AsPlainText -Force
-                    # New-AzADAppCredential -ObjectId $application.ObjectId -DisplayName $trimmedStringDescription -Password $SecureStringPassword -EndDate $endDate
-                    $appKeySecret = New-AzureADApplicationPasswordCredential -ObjectId $application.ObjectId -CustomKeyIdentifier $trimmedStringDescription -EndDate $endDate
-                    
-                    Write-Host "##vso[task.setvariable variable=Secret.$trimmedStringDescription;isOutput=true;issecret=true]$($appKeySecret.Value)"
-                }
-                else {
-                    Write-Verbose "Skip creating secret with description $trimmedStringDescription because secret action is not 'Refresh' or 'Create'"
-                }
+                Write-Verbose "Creating new key with description: $trimmedStringDescription and end date $endDate"
+                $appKeySecret = New-AzureADApplicationPasswordCredential -ObjectId $application.ObjectId -CustomKeyIdentifier $trimmedStringDescription -EndDate $endDate
+                
+                Write-Host "##vso[task.setvariable variable=Secret.$trimmedStringDescription;isOutput=true;issecret=true]$($appKeySecret.Value)"
             }
         }
 
