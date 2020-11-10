@@ -99,11 +99,11 @@ try
     Write-Verbose "secretsArray: $secretsArray"
     Write-Verbose "oauth2AllowImplicitFlow: $oauth2AllowImplicitFlow"
 
-    Write-Verbose "Add service principal of the azurerm connection to the array of owners"
+    Write-Verbose "Add service principal of the ARM connection to the array of owners"
     $serviceName = Get-VstsInput -Name ConnectedServiceNameARM -Require
     $endpoint = Get-VstsEndpoint -Name $serviceName -Require
     $clientId = $endpoint.Auth.Parameters.ServicePrincipalId
-    $deployServicePrincipalId = (Get-AzureRmADServicePrincipal -ApplicationId $clientId).Id
+    $deployServicePrincipalId = (Get-AzADServicePrincipal -ApplicationId $clientId).Id
     $ownersArray += $deployServicePrincipalId
 
     Import-Module $PSScriptRoot\scripts\Get-AadApplication.psm1
