@@ -85,7 +85,7 @@ function Set-AadApplication {
             -ReplyUrls $ReplyUrls
 
         Write-Verbose "Set required resource access to application and Oauth2AllowImplicitFlow: "
-        # Following can't be done by AzureRM (yet)
+        # Following can't be done by Az Module (yet)
         Set-AzureADApplication -ObjectId $application.ObjectId -Oauth2AllowImplicitFlow $Oauth2AllowImplicitFlow -RequiredResourceAccess $requiredResourceAccess
 
         Write-Verbose "Set service principal properties"
