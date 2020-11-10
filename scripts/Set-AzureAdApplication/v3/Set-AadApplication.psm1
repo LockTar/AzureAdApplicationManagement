@@ -136,7 +136,7 @@ function Set-AadApplication {
             -DisplayName $Name `
             -Homepage $HomePageUrl `
             -Tags "WindowsAzureActiveDirectoryIntegratedApp" `
-            -AppRoleAssignmentRequired 
+            -AppRoleAssignmentRequired $AppRoleAssignmentRequired
 
         # Add owners to the application
         Write-Verbose "Set owners of the application. Current owners are:"
