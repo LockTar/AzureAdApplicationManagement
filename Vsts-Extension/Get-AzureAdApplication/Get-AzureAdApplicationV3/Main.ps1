@@ -7,6 +7,12 @@ $applicationId = Get-VstsInput -Name applicationId
 $name = Get-VstsInput -Name name
 $failIfNotFound = Get-VstsInput -Name failIfNotFound -AsBool
 
+
+# Cleanup hosted agent with AzureRM modules
+. "$PSScriptRoot\Utility.ps1"
+CleanUp-PSModulePathForHostedAgent
+
+
 $requiredAzVersion = "5.0.0"
 
 # Initialize Azure helpers

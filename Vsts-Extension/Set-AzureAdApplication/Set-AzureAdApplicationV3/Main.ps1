@@ -62,6 +62,12 @@ if($secrets) {
     $secretsArray = $secrets | ConvertFrom-Json
 }
 
+
+# Cleanup hosted agent with AzureRM modules
+. "$PSScriptRoot\Utility.ps1"
+CleanUp-PSModulePathForHostedAgent
+
+
 $requiredAzVersion = "5.0.0"
 
 # Initialize Azure helpers

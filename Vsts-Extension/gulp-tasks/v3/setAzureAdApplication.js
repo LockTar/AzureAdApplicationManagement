@@ -30,6 +30,8 @@ function cleanSetAzureAdApplication() {
   console.log('Delete everything in ' + paths.extension.setAzureAdApplication.v3);
   return del([
     paths.extension.setAzureAdApplication.v3 + 'scripts',
+    paths.extension.setAzureAdApplication.v3 + 'CoreAz.ps1',
+    paths.extension.setAzureAdApplication.v3 + 'Utility.ps1',
     paths.extension.setAzureAdApplication.v3 + psModulesFolderName
   ]);
 }
@@ -54,6 +56,11 @@ function buildPsModulesSetAzureAdApplication() {
 }
 
 function buildScriptFilesAzureADApplication() {
+  gulp.src(paths.code.scripts + 'CoreAz.ps1')
+    .pipe(gulp.dest(paths.extension.setAzureAdApplication.v3));
+  gulp.src(paths.code.scripts + 'Utility.ps1')
+    .pipe(gulp.dest(paths.extension.setAzureAdApplication.v3));
+
   console.log('Fill ' + paths.extension.setAzureAdApplication.v3 + ' scripts from ' + paths.code.setAzureAdApplication.v3);
   gulp.src(paths.code.setAzureAdApplication.v3 + '**/*')
     .pipe(gulp.dest(paths.extension.setAzureAdApplication.v3 + 'scripts'));
