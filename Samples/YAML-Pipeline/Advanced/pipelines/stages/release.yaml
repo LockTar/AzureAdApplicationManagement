@@ -17,7 +17,7 @@ stages:
         deploy:
           steps:
 
-          - task: Set-Azure-AD-Application@2
+          - task: Set-Azure-AD-Application@3
             displayName: 'Set Azure AD Application'
             name: app
             inputs:
@@ -33,24 +33,24 @@ stages:
               replyUrlsMethod: 'Multiline'
               replyUrlsMultiLine: 'https://YourReplyUrl.com'
               resourceAccessFilePath: '$(Pipeline.Workspace)/drop/RequiredResourceAccess.json'
+              appRolesFilePath: '$(Pipeline.Workspace)/drop/AppRoles.json'
               ownersMethod: 'Singleline'
               ownersSingleLine: '$(APPLICATION_OWNERS)'
               secrets: '[{ ''Description'': ''testkey'', ''EndDate'': ''01/12/2019'' }]'
+              oauth2AllowImplicitFlow: false
+              appRoleAssignmentRequired: false
 
-          - task: PowerShell@2
+          - powershell: |
+              Write-Host "ObjectId- $(app.ObjectId)"
+              Write-Host "ApplicationId- $(app.ApplicationId)"
+              Write-Host "Name- $(app.Name)"
+              Write-Host "AppIdUri- $(app.AppIdUri)"
+              Write-Host "HomePageUrl- $(app.HomePageUrl)" 
+              Write-Host "ServicePrincipalObjectId- $(app.ServicePrincipalObjectId)"
+              Write-Host "The Secret with the name 'testkey'- $(app.Secret.testkey)"
             displayName: 'Print output variables'
-            inputs:
-              targetType: 'inline'
-              script: |
-                Write-Host "ObjectId- $(app.ObjectId)"
-                Write-Host "ApplicationId- $(app.ApplicationId)"
-                Write-Host "Name- $(app.Name)"
-                Write-Host "AppIdUri- $(app.AppIdUri)"
-                Write-Host "HomePageUrl- $(app.HomePageUrl)" 
-                Write-Host "ServicePrincipalObjectId- $(app.ServicePrincipalObjectId)"
-                Write-Host "The Secret with the name 'testkey'- $(app.Secret.testkey)"
 
-          - task: Remove-Azure-AD-Application@2
+          - task: Remove-Azure-AD-Application@3
             displayName: 'Remove Azure AD Application'
             inputs:
               azureSubscription: 'subscription name'
