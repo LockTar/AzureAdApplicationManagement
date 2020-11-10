@@ -38,12 +38,33 @@ In order to use these tasks, a **prerequisite must be done** otherwise you will 
             "type": "Role"
           }
         ]
+      },
+      {
+        "resourceAppId": "00000003-0000-0000-c000-000000000000",
+        "resourceAccess": [
+          {
+            "id": "7ab1d382-f21e-4acd-a863-ba3e13f7da61",
+            "type": "Role"
+          }
+        ]
       }
     ]
     ```
 
 7. **Very important** Request an Azure Global Administrator to hit the button **Grant admin consent for {your company}** in the **API permissions** view. This only has to be done once.
 8. Use any task of this extension.
+
+## Release notes
+
+### V3
+
+- Migrated (were possible) to the new Az Modules
+- Remove AzureRm modules everywere
+- Manage AppRoles in the 'Set' task
+- Manage 'User assignment required?' in the 'Set' task
+- No 'New' task for v3. Can be done with the 'Set' task (was already preferred way)
+- Update documentation
+- Deprecate all v2 tasks
 
 ## FAQ
 

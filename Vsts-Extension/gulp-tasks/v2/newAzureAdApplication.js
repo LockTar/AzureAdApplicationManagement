@@ -51,7 +51,7 @@ function buildScriptFilesAzureADApplication() {
     .pipe(gulp.dest(paths.extension.newAzureAdApplication.v2 + 'scripts'));
 }
 
-var taskName = "GetAdApplication";
+var taskName = "NewAdApplication";
 gulp.task('clean:' + taskName, cleanNewAzureAdApplication);
 gulp.task('clean', cleanNewAzureAdApplication);
 
