@@ -79,8 +79,9 @@ try
 {
     # Login
     Initialize-PackageProvider
-    Initialize-Module -Name "Az" -RequiredVersion $requiredAzVersion
-
+    Initialize-Module -Name "Az.Accounts" -RequiredVersion $requiredAzVersion
+    Initialize-Module -Name "Az.Resources" -RequiredVersion $requiredAzVersion
+    
     $connectedServiceName = Get-VstsInput -Name ConnectedServiceNameARM -Require
     $endpoint = Get-VstsEndpoint -Name $connectedServiceName -Require
     Initialize-AzModule -Endpoint $endpoint -azVersion $requiredAzVersion
