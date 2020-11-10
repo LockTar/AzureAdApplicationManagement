@@ -155,9 +155,8 @@ function Set-AadApplication {
             else
             {
                 Write-Verbose "Owner is an UserPrincipalName so search for the user and add the ObjectId of the user to the list as desired owners"
-                #$user = Get-AzADUser -UserPrincipalName $owner
-                $user = Get-AzureADUser -Filter "UserPrincipalName eq '$owner'"
-                $ownerObjectIds += $user.ObjectId
+                $user = Get-AzADUser -UserPrincipalName $owner
+                $ownerObjectIds += $user.Id
             }
         }
 
