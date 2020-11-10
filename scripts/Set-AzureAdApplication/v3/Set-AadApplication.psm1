@@ -8,6 +8,21 @@
 #     $global:DebugPreference = 'SilentlyContinue'
 # }
 
+# Create an application role
+Function CreateAppRole([string] $Id, [string] $DisplayName, [string] $Value, [string] $Description)
+{
+    $appRole = New-Object Microsoft.Open.AzureAD.Model.AppRole
+    $appRole.AllowedMemberTypes = New-Object System.Collections.Generic.List[string]
+    $appRole.AllowedMemberTypes.Add("Application");
+    $appRole.DisplayName = $DisplayName
+    $appRole.Id = $Id
+    $appRole.IsEnabled = $true
+    $appRole.Description = $Description
+    $appRole.Value = $Value;
+
+    return $appRole
+}
+
 function Set-AadApplication {
     [CmdletBinding()]
     Param(
@@ -24,6 +39,7 @@ function Set-AadApplication {
         [bool]$MultiTenant,
         [string[]]$ReplyUrls,
         [string]$ResourceAccessFilePath,
+        [string]$AppRolesFilePath,
         [string[]]$Owners,
         [Object[]]$Secrets,
         [bool]$Oauth2AllowImplicitFlow
@@ -46,9 +62,14 @@ function Set-AadApplication {
         Write-Information "Found application: "
         $application
 
+        $appRoles = $application.AppRoles
+        Write-Host "App Roles before setting the new roles:"
+        Write-Host $appRoles
+
         # For local testing
         #$ResourceAccessFilePath = Join-Path -Path $PSScriptRoot -ChildPath "..\..\Test-RequiredResourceAccess.json"
 
+        # ResourceAccess
         [System.Collections.ArrayList]$requiredResourceAccess = @()
 
         if ((Test-Path $ResourceAccessFilePath) -and ($ResourceAccessFilePath -Like "*.json")) {
@@ -75,6 +96,21 @@ function Set-AadApplication {
             Write-Verbose "All resources with permissions are created and ready to set to the application"
         }
 
+        # AppRoles
+        if ((Test-Path $AppRolesFilePath) -and ($AppRolesFilePath -Like "*.json")) {
+            Write-Verbose "Get the approles for app registration and convert into json object"
+            $appRolesInJson = Get-Content $AppRolesFilePath -Raw | ConvertFrom-Json
+
+            Write-Verbose "Loop through all approles"
+            foreach ($appRoleInJson in $appRolesInJson) {
+                $newRole = CreateAppRole -Id $appRoleInJson.id -DisplayName $appRoleInJson.displayName -Value $appRoleInJson.value -Description $appRoleInJson.description
+                $appRoles = New-Object System.Collections.Generic.List[Microsoft.Open.AzureAD.Model.AppRole]
+                $appRoles.Add($newRole)       
+            }
+
+            Write-Verbose "All approles are created and ready to set to the application"     
+        }
+
         Write-Verbose "Set application properties"
         Update-AzADApplication `
             -ObjectId $application.ObjectId `
@@ -84,9 +120,9 @@ function Set-AadApplication {
             -AvailableToOtherTenants $MultiTenant `
             -ReplyUrls $ReplyUrls
 
-        Write-Verbose "Set required resource access to application and Oauth2AllowImplicitFlow: "
+        Write-Verbose "Set required resource access, approles and Oauth2AllowImplicitFlow to application: "
         # Following can't be done by Az Module (yet)
-        Set-AzureADApplication -ObjectId $application.ObjectId -Oauth2AllowImplicitFlow $Oauth2AllowImplicitFlow -RequiredResourceAccess $requiredResourceAccess
+        Set-AzureADApplication -ObjectId $application.ObjectId -Oauth2AllowImplicitFlow $Oauth2AllowImplicitFlow -RequiredResourceAccess $requiredResourceAccess -AppRoles $appRoles
 
         Write-Verbose "Set service principal properties"
         $servicePrincipal = Get-AzADServicePrincipal -ApplicationId $application.ApplicationId

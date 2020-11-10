@@ -14,6 +14,7 @@ $replyUrlsMethod = Get-VstsInput -Name replyUrlsMethod -Require
 $replyUrlsSingleLine = Get-VstsInput -Name replyUrlsSingleLine
 $replyUrlsMultiLine = Get-VstsInput -Name replyUrlsMultiLine
 $resourceAccessFilePath = Get-VstsInput -Name resourceAccessFilePath
+$appRolesFilePath = Get-VstsInput -Name appRolesFilePath
 $ownersMethod = Get-VstsInput -Name ownersMethod -Require
 $ownersSingleLine = Get-VstsInput -Name ownersSingleLine
 $ownersMultiLine = Get-VstsInput -Name ownersMultiLine
@@ -101,6 +102,7 @@ try
     Write-Verbose "multiTenant: $multiTenant"
     Write-Verbose "replyUrlsArray: $replyUrlsArray"
     Write-Verbose "resourceAccessFilePath: $resourceAccessFilePath"
+    Write-Verbose "appRolesFilePath: $appRolesFilePath"
     Write-Verbose "ownersArray: $ownersArray"
     Write-Verbose "secretsArray: $secretsArray"
     Write-Verbose "oauth2AllowImplicitFlow: $oauth2AllowImplicitFlow"
@@ -146,6 +148,7 @@ try
         -MultiTenant $multiTenant `
         -ReplyUrls $replyUrlsArray `
         -ResourceAccessFilePath $resourceAccessFilePath `
+        -AppRolesFilePath $appRolesFilePath `
         -Owners $ownersArray `
         -Secrets $secretsArray `
         -Oauth2AllowImplicitFlow $oauth2AllowImplicitFlow
