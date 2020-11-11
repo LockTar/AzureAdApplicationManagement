@@ -4,7 +4,7 @@ Trace-VstsEnteringInvocation $MyInvocation
 $createIfNotExist = Get-VstsInput -Name createIfNotExist -AsBool
 $objectId = Get-VstsInput -Name objectId
 $name = Get-VstsInput -Name name -Require
-$appIdUri = Get-VstsInput -Name appIdUri -Require
+$appIdUri = Get-VstsInput -Name appIdUri
 $homePageUrl = Get-VstsInput -Name homePageUrl
 $logoutUrl = Get-VstsInput -Name logoutUrl
 $termsOfServiceUrl = Get-VstsInput -Name termsOfServiceUrl

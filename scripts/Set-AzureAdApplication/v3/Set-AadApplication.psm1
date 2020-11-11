@@ -15,7 +15,6 @@ function Set-AadApplication {
         [string]$ObjectId,
         [Parameter(Mandatory)]
         [string]$Name,
-        [Parameter(Mandatory)]
         [string]$AppIdUri,
         [string]$HomePageUrl,
         [string]$LogoutUrl,
@@ -47,6 +46,11 @@ function Set-AadApplication {
     else {
         Write-Information "Found application: "
         $application
+
+        if ($null -eq $AppIdUri -or $AppIdUri -eq "") {
+            # Because AppIdUri is not required anymore in the task it can be empty. If empty, update the paramter with the value in the AD so we can use the update cmdlet.
+            $AppIdUri = $application.IdentifierUris[0]
+        }
 
         $appRoles = $application.AppRoles
         Write-Host "App Roles before setting the new roles:"
