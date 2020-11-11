@@ -14,7 +14,7 @@ function New-AadApplication {
         [Parameter(Mandatory)]
         [string]$ApplicationName,
         [Parameter(Mandatory)]
-        [string]$SignOnUrl,
+        [string]$HomePageUrl,
         [string]$IdentifierUri
     )
 
@@ -38,9 +38,8 @@ function New-AadApplication {
     Write-Verbose "Create application $ApplicationName"
     $applicationCreated = New-AzADApplication `
         -DisplayName $ApplicationName `
-        -HomePage $SignOnUrl `
-        -IdentifierUris $($IdentifierUri) `
-        -ReplyUrls $($SignOnUrl)
+        -HomePage $HomePageUrl `
+        -IdentifierUris $($IdentifierUri)
 
     $delayInSeconds = 10
     $numberOfRetries = 10

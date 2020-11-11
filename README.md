@@ -66,6 +66,7 @@ In order to use these tasks, a **prerequisite must be done** otherwise you will 
 - No 'New' task for v3. Can be done with the 'Set' task (was already recommended way)
 - Update documentation
 - Deprecate all v2 tasks
+- Don't set default Reply url when creating new application (not mandatory anymore by Microsoft)
 
 ## FAQ
 

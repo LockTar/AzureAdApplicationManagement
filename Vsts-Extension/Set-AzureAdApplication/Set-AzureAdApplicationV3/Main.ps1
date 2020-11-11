@@ -124,9 +124,9 @@ try
 
         if (!$result.Application) {
             Write-Verbose "Application doesn't exist. Create the application '$name'"
-            New-AadApplication -ApplicationName $name -SignOnUrl $homePageUrl
+            New-AadApplication -ApplicationName $name -HomePageUrl $homePageUrl
 
-            $secondsToWait = 60
+            $secondsToWait = 10
             Write-Verbose "Application '$name' is created but wait $secondsToWait seconds so Azure AD can process it and we can set all the properties"
             Start-Sleep -Seconds $secondsToWait
         }
