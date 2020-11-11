@@ -47,9 +47,14 @@ function Set-AadApplication {
         Write-Information "Found application: "
         $application
 
+        # Because AppIdUri is not required anymore in the task it can be empty. If empty, update the paramter with the value in the AD so we can use the update cmdlet.
         if ($null -eq $AppIdUri -or $AppIdUri -eq "") {
-            # Because AppIdUri is not required anymore in the task it can be empty. If empty, update the paramter with the value in the AD so we can use the update cmdlet.
             $AppIdUri = $application.IdentifierUris[0]
+        }
+
+        # Because HomePageUrl is not required anymore in the task it can be empty. If empty, update the paramter with the value in the AD so we can use the update cmdlet.
+        if ($null -eq $HomePageUrl -or $HomePageUrl -eq "") {
+            $AppIdUri = $application.HomePage
         }
 
         $appRoles = $application.AppRoles
