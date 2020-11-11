@@ -118,13 +118,23 @@ function Set-AadApplication {
         }
 
         Write-Verbose "Set application properties"
-        Update-AzADApplication `
-            -ObjectId $application.ObjectId `
-            -DisplayName $Name `
-            -IdentifierUris $AppIdUri `
-            -HomePage $HomePageUrl `
-            -AvailableToOtherTenants $MultiTenant `
-            -ReplyUrls $ReplyUrls
+        if ($null -eq $HomePageUrl -or $HomePageUrl -eq "") {
+            Update-AzADApplication `
+                -ObjectId $application.ObjectId `
+                -DisplayName $Name `
+                -IdentifierUris $AppIdUri `
+                -AvailableToOtherTenants $MultiTenant `
+                -ReplyUrls $ReplyUrls
+        }
+        else {
+            Update-AzADApplication `
+                -ObjectId $application.ObjectId `
+                -DisplayName $Name `
+                -IdentifierUris $AppIdUri `
+                -HomePage $HomePageUrl `
+                -AvailableToOtherTenants $MultiTenant `
+                -ReplyUrls $ReplyUrls
+        }
 
         Write-Verbose "Set required resource access, approles and Oauth2AllowImplicitFlow to application: "
         # Following can't be done by Az Module (yet)
