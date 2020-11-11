@@ -38,10 +38,17 @@ function New-AadApplication {
     }
 
     Write-Verbose "Create application $ApplicationName"
-    $application = New-AzADApplication `
-        -DisplayName $ApplicationName `
-        -HomePage $HomePageUrl `
-        -IdentifierUris $($IdentifierUri)
+    if ($null -eq $HomePageUrl -or $HomePageUrl -eq "") {
+        $application = New-AzADApplication `
+            -DisplayName $ApplicationName `
+            -IdentifierUris $($IdentifierUri)
+    }
+    else {
+        $application = New-AzADApplication `
+            -DisplayName $ApplicationName `
+            -HomePage $HomePageUrl `
+            -IdentifierUris $($IdentifierUri)
+    }
 
     if ($IdentifierUriFromTask -eq $false) {
         # The IdentifierUri was not given in the task so create the new default identifieruri. This can only be done with the ApplicationId so use it from the 'New' action.
