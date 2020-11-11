@@ -25,21 +25,32 @@ function New-AadApplication {
     $oldinformation = $InformationPreference
     $InformationPreference = "continue"
 
+    $IdentifierUriFromTask = $false
     Write-Verbose "Check if IdentifierUri is given"
     if ($null -eq $IdentifierUri -or $IdentifierUri -eq "") {
         Write-Verbose "No IdentifierUri so generate one with format: https://{ApplicationName}"        
         $IdentifierUri = "https://$ApplicationName"
+        $IdentifierUriFromTask = $false
         Write-Verbose "Generated IdentifierUri: $IdentifierUri"
     }
     else {
         Write-Verbose "Use given IdentifierUri: $IdentifierUri"
+        $IdentifierUriFromTask = $true
     }
 
     Write-Verbose "Create application $ApplicationName"
-    $applicationCreated = New-AzADApplication `
+    $application = New-AzADApplication `
         -DisplayName $ApplicationName `
         -HomePage $HomePageUrl `
         -IdentifierUris $($IdentifierUri)
+
+    if ($IdentifierUriFromTask -eq $false) {
+        # The IdentifierUri was not given in the task so create the new default identifieruri. This can only be done with the ApplicationId so use it from the 'New' action.
+        Write-Verbose "Change IdentifierUri to the new default format of Microsoft: api://{ApplicationId}"
+        $IdentifierUri = "api://$($application.ApplicationId)"
+        $application = Update-AzADApplication `
+            -IdentifierUris $($IdentifierUri)
+    }
 
     $delayInSeconds = 10
     $numberOfRetries = 10
@@ -50,8 +61,8 @@ function New-AadApplication {
     while (-not $completed) {
         try {
             Write-Verbose "Create service principal connected to application"
-            $servicePrincipal = Get-AzADApplication -ObjectId $applicationCreated.ObjectId | New-AzADServicePrincipal
-
+            $servicePrincipal = Get-AzADApplication -ObjectId $application.ObjectId | New-AzADServicePrincipal
+            
             $completed = $true
         }
         catch {
@@ -66,8 +77,9 @@ function New-AadApplication {
             }
         }
     }
+    
+    Get-AzADApplication -ObjectId $application.ObjectId
 
-    $application = $applicationCreated
     Write-Verbose "Created application: "
     $application
 
