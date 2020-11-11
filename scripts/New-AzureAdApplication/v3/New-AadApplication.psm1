@@ -55,6 +55,7 @@ function New-AadApplication {
         Write-Verbose "Change IdentifierUri to the new default format of Microsoft: api://{ApplicationId}"
         $IdentifierUri = "api://$($application.ApplicationId)"
         $application = Update-AzADApplication `
+            -ObjectId $application.ObjectId `
             -IdentifierUris $($IdentifierUri)
     }
 
