@@ -13,7 +13,6 @@ function New-AadApplication {
     Param(
         [Parameter(Mandatory)]
         [string]$ApplicationName,
-        [Parameter(Mandatory)]
         [string]$HomePageUrl,
         [string]$IdentifierUri
     )
