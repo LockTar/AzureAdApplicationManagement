@@ -56,9 +56,12 @@ function Set-AadApplication {
 
         # Because HomePageUrl is not required anymore in the task it can be empty. If empty, update the paramter with the value in the AD so we can use the update cmdlet.
         if ($null -eq $HomePageUrl -or $HomePageUrl -eq "") {
-            Write-Host "HomePageUrl is null or empty so use HomePage from the AD $($application.HomePage)"
+            Write-Host "HomePageUrl is null or empty so use HomePage from the AD $($application.HomePage) because Microsoft Update cmdlet won't allow empty Homepage"
             $HomePageUrl = $application.HomePage
             Write-Host "Going to use HomePageUrl: $HomePageUrl"
+            if ($null -eq $HomePageUrl -or $HomePageUrl -eq "") {
+                Write-Host "HomePage is already empty in the AD so skip the parameter in the Update cmdlet"
+            }
         }
 
         $appRoles = $application.AppRoles
@@ -152,13 +155,21 @@ function Set-AadApplication {
         #     -DisplayName $Name `
         #     -Homepage $HomePageUrl
 
-        # Is Tags already supported in the new Az modules????
-        Set-AzureADServicePrincipal `
-            -ObjectId $servicePrincipal.Id `
-            -DisplayName $Name `
-            -Homepage $HomePageUrl `
-            -Tags "WindowsAzureActiveDirectoryIntegratedApp" `
-            -AppRoleAssignmentRequired $AppRoleAssignmentRequired
+        if ($null -eq $HomePageUrl -or $HomePageUrl -eq "") {
+            Set-AzureADServicePrincipal `
+                -ObjectId $servicePrincipal.Id `
+                -DisplayName $Name `
+                -Tags "WindowsAzureActiveDirectoryIntegratedApp" `
+                -AppRoleAssignmentRequired $AppRoleAssignmentRequired
+        }
+        else {
+            Set-AzureADServicePrincipal `
+                -ObjectId $servicePrincipal.Id `
+                -DisplayName $Name `
+                -Homepage $HomePageUrl `
+                -Tags "WindowsAzureActiveDirectoryIntegratedApp" `
+                -AppRoleAssignmentRequired $AppRoleAssignmentRequired
+        }
 
         # Add owners to the application
         Write-Verbose "Set owners of the application. Current owners are:"
