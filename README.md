@@ -67,6 +67,7 @@ In order to use these tasks, a **prerequisite must be done** otherwise you will 
 - Update documentation
 - Deprecate all v2 tasks
 - Don't set default Reply url when creating new application (not mandatory anymore by Microsoft)
+- Don't make homepage mandatory anymore (not mandatory anymore by Microsoft)
 
 ## FAQ
 
