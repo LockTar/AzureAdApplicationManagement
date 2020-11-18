@@ -1,6 +1,7 @@
-# BeforeAll { 
-#     Import-Module .\ManageAadApplications.psm1
-# }
+BeforeAll { 
+    Remove-Module ManageAadApplications
+    Import-Module .\ManageAadApplications.psm1
+}
 
 Describe 'Get-AadApplication' {
     Context "No parameters" {
@@ -24,10 +25,7 @@ Describe 'Get-AadApplication' {
             $result.Application | Should -BeNullOrEmpty -Not
             $result.ServicePrincipal | Should -BeNullOrEmpty -Not
             $result.Application.DisplayName | Should -Be "TestRalph"
+            $result.ServicePrincipal.DisplayName | Should -Be "TestRalph"
         }
     }
 }
-
-# AfterAll {
-#     Remove-Module ManageAadApplications
-# }
