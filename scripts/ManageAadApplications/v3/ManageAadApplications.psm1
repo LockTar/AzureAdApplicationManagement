@@ -56,12 +56,19 @@ function Get-AadApplication {
     else {
         Write-Information "Found application with name $DisplayName under ObjectId $($app.ObjectId) and ApplicationId $($app.ApplicationId)"
         $sp = Get-AzADApplication -ObjectId $app.ObjectId | Get-AzADServicePrincipal
-
+        
+        Write-Host "##vso[task.setvariable variable=ObjectId;]$($app.ObjectId)"
+        Write-Host "##vso[task.setvariable variable=ApplicationId;]$($app.ApplicationId)"
+        Write-Host "##vso[task.setvariable variable=Name;]$($app.DisplayName)"
+        Write-Host "##vso[task.setvariable variable=AppIdUri;]$($app.IdentifierUris[0])"
+        Write-Host "##vso[task.setvariable variable=HomePageUrl;]$($app.HomePage)"
+        Write-Host "##vso[task.setvariable variable=ServicePrincipalObjectId;]$($sp.Id)"
+                                
         $result = [PSCustomObject]@{
             Application      = $app
             ServicePrincipal = $sp
         }
-
+                        
         $result
     }
 }
