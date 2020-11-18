@@ -17,9 +17,16 @@ function New-AadApplication {
 
 function Get-AadApplication {
 
-    [CmdletBinding(SupportsShouldProcess)]
+    [CmdletBinding(DefaultParameterSetName = "ObjectId", SupportsShouldProcess)]
     param (
         [ValidateNotNullOrEmpty()]
+        [Parameter(Position = 0, ParameterSetName = "ObjectId", Mandatory = $true)]
+        [string]$ObjectId,
+        [ValidateNotNullOrEmpty()]
+        [Parameter(ParameterSetName = "ApplicationId", Mandatory = $true)]
+        [string]$ApplicationId,
+        [ValidateNotNullOrEmpty()]
+        [Parameter(ParameterSetName = "DisplayName", Mandatory = $true)]
         [string]$DisplayName
     )
 
@@ -32,7 +39,14 @@ function Get-AadApplication {
     }
     else {
         Write-Information "Found application with name $DisplayName under ObjectId $($app.ObjectId) and ApplicationId $($app.ApplicationId)"
-        $app
+        $sp = Get-AzADApplication -ObjectId $app.ObjectId | Get-AzADServicePrincipal
+
+        $result = [PSCustomObject]@{
+            Application = $app
+            ServicePrincipal = $sp
+        }
+
+        $result
     }
 }
 
@@ -59,25 +73,4 @@ function Remove-AadApplication {
     }
 }
 
-function Test-AadApplication {
-
-    [CmdletBinding(SupportsShouldProcess)]
-    param (
-        [ValidateNotNullOrEmpty()]
-        [string]$DisplayName
-    )
-
-    Write-Verbose -Message "Test, new, get, remove application $DisplayName"
-        
-    $app = Get-AadApplication -DisplayName $DisplayName
-    if (!$app) {
-        Write-Verbose "No application found. Create one"
-        $app = New-AadApplication -DisplayName $DisplayName
-    }
-    
-    Remove-AadApplication -ObjectId $app.ObjectId
-
-    Write-Verbose "Testing is done"
-}
-
-Export-ModuleMember -Function Test-AadApplication
+Export-ModuleMember -Function New-AadApplication, Get-AadApplication, Remove-AadApplication
