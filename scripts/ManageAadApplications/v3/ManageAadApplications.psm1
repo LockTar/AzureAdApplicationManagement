@@ -27,7 +27,9 @@ function Get-AadApplication {
         [string]$ApplicationId,
         [ValidateNotNullOrEmpty()]
         [Parameter(ParameterSetName = "DisplayName", Mandatory = $true)]
-        [string]$DisplayName
+        [string]$DisplayName,
+        
+        [switch]$FailIfNotFound
     )
 
     Write-Verbose "Get application by $($PSCmdlet.ParameterSetName)"
@@ -51,7 +53,13 @@ function Get-AadApplication {
     }    
 
     if ($null -eq $app) {
-        Write-Information "No application found with name $DisplayName"
+        $message = "The application cannot be found. Check if the application exists and if you search with the right values."
+        if ($FailIfNotFound) {
+            throw [Microsoft.PowerShell.Commands.NotFoundException]$message
+        }
+        else {
+            Write-Information $message
+        }
     }
     else {
         Write-Information "Found application with name $DisplayName under ObjectId $($app.ObjectId) and ApplicationId $($app.ApplicationId)"

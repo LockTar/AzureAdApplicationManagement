@@ -4,12 +4,6 @@ BeforeAll {
 }
 
 Describe 'Get-AadApplication' {
-    Context "No parameters" {
-        # It 'Given no parameters, it should show error' {
-        #     Get-AadApplication | Should -Throw
-        # }
-    }
-
     Context "No parameter names" {
         It "Given an existing ObjectId should return application and service principal" {
             $result = Get-AadApplication 88a82126-c223-4f2e-b997-2fe44d9131eb
@@ -23,12 +17,16 @@ Describe 'Get-AadApplication' {
     }
 
     Context "Parameter ObjectId" {
-        # It "Given empty parameter should show error" {
-        #     Get-AadApplication "" | Should -Throw# -ExceptionType "ValidationMetadataException"
-        # }
+        It "Given empty parameter should show error" {
+            { Get-AadApplication -ObjectId "" } | Should -Throw
+        }
 
         It "Given not existing id should return null" {
             Get-AadApplication -ObjectId 88a82126-c223-4f2e-b997-2fe44d9131ec | Should -BeNullOrEmpty
+        }
+
+        It "Given not existing id and fail should give error" {
+            { Get-AadApplication -ObjectId 88a82126-c223-4f2e-b997-2fe44d9131ec -FailIfNotFound } | Should -Throw
         }
 
         It "Given an existing id should return application and service principal" {
@@ -43,9 +41,9 @@ Describe 'Get-AadApplication' {
     }
 
     Context "Parameter ApplicationId" {
-        # It "Given empty parameter should show error" {
-        #     Get-AadApplication "" | Should -Throw# -ExceptionType "ValidationMetadataException"
-        # }
+        It "Given empty parameter should show error" {
+            { Get-AadApplication -ApplicationId "" } | Should -Throw
+        }
 
         It "Given not existing id should return null" {
             Get-AadApplication -ApplicationId 88a82126-c223-4f2e-b997-2fe44d9131ec | Should -BeNullOrEmpty
@@ -63,9 +61,9 @@ Describe 'Get-AadApplication' {
     }
 
     Context "Parameter DisplayName" {
-        # It "Given empty parameter should show error" {
-        #     Get-AadApplication "" | Should -Throw# -ExceptionType "ValidationMetadataException"
-        # }
+        It "Given empty parameter should show error" {
+            { Get-AadApplication -DisplayName "" } | Should -Throw
+        }
 
         It "Given not existing name should return null" {
             Get-AadApplication -DisplayName "foo" | Should -BeNullOrEmpty
