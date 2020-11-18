@@ -17,7 +17,7 @@ function New-AadApplication {
 
 function Get-AadApplication {
 
-    [CmdletBinding(DefaultParameterSetName = "ObjectId", SupportsShouldProcess)]
+    [CmdletBinding(DefaultParameterSetName = "ObjectId")]
     param (
         [ValidateNotNullOrEmpty()]
         [Parameter(Position = 0, ParameterSetName = "ObjectId", Mandatory = $true)]
@@ -30,9 +30,25 @@ function Get-AadApplication {
         [string]$DisplayName
     )
 
-    Write-Verbose -Message "Get application $DisplayName"
-        
-    $app = Get-AzADApplication -DisplayName $DisplayName
+    Write-Verbose "Get application by $($PSCmdlet.ParameterSetName)"
+    
+    switch ($PSCmdlet.ParameterSetName) {
+        "ObjectId" { 
+            Write-Verbose "Get application $ObjectId"
+            $app = Get-AzADApplication -ObjectId $ObjectId -ErrorAction SilentlyContinue
+        } 
+        "ApplicationId" { 
+            Write-Verbose "Get application $ApplicationId"
+            $app = Get-AzADApplication -ApplicationId $ApplicationId -ErrorAction SilentlyContinue
+        }
+        "DisplayName" { 
+            Write-Verbose "Get application $DisplayName"
+            $app = Get-AzADApplication -DisplayName $DisplayName -ErrorAction SilentlyContinue
+        }
+        Default {
+            throw "Unknown ParameterSetName"
+        }
+    }    
 
     if ($null -eq $app) {
         Write-Information "No application found with name $DisplayName"
@@ -42,7 +58,7 @@ function Get-AadApplication {
         $sp = Get-AzADApplication -ObjectId $app.ObjectId | Get-AzADServicePrincipal
 
         $result = [PSCustomObject]@{
-            Application = $app
+            Application      = $app
             ServicePrincipal = $sp
         }
 
