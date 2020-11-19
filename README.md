@@ -63,6 +63,7 @@ In order to use these tasks, a **prerequisite must be done** otherwise you will 
 - Remove AzureRm modules everywere
 - Manage AppRoles in the 'Set' task
 - Manage 'User assignment required?' in the 'Set' task
+- New 'Update' task that will only update the values that are given and will skip the rest
 - No 'New' task for v3. Can be done with the 'Set' task (was already recommended way)
 - Update documentation
 - Deprecate all v2 tasks
