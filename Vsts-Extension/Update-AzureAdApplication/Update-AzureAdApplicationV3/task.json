@@ -42,8 +42,7 @@
             "defaultValue": "",
             "required": true,
             "groupName": "AzureDetails",
-            "helpMarkDown": "Provide the Application object Id of the Azure AD Application.",
-            "visibleRule": "createIfNotExist = false"
+            "helpMarkDown": "Provide the Application object Id of the Azure AD Application."
         },
         {
             "name": "resourceAccessFilePath",
