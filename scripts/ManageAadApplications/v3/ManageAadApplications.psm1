@@ -149,92 +149,106 @@ function Update-AadApplication {
     $app = Get-AzADApplication -ObjectId $ObjectId #-ErrorAction Stop
 
     Write-Information "Found application with name $($app.DisplayName) under ObjectId $($app.ObjectId) and ApplicationId $($app.ApplicationId)"
-
-    # Because IdentifierUri is not required anymore in the task it can be empty. If empty, update the parameter with the value in the AD so we can use the update cmdlet from Microsoft (mandator there).
-    if ($null -eq $IdentifierUri -or $IdentifierUri -eq "") {
+    
+    # Because IdentifierUri is not required anymore in this cmdlet it can be empty. If empty, update the parameter with the value in the AD so we can use the update cmdlet from Microsoft (mandator there).
+    if ([string]::IsNullOrWhiteSpace($IdentifierUri)) {
         Write-Verbose "IdentifierUri is null or empty so use IdentifierUri from the AD $($app.IdentifierUris[0])"
         $IdentifierUri = $app.IdentifierUris[0]
         Write-Information "Going to use IdentifierUri: $IdentifierUri"
     }
-
-    # Because HomePageUrl is not required anymore in the task it can be empty. If empty, update the parameter with the value in the AD so we can use the update cmdlet from Microsoft (mandator there).
-    if ($null -eq $HomePageUrl -or $HomePageUrl -eq "") {
+    
+    # Because HomePageUrl is not required anymore in this cmdlet it can be empty. If empty, update the parameter with the value in the AD so we can use the update cmdlet from Microsoft (mandator there).
+    if ([string]::IsNullOrWhiteSpace($HomePageUrl)) {
         Write-Verbose "HomePageUrl is null or empty so use HomePage from the AD $($app.HomePage) because Microsoft Update cmdlet won't allow empty Homepage"
         $HomePageUrl = $app.HomePage
         Write-Information "Going to use HomePageUrl: $HomePageUrl"
-        if ($null -eq $HomePageUrl -or $HomePageUrl -eq "") {
+        if ([string]::IsNullOrWhiteSpace($HomePageUrl)) {
             Write-Information "HomePage is already empty in the AD so skip the parameter in the Update cmdlet"
         }
     }
     
-    # ResourceAccess
-    if ((Test-Path $ResourceAccessFilePath) -and ($ResourceAccessFilePath -Like "*.json")) {
+    # Prepare ResourceAccess
+    if ($PSBoundParameters.ContainsKey('ResourceAccessFilePath')) {
         [System.Collections.ArrayList]$requiredResourceAccess = @()
+        if ((Test-Path $ResourceAccessFilePath) -and ($ResourceAccessFilePath -Like "*.json")) {
         
-        Write-Verbose "Get the resources and permissions for app registration and convert into json object"
-        $resourceAccessInJson = Get-Content $ResourceAccessFilePath -Raw | ConvertFrom-Json
+            Write-Verbose "Get the resources and permissions for app registration and convert into json object"
+            $resourceAccessInJson = Get-Content $ResourceAccessFilePath -Raw | ConvertFrom-Json
         
-        Write-Verbose "Loop through all resources and permissions"
-        foreach ($resourceInJson in $resourceAccessInJson) {
-            Write-Verbose "Create new 'Microsoft.Open.AzureAD.Model.RequiredResourceAccess' object and set '$($resourceInJson.resourceAppId)' as the ResourceAppId"
-            $resource = New-Object -TypeName "Microsoft.Open.AzureAD.Model.RequiredResourceAccess"
-            $resource.ResourceAppId = $resourceInJson.resourceAppId
+            Write-Verbose "Loop through all resources and permissions"
+            foreach ($resourceInJson in $resourceAccessInJson) {
+                Write-Verbose "Create new 'Microsoft.Open.AzureAD.Model.RequiredResourceAccess' object and set '$($resourceInJson.resourceAppId)' as the ResourceAppId"
+                $resource = New-Object -TypeName "Microsoft.Open.AzureAD.Model.RequiredResourceAccess"
+                $resource.ResourceAppId = $resourceInJson.resourceAppId
             
-            Write-Verbose "Create new 'System.Collections.Generic.List[Microsoft.Open.AzureAD.Model.ResourceAccess]' object for ResourceAccess"
-            $resource.ResourceAccess = New-Object System.Collections.Generic.List[Microsoft.Open.AzureAD.Model.ResourceAccess]
-            foreach ($resourceAccessInJson in $resourceInJson.resourceAccess) {
-                Write-Verbose "Create new 'Microsoft.Open.AzureAD.Model.ResourceAccess' object and set '$($resourceAccessInJson.id),$($resourceAccessInJson.type)'. Add this ResourceAccess to the list"
-                $resourceAccess = New-Object -TypeName "Microsoft.Open.AzureAD.Model.ResourceAccess" -ArgumentList $resourceAccessInJson.id, $resourceAccessInJson.type
-                $resource.ResourceAccess.Add($resourceAccess)
+                Write-Verbose "Create new 'System.Collections.Generic.List[Microsoft.Open.AzureAD.Model.ResourceAccess]' object for ResourceAccess"
+                $resource.ResourceAccess = New-Object System.Collections.Generic.List[Microsoft.Open.AzureAD.Model.ResourceAccess]
+                foreach ($resourceAccessInJson in $resourceInJson.resourceAccess) {
+                    Write-Verbose "Create new 'Microsoft.Open.AzureAD.Model.ResourceAccess' object and set '$($resourceAccessInJson.id),$($resourceAccessInJson.type)'. Add this ResourceAccess to the list"
+                    $resourceAccess = New-Object -TypeName "Microsoft.Open.AzureAD.Model.ResourceAccess" -ArgumentList $resourceAccessInJson.id, $resourceAccessInJson.type
+                    $resource.ResourceAccess.Add($resourceAccess)
+                }
+            
+                $requiredResourceAccess.Add($resource)
             }
-            
-            $requiredResourceAccess.Add($resource)
-        }
         
-        Write-Verbose "All resources with permissions are created and ready to set to the application"
+            Write-Verbose "All resources with permissions are created and ready to set to the application"
+        }
     }
     
-    # AppRoles
-    $appRoles = $app.AppRoles
-    Write-Verbose "App Roles before updating to the new roles:"
-    Write-Host $appRoles
+    # Prepare AppRoles
+    if ($PSBoundParameters.ContainsKey('AppRolesFilePath')) {
+        $appRoles = $app.AppRoles
+        Write-Verbose "App Roles before updating to the new roles:"
+        Write-Host $appRoles
 
-    if ((Test-Path $AppRolesFilePath) -and ($AppRolesFilePath -Like "*.json")) {
-        Write-Verbose "Get the approles for app registration and convert into json object"
-        $appRolesInJson = Get-Content $AppRolesFilePath -Raw | ConvertFrom-Json
-        $appRoles = New-Object System.Collections.Generic.List[Microsoft.Open.AzureAD.Model.AppRole]
+        if ((Test-Path $AppRolesFilePath) -and ($AppRolesFilePath -Like "*.json")) {
+            Write-Verbose "Get the approles for app registration and convert into json object"
+            $appRolesInJson = Get-Content $AppRolesFilePath -Raw | ConvertFrom-Json
+            $appRoles = New-Object System.Collections.Generic.List[Microsoft.Open.AzureAD.Model.AppRole]
 
-        Write-Verbose "Loop through all approles"
-        foreach ($appRoleInJson in $appRolesInJson) {
-            $appRole = New-Object Microsoft.Open.AzureAD.Model.AppRole
-            $appRole.AllowedMemberTypes = $appRoleInJson.allowedMemberTypes
-            $appRole.DisplayName = $appRoleInJson.displayName
-            $appRole.Id = $appRoleInJson.id
-            $appRole.IsEnabled = $appRoleInJson.isEnabled
-            $appRole.Description = $appRoleInJson.description
-            $appRole.Value = $appRoleInJson.value
+            Write-Verbose "Loop through all approles"
+            foreach ($appRoleInJson in $appRolesInJson) {
+                $appRole = New-Object Microsoft.Open.AzureAD.Model.AppRole
+                $appRole.AllowedMemberTypes = $appRoleInJson.allowedMemberTypes
+                $appRole.DisplayName = $appRoleInJson.displayName
+                $appRole.Id = $appRoleInJson.id
+                $appRole.IsEnabled = $appRoleInJson.isEnabled
+                $appRole.Description = $appRoleInJson.description
+                $appRole.Value = $appRoleInJson.value
                 
-            $appRoles.Add($appRole)
-        }
+                $appRoles.Add($appRole)
+            }
 
-        Write-Verbose "All approles are created and ready to set to the application"     
+            Write-Verbose "All approles are created and ready to set to the application"     
+        }
     }
 
     Write-Verbose "Update application properties"
 
-    if (![string]::IsNullOrWhiteSpace($DisplayName)) {
-        Write-Verbose "Update DisplayName"
-        $app = Update-AzADApplication -ObjectId $app.ObjectId -IdentifierUris $IdentifierUri -DisplayName $Name
-        Set-AzureADServicePrincipal -ObjectId $sp.Id -DisplayName $Name
+    if ($PSBoundParameters.ContainsKey('DisplayName')) {
+        if ([string]::IsNullOrWhiteSpace($DisplayName)) {
+            throw "DisplayName can't be null or empty"
+        }
+        else {
+            Write-Verbose "Update DisplayName"
+            $app = Update-AzADApplication -ObjectId $app.ObjectId -IdentifierUris $IdentifierUri -DisplayName $Name
+            Set-AzureADServicePrincipal -ObjectId $sp.Id -DisplayName $Name
+        }
     }
 
-    if (![string]::IsNullOrWhiteSpace($HomePageUrl)) {
-        Write-Verbose "Update HomePageUrl"
-        $app = Update-AzADApplication -ObjectId $app.ObjectId -IdentifierUris $IdentifierUri -HomePage $HomePageUrl
-        Set-AzureADServicePrincipal -ObjectId $sp.Id -Homepage $HomePageUrl
+    if ($PSBoundParameters.ContainsKey('HomePageUrl')) {
+        if ([string]::IsNullOrWhiteSpace($HomePageUrl)) {
+            throw "HomePageUrl can't be null or empty"
+        }
+        else {
+            Write-Verbose "Update HomePageUrl"
+            $app = Update-AzADApplication -ObjectId $app.ObjectId -IdentifierUris $IdentifierUri -HomePage $HomePageUrl
+            Set-AzureADServicePrincipal -ObjectId $sp.Id -Homepage $HomePageUrl
+        }
     }
 
-    if ($ReplyUrls) {
+    if ($PSBoundParameters.ContainsKey('ReplyUrls')) {
         Write-Verbose "Update ReplyUrls"
         $app = Update-AzADApplication -ObjectId $app.ObjectId -IdentifierUris $IdentifierUri -ReplyUrls $ReplyUrls        
     }
@@ -250,17 +264,17 @@ function Update-AadApplication {
     Write-Verbose "Update Oauth2AllowImplicitFlow"
     Set-AzureADApplication -ObjectId $app.ObjectId -Oauth2AllowImplicitFlow $Oauth2AllowImplicitFlow
 
-    if ((Test-Path $ResourceAccessFilePath) -and ($ResourceAccessFilePath -Like "*.json")) {
+    if ($PSBoundParameters.ContainsKey('ResourceAccessFilePath')) {
         Write-Verbose "Update RequiredResourceAccess"
         Set-AzureADApplication -ObjectId $app.ObjectId -RequiredResourceAccess $requiredResourceAccess
     }
 
-    if ((Test-Path $AppRolesFilePath) -and ($AppRolesFilePath -Like "*.json")) {
+    if ($PSBoundParameters.ContainsKey('AppRolesFilePath')) {
         Write-Verbose "Update AppRoles"
         Set-AzureADApplication -ObjectId $app.ObjectId -AppRoles $appRoles        
     }
     
-    if ($Owners) {
+    if ($PSBoundParameters.ContainsKey('Owners')) {
         Write-Verbose "Update owners of the application. Current owners are:"
         $currentOwners = Get-AzureADApplicationOwner -ObjectId $app.ObjectId -All $True
         $currentOwners | Select-Object ObjectId, DisplayName, UserPrincipalName | Format-Table | Write-Host
@@ -312,36 +326,38 @@ function Update-AadApplication {
         $currentOwners | Select-Object ObjectId, DisplayName, UserPrincipalName | Format-Table | Write-Host
     }
     
-    if ($Secrets) { 
-        # Check for existing secrets and remove them so they can be re-created
-        Write-Verbose "Checking for existing secrets"
-        $appKeySecrets = Get-AzureADApplicationPasswordCredential -ObjectId $app.ObjectId
+    if ($PSBoundParameters.ContainsKey('Secrets')) {
+        if ($Secrets) { 
+            # Check for existing secrets and remove them so they can be re-created
+            Write-Verbose "Checking for existing secrets"
+            $appKeySecrets = Get-AzureADApplicationPasswordCredential -ObjectId $app.ObjectId
 
-        if ($appKeySecrets) {
-            foreach ($existingSecret in $appKeySecrets) {
-                foreach ($secret in $Secrets) {
-                    $stringDescription = $secret.Description | Out-String
-                    $trimmedStringDescription = $stringDescription -replace [Environment]::NewLine, "";
+            if ($appKeySecrets) {
+                foreach ($existingSecret in $appKeySecrets) {
+                    foreach ($secret in $Secrets) {
+                        $stringDescription = $secret.Description | Out-String
+                        $trimmedStringDescription = $stringDescription -replace [Environment]::NewLine, "";
 
-                    if ([System.Text.Encoding]::ASCII.GetString($existingSecret.CustomKeyIdentifier) -eq $trimmedStringDescription) {
-                        Write-Verbose "Removing existing key with description: $trimmedStringDescription"
-                        Remove-AzureADApplicationPasswordCredential  -ObjectId $app.ObjectId -KeyId $existingSecret.KeyId
+                        if ([System.Text.Encoding]::ASCII.GetString($existingSecret.CustomKeyIdentifier) -eq $trimmedStringDescription) {
+                            Write-Verbose "Removing existing key with description: $trimmedStringDescription"
+                            Remove-AzureADApplicationPasswordCredential  -ObjectId $app.ObjectId -KeyId $existingSecret.KeyId
+                        }
                     }
                 }
             }
-        }
 
-        # Create new secrets
-        foreach ($secret in $Secrets) {
-            $endDate = [datetime]::ParseExact($secret.EndDate, 'dd/MM/yyyy', [Globalization.CultureInfo]::InvariantCulture)
+            # Create new secrets
+            foreach ($secret in $Secrets) {
+                $endDate = [datetime]::ParseExact($secret.EndDate, 'dd/MM/yyyy', [Globalization.CultureInfo]::InvariantCulture)
                 
-            $stringDescription = $secret.Description | Out-String
-            $trimmedStringDescription = $stringDescription -replace [Environment]::NewLine, "";
+                $stringDescription = $secret.Description | Out-String
+                $trimmedStringDescription = $stringDescription -replace [Environment]::NewLine, "";
                 
-            Write-Verbose "Creating new key with description: $trimmedStringDescription and end date $endDate"
-            $appKeySecret = New-AzureADApplicationPasswordCredential -ObjectId $app.ObjectId -CustomKeyIdentifier $trimmedStringDescription -EndDate $endDate
+                Write-Verbose "Creating new key with description: $trimmedStringDescription and end date $endDate"
+                $appKeySecret = New-AzureADApplicationPasswordCredential -ObjectId $app.ObjectId -CustomKeyIdentifier $trimmedStringDescription -EndDate $endDate
                 
-            Write-Host "##vso[task.setvariable variable=Secret.$trimmedStringDescription;isOutput=true;issecret=true]$($appKeySecret.Value)"
+                Write-Host "##vso[task.setvariable variable=Secret.$trimmedStringDescription;isOutput=true;issecret=true]$($appKeySecret.Value)"
+            }
         }
     }
 
