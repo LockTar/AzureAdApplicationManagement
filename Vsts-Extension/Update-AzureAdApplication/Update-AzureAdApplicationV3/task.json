@@ -46,7 +46,7 @@
         },
         {
             "name": "resourceAccessFilePath",
-            "type": "filePath",
+            "type": "string",
             "label": "Required Resource Access",
             "defaultValue": "",
             "required": false,
@@ -55,7 +55,7 @@
         },
         {
             "name": "appRolesFilePath",
-            "type": "filePath",
+            "type": "string",
             "label": "AppRoles",
             "defaultValue": "",
             "required": false,
