@@ -5,7 +5,7 @@
   "main": "vss-extension.json",
   "dependencies": {},
   "devDependencies": {
-    "del": "^5.1.0",
+    "del": "^6.0.0",
     "gulp": "^4.0.2",
     "gulp-hub": "github:frankwallis/gulp-hub#4.2.0",
     "npm": "^6.14.9",
