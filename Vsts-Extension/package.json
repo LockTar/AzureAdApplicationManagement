@@ -8,8 +8,8 @@
     "del": "^5.1.0",
     "gulp": "^4.0.2",
     "gulp-hub": "github:frankwallis/gulp-hub#4.2.0",
-    "npm": "^6.14.6",
-    "tfx-cli": "^0.7.11",
+    "npm": "^6.14.9",
+    "tfx-cli": "^0.8.3",
     "vss-web-extension-sdk": "^5.141.0"
   },
   "scripts": {
