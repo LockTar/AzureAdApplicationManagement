@@ -167,7 +167,7 @@ function Update-AadApplication {
     # Prepare ResourceAccess
     if ($PSBoundParameters.ContainsKey('ResourceAccessFilePath')) {        
         [System.Collections.ArrayList]$requiredResourceAccess = @()
-        if ((Test-Path $ResourceAccessFilePath) -and ($ResourceAccessFilePath -Like "*.json")) {            
+        if (![string]::IsNullOrWhiteSpace($ResourceAccessFilePath) -and (Test-Path $ResourceAccessFilePath) -and ($ResourceAccessFilePath -Like "*.json")) {            
             Write-Verbose "Get the resources and permissions for app registration and convert into json object"
             $resourceAccessInJson = Get-Content $ResourceAccessFilePath -Raw | ConvertFrom-Json
         
@@ -201,7 +201,7 @@ function Update-AadApplication {
         # Write-Verbose "App Roles before updating to the new roles:"
         # Write-Host $appRoles
 
-        if ((Test-Path $AppRolesFilePath) -and ($AppRolesFilePath -Like "*.json")) {
+        if (![string]::IsNullOrWhiteSpace($AppRolesFilePath) -and (Test-Path $AppRolesFilePath) -and ($AppRolesFilePath -Like "*.json")) {
             Write-Verbose "Get the approles for app registration and convert into json object"
             $appRolesInJson = Get-Content $AppRolesFilePath -Raw | ConvertFrom-Json
             $appRoles = New-Object System.Collections.Generic.List[Microsoft.Open.AzureAD.Model.AppRole]
@@ -373,6 +373,9 @@ function Update-AadApplication {
     #     }
     # }
 
+    Write-Verbose "Sleep so updates are processed"
+    Start-Sleep 10
+
     Write-Verbose "Get refreshed app and service principal properties"
     $app = Get-AzADApplication -ObjectId $app.ObjectId
     $appOld = Get-AzureADApplication -ObjectId $app.ObjectId
@@ -397,24 +400,32 @@ function Update-AadApplication {
 
 function Remove-AadApplication {
 
-    [CmdletBinding(SupportsShouldProcess)]
+    [CmdletBinding(DefaultParameterSetName = "ObjectId")]
     param (
         [ValidateNotNullOrEmpty()]
-        [string]$ObjectId
+        [Parameter(Position = 0, ParameterSetName = "ObjectId", Mandatory = $true)]
+        [string]$ObjectId,
+
+        [switch]$FailIfNotFound
     )
 
-    Write-Verbose -Message "Remove application with objectid $ObjectId"
+    Write-Verbose "Remove application with objectid $ObjectId"
         
-    $app = Get-AzADApplication -ObjectId $ObjectId
-    $displayName = $app.DisplayName
+    $app = Get-AzADApplication -ObjectId $ObjectId -ErrorAction SilentlyContinue
 
     if ($null -eq $app) {
-        Write-Information "No application found to remove with name $displayName"
+        $message = "The application with ObjectId $ObjectId cannot be found. Check if the application exists and if you search with the right values."
+        if ($FailIfNotFound) {
+            throw $message
+        }
+        else {
+            Write-Information $message
+        }
     }
     else {
-        Write-Verbose "Found application to remove with name $displayName under ObjectId $($app.ObjectId) and ApplicationId $($app.ApplicationId)"
+        Write-Verbose "Found application to remove with name $($app.DisplayName) under ObjectId $($app.ObjectId) and ApplicationId $($app.ApplicationId)"
         Remove-AzADApplication -ObjectId $ObjectId -Force
-        Write-Information "Removed application $displayName"
+        Write-Information "Removed application $($app.DisplayName)"
     }
 }
 
