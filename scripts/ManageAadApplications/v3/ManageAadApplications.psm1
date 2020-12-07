@@ -400,24 +400,32 @@ function Update-AadApplication {
 
 function Remove-AadApplication {
 
-    [CmdletBinding(SupportsShouldProcess)]
+    [CmdletBinding(DefaultParameterSetName = "ObjectId")]
     param (
         [ValidateNotNullOrEmpty()]
-        [string]$ObjectId
+        [Parameter(Position = 0, ParameterSetName = "ObjectId", Mandatory = $true)]
+        [string]$ObjectId,
+
+        [switch]$FailIfNotFound
     )
 
-    Write-Verbose -Message "Remove application with objectid $ObjectId"
+    Write-Verbose "Remove application with objectid $ObjectId"
         
-    $app = Get-AzADApplication -ObjectId $ObjectId
-    $displayName = $app.DisplayName
+    $app = Get-AzADApplication -ObjectId $ObjectId -ErrorAction SilentlyContinue
 
     if ($null -eq $app) {
-        Write-Information "No application found to remove with name $displayName"
+        $message = "The application with ObjectId $ObjectId cannot be found. Check if the application exists and if you search with the right values."
+        if ($FailIfNotFound) {
+            throw $message
+        }
+        else {
+            Write-Information $message
+        }
     }
     else {
-        Write-Verbose "Found application to remove with name $displayName under ObjectId $($app.ObjectId) and ApplicationId $($app.ApplicationId)"
+        Write-Verbose "Found application to remove with name $($app.DisplayName) under ObjectId $($app.ObjectId) and ApplicationId $($app.ApplicationId)"
         Remove-AzADApplication -ObjectId $ObjectId -Force
-        Write-Information "Removed application $displayName"
+        Write-Information "Removed application $($app.DisplayName)"
     }
 }
 
