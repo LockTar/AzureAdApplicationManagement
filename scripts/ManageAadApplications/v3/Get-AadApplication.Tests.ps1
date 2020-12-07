@@ -1,3 +1,5 @@
+#Invoke-Pester -Output Detailed .\Get-AadApplication.Tests.ps1
+
 BeforeAll { 
     Remove-Module ManageAadApplications
     Import-Module .\ManageAadApplications.psm1
