@@ -35,25 +35,19 @@ try
     Write-Verbose "name: $name"
     Write-Verbose "failIfNotFound: $failIfNotFound"
 
-    Import-Module $PSScriptRoot\scripts\Get-AadApplication.psm1
+    Import-Module $PSScriptRoot\scripts\ManageAadApplications.psm1
 
-    switch ($method)
-    {
-        "objectid"
-        {
-            Write-Verbose "Get application by ObjectId"        
-            $null = Get-AadApplication -ObjectId $objectId -FailIfNotFound $failIfNotFound
+    switch ($method) {
+        "objectId" { 
+            Get-AadApplication -ObjectId $objectId -FailIfNotFound:$failIfNotFound
         }
-        "applicationid"
-        {
-            Write-Verbose "Get application by ApplicationId"
-            $null = Get-AadApplication -ApplicationId $applicationId -FailIfNotFound $failIfNotFound
-        }  
+        "applicationid" { 
+            Get-AadApplication -ApplicationId $applicationId -FailIfNotFound:$failIfNotFound
+        }    
         "name"
         {
-            Write-Verbose "Get application by Name"
-            $null = Get-AadApplication -ApplicationName $name -FailIfNotFound $failIfNotFound
-        }
+            Get-AadApplication -DisplayName $name -FailIfNotFound $failIfNotFound
+        }    
         default {
             Write-Error "Unknow method '$method'"
         }
