@@ -46,7 +46,7 @@ try
         }    
         "name"
         {
-            Get-AadApplication -DisplayName $name -FailIfNotFound $failIfNotFound
+            Get-AadApplication -DisplayName $name -FailIfNotFound:$failIfNotFound
         }    
         default {
             Write-Error "Unknow method '$method'"
