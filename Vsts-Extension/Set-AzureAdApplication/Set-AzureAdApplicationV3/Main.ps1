@@ -119,7 +119,7 @@ try
 
     if ($createIfNotExist) {
         Write-Verbose "Check if the application '$name' exists"
-        $result = Get-AadApplication -DisplayName $name -FailIfNotFound $false
+        $result = Get-AadApplication -DisplayName $name
 
         if (!$result.Application) {
             Write-Verbose "Application doesn't exist. Create the application '$name'"
@@ -131,7 +131,7 @@ try
         }
 
         Write-Verbose "Get the application '$name' again so we have the ObjectId to alter the application"
-        $result = Get-AadApplication -DisplayName $name -FailIfNotFound $false
+        $result = Get-AadApplication -DisplayName $name
 
         $objectId = $result.Application.ObjectId
     }
