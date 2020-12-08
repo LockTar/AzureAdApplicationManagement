@@ -406,25 +406,41 @@ function Remove-AadApplication {
         [Parameter(Position = 0, ParameterSetName = "ObjectId", Mandatory = $true)]
         [string]$ObjectId,
 
+        [ValidateNotNullOrEmpty()]
+        [Parameter(ParameterSetName = "ApplicationId", Mandatory = $true)]
+        [string]$ApplicationId,
+
         [switch]$FailIfNotFound
     )
 
-    Write-Verbose "Remove application with objectid $ObjectId"
-        
-    $app = Get-AzADApplication -ObjectId $ObjectId -ErrorAction SilentlyContinue
+    switch ($PSCmdlet.ParameterSetName) {
+        "ObjectId" { 
+            Write-Verbose "Remove application by ObjectId: $ObjectId"
+            $app = Get-AzADApplication -ObjectId $ObjectId -ErrorAction SilentlyContinue
+            $notFoundMessage = "The application with ObjectId $ObjectId cannot be found. Check if the application exists and if you search with the right values."
+        } 
+        "ApplicationId" { 
+            Write-Verbose "Remove application by ApplicationId: $ApplicationId"
+            $app = Get-AzADApplication -ApplicationId $ApplicationId -ErrorAction SilentlyContinue
+            $notFoundMessage = "The application with ApplicationId $ApplicationId cannot be found. Check if the application exists and if you search with the right values."
+        }
+        Default {
+            throw "Unknown ParameterSetName"
+        }
+    }  
 
     if ($null -eq $app) {
-        $message = "The application with ObjectId $ObjectId cannot be found. Check if the application exists and if you search with the right values."
+        Write-Verbose "Application not found. Check if we should throw error"
         if ($FailIfNotFound) {
-            throw $message
+            throw $notFoundMessage
         }
         else {
-            Write-Information $message
+            Write-Information $notFoundMessage
         }
     }
     else {
         Write-Verbose "Found application to remove with name $($app.DisplayName) under ObjectId $($app.ObjectId) and ApplicationId $($app.ApplicationId)"
-        Remove-AzADApplication -ObjectId $ObjectId -Force
+        Remove-AzADApplication -ObjectId $app.ObjectId -Force
         Write-Information "Removed application $($app.DisplayName)"
     }
 }

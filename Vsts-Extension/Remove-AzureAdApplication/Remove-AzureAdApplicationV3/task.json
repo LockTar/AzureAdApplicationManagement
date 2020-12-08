@@ -70,7 +70,15 @@
             "groupName": "AzureDetails",
             "helpMarkDown": "Provide the Application Id of the Azure AD Application.",
             "visibleRule": "method = ApplicationId"
-        }
+        },
+        {
+            "name": "failIfNotFound",
+            "type": "boolean",
+            "label": "Fail build if not found",
+            "defaultValue": false,
+            "groupName": "AzureDetails",
+            "helpMarkDown": "Let the build fail if the Azure AD Application cannot be found."
+        }     
     ],
     "execution": {
         "PowerShell3": {
