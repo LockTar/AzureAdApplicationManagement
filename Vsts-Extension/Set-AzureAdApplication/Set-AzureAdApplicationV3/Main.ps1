@@ -114,17 +114,16 @@ try
     $deployServicePrincipalId = (Get-AzADServicePrincipal -ApplicationId $clientId).Id
     $ownersArray += $deployServicePrincipalId
 
-    Import-Module $PSScriptRoot\scripts\Get-AadApplication.psm1
-    Import-Module $PSScriptRoot\scripts\New-AadApplication.psm1
     Import-Module $PSScriptRoot\scripts\Set-AadApplication.psm1
+    Import-Module $PSScriptRoot\scripts\ManageAadApplications.psm1
 
     if ($createIfNotExist) {
         Write-Verbose "Check if the application '$name' exists"
-        $result = Get-AadApplication -ApplicationName $name -FailIfNotFound $false
+        $result = Get-AadApplication -DisplayName $name -FailIfNotFound $false
 
         if (!$result.Application) {
             Write-Verbose "Application doesn't exist. Create the application '$name'"
-            New-AadApplication -ApplicationName $name -HomePageUrl $homePageUrl
+            New-AadApplication -DisplayName $name
 
             $secondsToWait = 10
             Write-Verbose "Application '$name' is created but wait $secondsToWait seconds so Azure AD can process it and we can set all the properties"
@@ -132,7 +131,7 @@ try
         }
 
         Write-Verbose "Get the application '$name' again so we have the ObjectId to alter the application"
-        $result = Get-AadApplication -ApplicationName $name -FailIfNotFound $false
+        $result = Get-AadApplication -DisplayName $name -FailIfNotFound $false
 
         $objectId = $result.Application.ObjectId
     }
