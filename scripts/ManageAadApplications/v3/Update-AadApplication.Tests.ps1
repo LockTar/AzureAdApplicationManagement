@@ -6,7 +6,7 @@ BeforeAll {
 }
 
 Describe 'Update-AadApplication' {
-    Context "Update-AadApplication" {
+    Context "ObjectId" {
         BeforeEach { 
             $app1 = New-AzADApplication -DisplayName "AzureAdApplicationManagementTestApp1" -IdentifierUris "https://AzureAdApplicationManagementTestApp1"
             $sp1 = Get-AzADApplication -ObjectId $app1.ObjectId | New-AzADServicePrincipal
@@ -34,6 +34,18 @@ Describe 'Update-AadApplication' {
             $result.Application.DisplayName | Should -Be "AzureAdApplicationManagementTestApp1"
             $result.ServicePrincipal.DisplayName | Should -Be "AzureAdApplicationManagementTestApp1"
         }
+        
+        AfterEach { 
+            Get-AzADApplication -DisplayName "AzureAdApplicationManagementTestApp1" | Remove-AzADApplication -Force
+        }
+    }
+
+    Context "ResourceAccessFilePath" {
+        BeforeEach { 
+            $app1 = New-AzADApplication -DisplayName "AzureAdApplicationManagementTestApp1" -IdentifierUris "https://AzureAdApplicationManagementTestApp1"
+            $sp1 = Get-AzADApplication -ObjectId $app1.ObjectId | New-AzADServicePrincipal
+            Start-Sleep 15
+        }
 
         It "Given empty ResourceAccessFilePath should throw error" {
             { Update-AadApplication -ObjectId $app1.ObjectId -ResourceAccessFilePath "" } | Should -Throw "Invalid file path for ResourceAccessFilePath"
@@ -50,6 +62,18 @@ Describe 'Update-AadApplication' {
             $result.Application | Should -BeNullOrEmpty -Not
             $result.RequiredResourceAccess | Should -BeNullOrEmpty -Not
             $result.RequiredResourceAccess.Count | Should -Be 2
+        }
+        
+        AfterEach { 
+            Get-AzADApplication -DisplayName "AzureAdApplicationManagementTestApp1" | Remove-AzADApplication -Force
+        }
+    }
+
+    Context "AppRolesFilePath" {
+        BeforeEach { 
+            $app1 = New-AzADApplication -DisplayName "AzureAdApplicationManagementTestApp1" -IdentifierUris "https://AzureAdApplicationManagementTestApp1"
+            $sp1 = Get-AzADApplication -ObjectId $app1.ObjectId | New-AzADServicePrincipal
+            Start-Sleep 15
         }
 
         It "Given empty AppRolesFilePath should throw error" {
@@ -72,6 +96,67 @@ Describe 'Update-AadApplication' {
         
         AfterEach { 
             Get-AzADApplication -DisplayName "AzureAdApplicationManagementTestApp1" | Remove-AzADApplication -Force
+        }
+    }
+
+    Context "DisplayName" {
+        BeforeEach { 
+            $app1 = New-AzADApplication -DisplayName "AzureAdApplicationManagementTestApp1" -IdentifierUris "https://AzureAdApplicationManagementTestApp1"
+            $sp1 = Get-AzADApplication -ObjectId $app1.ObjectId | New-AzADServicePrincipal
+            Start-Sleep 15
+        }
+
+        It "Given no DisplayName should skip update" {
+            $result = Update-AadApplication -ObjectId $app1.ObjectId
+
+            $result | Should -BeNullOrEmpty -Not
+        }
+
+        It "Given empty DisplayName should throw error" {
+            { Update-AadApplication -ObjectId $app1.ObjectId -DisplayName "" } | Should -Throw "Cannot validate argument on parameter 'DisplayName'. The argument is null or empty. Provide an argument that is not null or empty, and then try the command again."
+        }        
+
+        It "Given DisplayName should update value" {
+            $result = Update-AadApplication -ObjectId $app1.ObjectId -DisplayName "AzureAdApplicationManagementTestApp1NewName"
+
+            $result | Should -BeNullOrEmpty -Not
+            $result.Application | Should -BeNullOrEmpty -Not
+            $result.Application.DisplayName | Should -Be "AzureAdApplicationManagementTestApp1NewName"
+            $result.ServicePrincipal.DisplayName | Should -Be "AzureAdApplicationManagementTestApp1NewName"
+        }
+        
+        AfterEach { 
+            Get-AzADApplication -ObjectId $app1.ObjectId | Remove-AzADApplication -Force
+        }
+    }
+
+    Context "IdentifierUri" {
+        BeforeEach { 
+            $app1 = New-AzADApplication -DisplayName "AzureAdApplicationManagementTestApp1" -IdentifierUris "https://AzureAdApplicationManagementTestApp1"
+            $sp1 = Get-AzADApplication -ObjectId $app1.ObjectId | New-AzADServicePrincipal
+            Start-Sleep 15
+        }
+
+        It "Given no IdentifierUri should skip update" {
+            $result = Update-AadApplication -ObjectId $app1.ObjectId
+
+            $result | Should -BeNullOrEmpty -Not
+        }
+
+        It "Given empty IdentifierUri should throw error" {
+            { Update-AadApplication -ObjectId $app1.ObjectId -IdentifierUri "" } | Should -Throw "Cannot validate argument on parameter 'IdentifierUri'. The argument is null or empty. Provide an argument that is not null or empty, and then try the command again."
+        }        
+
+        It "Given IdentifierUri should update value" {
+            $result = Update-AadApplication -ObjectId $app1.ObjectId -IdentifierUri "http://foo123"
+
+            $result | Should -BeNullOrEmpty -Not
+            $result.Application | Should -BeNullOrEmpty -Not
+            $result.Application.IdentifierUris | Should -Be "http://foo123"
+        }
+        
+        AfterEach { 
+            Get-AzADApplication -ObjectId $app1.ObjectId | Remove-AzADApplication -Force
         }
     }
 }

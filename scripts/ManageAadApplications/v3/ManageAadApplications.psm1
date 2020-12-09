@@ -127,8 +127,10 @@ function Update-AadApplication {
         [ValidateNotNullOrEmpty()]
         [Parameter(Position = 0, ParameterSetName = "ObjectId", Mandatory = $true)]
         [string]$ObjectId,
-        # [string]$DisplayName,
-        # [string]$IdentifierUri,
+        [ValidateNotNullOrEmpty()]
+        [string]$DisplayName,
+        [ValidateNotNullOrEmpty()]
+        [string]$IdentifierUri,
         # [string]$HomePageUrl,
         # [bool]$MultiTenant,
         # [string[]]$ReplyUrls,
@@ -144,16 +146,10 @@ function Update-AadApplication {
 
     Write-Verbose "Get application by ObjectId: $ObjectId"
     $app = Get-AzADApplication -ObjectId $ObjectId -ErrorAction Stop
+    $sp = Get-AzADServicePrincipal -ApplicationId $app.ApplicationId
 
     Write-Information "Found application with name $($app.DisplayName) under ObjectId $($app.ObjectId) and ApplicationId $($app.ApplicationId)"
-    
-    # # Because IdentifierUri is not required anymore in this cmdlet it can be empty. If empty, update the parameter with the value in the AD so we can use the update cmdlet from Microsoft (mandator there).
-    # if ([string]::IsNullOrWhiteSpace($IdentifierUri)) {
-    #     Write-Verbose "IdentifierUri is null or empty so use IdentifierUri from the AD $($app.IdentifierUris[0])"
-    #     $IdentifierUri = $app.IdentifierUris[0]
-    #     Write-Information "Going to use IdentifierUri: $IdentifierUri"
-    # }
-    
+   
     # # Because HomePageUrl is not required anymore in this cmdlet it can be empty. If empty, update the parameter with the value in the AD so we can use the update cmdlet from Microsoft (mandator there).
     # if ([string]::IsNullOrWhiteSpace($HomePageUrl)) {
     #     Write-Verbose "HomePageUrl is null or empty so use HomePage from the AD $($app.HomePage) because Microsoft Update cmdlet won't allow empty Homepage"
@@ -165,7 +161,7 @@ function Update-AadApplication {
     # }
     
     # Prepare ResourceAccess
-    if ($PSBoundParameters.ContainsKey('ResourceAccessFilePath')) {        
+    if ($PSBoundParameters.ContainsKey('ResourceAccessFilePath')) {
         [System.Collections.ArrayList]$requiredResourceAccess = @()
         if (![string]::IsNullOrWhiteSpace($ResourceAccessFilePath) -and (Test-Path $ResourceAccessFilePath) -and ($ResourceAccessFilePath -Like "*.json")) {            
             Write-Verbose "Get the resources and permissions for app registration and convert into json object"
@@ -228,16 +224,18 @@ function Update-AadApplication {
 
     Write-Verbose "Start updating application properties"
 
-    # if ($PSBoundParameters.ContainsKey('DisplayName')) {
-    #     if ([string]::IsNullOrWhiteSpace($DisplayName)) {
-    #         throw "DisplayName can't be null or empty"
-    #     }
-    #     else {
-    #         Write-Verbose "Update DisplayName"
-    #         $app = Update-AzADApplication -ObjectId $app.ObjectId -IdentifierUris $IdentifierUri -DisplayName $Name
-    #         Set-AzureADServicePrincipal -ObjectId $sp.Id -DisplayName $Name
-    #     }
-    # }
+    if ($PSBoundParameters.ContainsKey('DisplayName')) {        
+        Write-Verbose "Update DisplayName for application"
+        $app = Update-AzADApplication -ObjectId $app.ObjectId -DisplayName $DisplayName
+
+        Write-Verbose "Update DisplayName for service principal"
+        Update-AzADServicePrincipal -ObjectId $sp.Id -DisplayName $DisplayName
+    }
+
+    if ($PSBoundParameters.ContainsKey('IdentifierUri')) {        
+        Write-Verbose "Update IdentifierUri"
+        $app = Update-AzADApplication -ObjectId $app.ObjectId -IdentifierUris $IdentifierUri
+    }
 
     # if ($PSBoundParameters.ContainsKey('HomePageUrl')) {
     #     if ([string]::IsNullOrWhiteSpace($HomePageUrl)) {
