@@ -131,8 +131,9 @@ function Update-AadApplication {
         [string]$DisplayName,
         [ValidateNotNullOrEmpty()]
         [string]$IdentifierUri,
-        # [string]$HomePageUrl,
-        # [bool]$MultiTenant,
+        [ValidateNotNullOrEmpty()]
+        [string]$HomePageUrl,
+        [bool]$AvailableToOtherTenants,
         # [string[]]$ReplyUrls,
         [string]$ResourceAccessFilePath,
         [string]$AppRolesFilePath
@@ -149,17 +150,7 @@ function Update-AadApplication {
     $sp = Get-AzADServicePrincipal -ApplicationId $app.ApplicationId
 
     Write-Information "Found application with name $($app.DisplayName) under ObjectId $($app.ObjectId) and ApplicationId $($app.ApplicationId)"
-   
-    # # Because HomePageUrl is not required anymore in this cmdlet it can be empty. If empty, update the parameter with the value in the AD so we can use the update cmdlet from Microsoft (mandator there).
-    # if ([string]::IsNullOrWhiteSpace($HomePageUrl)) {
-    #     Write-Verbose "HomePageUrl is null or empty so use HomePage from the AD $($app.HomePage) because Microsoft Update cmdlet won't allow empty Homepage"
-    #     $HomePageUrl = $app.HomePage
-    #     Write-Information "Going to use HomePageUrl: $HomePageUrl"
-    #     if ([string]::IsNullOrWhiteSpace($HomePageUrl)) {
-    #         Write-Information "HomePage is already empty in the AD so skip the parameter in the Update cmdlet"
-    #     }
-    # }
-    
+       
     # Prepare ResourceAccess
     if ($PSBoundParameters.ContainsKey('ResourceAccessFilePath')) {
         [System.Collections.ArrayList]$requiredResourceAccess = @()
@@ -229,7 +220,7 @@ function Update-AadApplication {
         $app = Update-AzADApplication -ObjectId $app.ObjectId -DisplayName $DisplayName
 
         Write-Verbose "Update DisplayName for service principal"
-        Update-AzADServicePrincipal -ObjectId $sp.Id -DisplayName $DisplayName
+        $sp = Update-AzADServicePrincipal -ObjectId $sp.Id -DisplayName $DisplayName
     }
 
     if ($PSBoundParameters.ContainsKey('IdentifierUri')) {        
@@ -237,24 +228,23 @@ function Update-AadApplication {
         $app = Update-AzADApplication -ObjectId $app.ObjectId -IdentifierUris $IdentifierUri
     }
 
-    # if ($PSBoundParameters.ContainsKey('HomePageUrl')) {
-    #     if ([string]::IsNullOrWhiteSpace($HomePageUrl)) {
-    #         throw "HomePageUrl can't be null or empty"
-    #     }
-    #     else {
-    #         Write-Verbose "Update HomePageUrl"
-    #         $app = Update-AzADApplication -ObjectId $app.ObjectId -IdentifierUris $IdentifierUri -HomePage $HomePageUrl
-    #         Set-AzureADServicePrincipal -ObjectId $sp.Id -Homepage $HomePageUrl
-    #     }
-    # }
+    if ($PSBoundParameters.ContainsKey('HomePageUrl')) {
+        Write-Verbose "Update HomePageUrl"
+        $app = Update-AzADApplication -ObjectId $app.ObjectId -HomePage $HomePageUrl
+
+        Write-Verbose "Update HomePageUrl for service principal"
+        $sp = Set-AzureADServicePrincipal -ObjectId $sp.Id -Homepage $HomePageUrl
+    }
 
     # if ($PSBoundParameters.ContainsKey('ReplyUrls')) {
     #     Write-Verbose "Update ReplyUrls"
     #     $app = Update-AzADApplication -ObjectId $app.ObjectId -IdentifierUris $IdentifierUri -ReplyUrls $ReplyUrls        
     # }
 
-    # How to deal with AvailableToOtherTenants? This is a boolean so always given
-    # $app = Update-AzADApplication -ObjectId $app.ObjectId -IdentifierUris $IdentifierUri -AvailableToOtherTenants $MultiTenant
+    if ($PSBoundParameters.ContainsKey('AvailableToOtherTenants')) {
+        Write-Verbose "Update AvailableToOtherTenants"
+        $app = Update-AzADApplication -ObjectId $app.ObjectId -AvailableToOtherTenants $AvailableToOtherTenants
+    }
    
     # How to deal with AppRoleAssignmentRequired? This is a boolean so always given
     # Write-Verbose "Update Tags and AppRoleAssignmentRequired"

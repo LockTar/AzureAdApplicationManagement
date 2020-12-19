@@ -159,4 +159,82 @@ Describe 'Update-AadApplication' {
             Get-AzADApplication -ObjectId $app1.ObjectId | Remove-AzADApplication -Force
         }
     }
+
+    Context "HomePage" {
+        BeforeEach { 
+            $app1 = New-AzADApplication -DisplayName "AzureAdApplicationManagementTestApp1" -IdentifierUris "https://AzureAdApplicationManagementTestApp1"
+            $sp1 = Get-AzADApplication -ObjectId $app1.ObjectId | New-AzADServicePrincipal
+            Start-Sleep 15
+        }
+
+        It "Given no HomePage should skip update" {
+            $result = Update-AadApplication -ObjectId $app1.ObjectId
+
+            $result | Should -BeNullOrEmpty -Not
+            $result.ServicePrincipal.HomePage | Should -BeNullOrEmpty
+        }
+
+        It "Given empty HomePage should throw error" {
+            { Update-AadApplication -ObjectId $app1.ObjectId -HomePage "" } | Should -Throw "Cannot validate argument on parameter 'HomePage'. The argument is null or empty. Provide an argument that is not null or empty, and then try the command again."
+        }        
+
+        It "Given HomePage should update value" {
+            $result = Update-AadApplication -ObjectId $app1.ObjectId -HomePage "https://sampleurl.info"
+
+            $result | Should -BeNullOrEmpty -Not
+            $result.Application | Should -BeNullOrEmpty -Not
+            $result.Application.HomePage | Should -Be "https://sampleurl.info"
+            $result.ServicePrincipal.HomePage | Should -Be "https://sampleurl.info"
+        }
+
+        It "Given new HomePage should update old HomePage value" {
+            $result = Update-AadApplication -ObjectId $app1.ObjectId -HomePage "https://old.info"
+            $result = Update-AadApplication -ObjectId $app1.ObjectId -HomePage "https://sampleurl.info"
+
+            $result | Should -BeNullOrEmpty -Not
+            $result.Application | Should -BeNullOrEmpty -Not
+            $result.Application.HomePage | Should -Be "https://sampleurl.info"
+            $result.ServicePrincipal.HomePage | Should -Be "https://sampleurl.info"
+        }
+        
+        AfterEach { 
+            Get-AzADApplication -ObjectId $app1.ObjectId | Remove-AzADApplication -Force
+        }
+    }
+
+    Context "AvailableToOtherTenants" {
+        BeforeEach { 
+            $app1 = New-AzADApplication -DisplayName "AzureAdApplicationManagementTestApp1" -IdentifierUris "https://AzureAdApplicationManagementTestApp1"
+            $sp1 = Get-AzADApplication -ObjectId $app1.ObjectId | New-AzADServicePrincipal
+            Start-Sleep 15
+        }
+
+        It "Given no AvailableToOtherTenants should skip update" {
+            $result = Update-AadApplication -ObjectId $app1.ObjectId
+
+            $result | Should -BeNullOrEmpty -Not
+            $result.Application.AvailableToOtherTenants | Should -Be $false
+        }
+
+        It "Given AvailableToOtherTenants should update value" {
+            $result = Update-AadApplication -ObjectId $app1.ObjectId -AvailableToOtherTenants $true
+
+            $result | Should -BeNullOrEmpty -Not
+            $result.Application | Should -BeNullOrEmpty -Not
+            $result.Application.AvailableToOtherTenants | Should -Be $true
+        }
+
+        It "Given new AvailableToOtherTenants should update old AvailableToOtherTenants value" {
+            $result = Update-AadApplication -ObjectId $app1.ObjectId -AvailableToOtherTenants $true
+            $result = Update-AadApplication -ObjectId $app1.ObjectId -AvailableToOtherTenants $false
+
+            $result | Should -BeNullOrEmpty -Not
+            $result.Application | Should -BeNullOrEmpty -Not
+            $result.Application.AvailableToOtherTenants | Should -Be $false
+        }
+        
+        AfterEach { 
+            Get-AzADApplication -ObjectId $app1.ObjectId | Remove-AzADApplication -Force
+        }
+    }
 }
