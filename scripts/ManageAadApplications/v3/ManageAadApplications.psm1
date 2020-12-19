@@ -138,9 +138,9 @@ function Update-AadApplication {
         [string]$ResourceAccessFilePath,
         [string]$AppRolesFilePath,
         [string[]]$Owners,
-        # [Object[]]$Secrets,
-        # [bool]$Oauth2AllowImplicitFlow,
-        # [bool]$AppRoleAssignmentRequired
+        [Object[]]$Secrets,
+        [bool]$Oauth2AllowImplicitFlow,
+        [bool]$AppRoleAssignmentRequired
     )
 
     Write-Verbose "Update application $ObjectId"
@@ -246,13 +246,15 @@ function Update-AadApplication {
         $app = Update-AzADApplication -ObjectId $app.ObjectId -AvailableToOtherTenants $AvailableToOtherTenants
     }
    
-    # How to deal with AppRoleAssignmentRequired? This is a boolean so always given
-    # Write-Verbose "Update Tags and AppRoleAssignmentRequired"
-    # Set-AzureADServicePrincipal -ObjectId $sp.Id -Tags "WindowsAzureActiveDirectoryIntegratedApp" -AppRoleAssignmentRequired $AppRoleAssignmentRequired
+    if ($PSBoundParameters.ContainsKey('AppRoleAssignmentRequired')) {
+        Write-Verbose "Update Tags and AppRoleAssignmentRequired"
+        Set-AzureADServicePrincipal -ObjectId $sp.Id -Tags "WindowsAzureActiveDirectoryIntegratedApp" -AppRoleAssignmentRequired $AppRoleAssignmentRequired
+    }
 
-    # How to deal with Oauth2AllowImplicitFlow? This is a boolean so always given
-    # Write-Verbose "Update Oauth2AllowImplicitFlow"
-    # Set-AzureADApplication -ObjectId $app.ObjectId -Oauth2AllowImplicitFlow $Oauth2AllowImplicitFlow
+    if ($PSBoundParameters.ContainsKey('Oauth2AllowImplicitFlow')) {
+        Write-Verbose "Update Oauth2AllowImplicitFlow"
+        Set-AzureADApplication -ObjectId $app.ObjectId -Oauth2AllowImplicitFlow $Oauth2AllowImplicitFlow
+    }
 
     if ($PSBoundParameters.ContainsKey('ResourceAccessFilePath')) {
         if ((Test-Path $ResourceAccessFilePath) -and ($ResourceAccessFilePath -Like "*.json")) {

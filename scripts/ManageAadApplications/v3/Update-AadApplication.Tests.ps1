@@ -355,4 +355,76 @@ Describe 'Update-AadApplication' {
             Get-AzADApplication -ObjectId $app1.ObjectId | Remove-AzADApplication -Force
         }
     }
+
+    Context "AppRoleAssignmentRequired" {
+        BeforeEach { 
+            $app1 = New-AzADApplication -DisplayName "AzureAdApplicationManagementTestApp1" -IdentifierUris "https://AzureAdApplicationManagementTestApp1"
+            $sp1 = Get-AzADApplication -ObjectId $app1.ObjectId | New-AzADServicePrincipal
+            Start-Sleep 15
+        }
+
+        It "Given no AppRoleAssignmentRequired should skip update" {
+            $result = Update-AadApplication -ObjectId $app1.ObjectId
+
+            $result | Should -BeNullOrEmpty -Not
+            $result.Application.AppRoleAssignmentRequired | Should -Be $false
+        }
+
+        It "Given AppRoleAssignmentRequired should update value" {
+            $result = Update-AadApplication -ObjectId $app1.ObjectId -AppRoleAssignmentRequired $true
+
+            $result | Should -BeNullOrEmpty -Not
+            $result.Application | Should -BeNullOrEmpty -Not
+            $result.Application.AppRoleAssignmentRequired | Should -Be $true
+        }
+
+        It "Given new AppRoleAssignmentRequired should update old AppRoleAssignmentRequired value" {
+            $result = Update-AadApplication -ObjectId $app1.ObjectId -AppRoleAssignmentRequired $true
+            $result = Update-AadApplication -ObjectId $app1.ObjectId -AppRoleAssignmentRequired $false
+
+            $result | Should -BeNullOrEmpty -Not
+            $result.Application | Should -BeNullOrEmpty -Not
+            $result.Application.AppRoleAssignmentRequired | Should -Be $false
+        }
+        
+        AfterEach { 
+            Get-AzADApplication -ObjectId $app1.ObjectId | Remove-AzADApplication -Force
+        }
+    }
+
+    Context "Oauth2AllowImplicitFlow" {
+        BeforeEach { 
+            $app1 = New-AzADApplication -DisplayName "AzureAdApplicationManagementTestApp1" -IdentifierUris "https://AzureAdApplicationManagementTestApp1"
+            $sp1 = Get-AzADApplication -ObjectId $app1.ObjectId | New-AzADServicePrincipal
+            Start-Sleep 15
+        }
+
+        It "Given no Oauth2AllowImplicitFlow should skip update" {
+            $result = Update-AadApplication -ObjectId $app1.ObjectId
+
+            $result | Should -BeNullOrEmpty -Not
+            $result.Application.Oauth2AllowImplicitFlow | Should -Be $false
+        }
+
+        It "Given Oauth2AllowImplicitFlow should update value" {
+            $result = Update-AadApplication -ObjectId $app1.ObjectId -Oauth2AllowImplicitFlow $true
+
+            $result | Should -BeNullOrEmpty -Not
+            $result.Application | Should -BeNullOrEmpty -Not
+            $result.Application.Oauth2AllowImplicitFlow | Should -Be $true
+        }
+
+        It "Given new Oauth2AllowImplicitFlow should update old Oauth2AllowImplicitFlow value" {
+            $result = Update-AadApplication -ObjectId $app1.ObjectId -Oauth2AllowImplicitFlow $true
+            $result = Update-AadApplication -ObjectId $app1.ObjectId -Oauth2AllowImplicitFlow $false
+
+            $result | Should -BeNullOrEmpty -Not
+            $result.Application | Should -BeNullOrEmpty -Not
+            $result.Application.Oauth2AllowImplicitFlow | Should -Be $false
+        }
+        
+        AfterEach { 
+            Get-AzADApplication -ObjectId $app1.ObjectId | Remove-AzADApplication -Force
+        }
+    }
 }
