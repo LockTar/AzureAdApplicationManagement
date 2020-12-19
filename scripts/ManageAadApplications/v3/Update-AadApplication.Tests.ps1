@@ -171,6 +171,7 @@ Describe 'Update-AadApplication' {
             $result = Update-AadApplication -ObjectId $app1.ObjectId
 
             $result | Should -BeNullOrEmpty -Not
+            $result.Application.HomePage | Should -BeNullOrEmpty
             $result.ServicePrincipal.HomePage | Should -BeNullOrEmpty
         }
 
@@ -231,6 +232,46 @@ Describe 'Update-AadApplication' {
             $result | Should -BeNullOrEmpty -Not
             $result.Application | Should -BeNullOrEmpty -Not
             $result.Application.AvailableToOtherTenants | Should -Be $false
+        }
+        
+        AfterEach { 
+            Get-AzADApplication -ObjectId $app1.ObjectId | Remove-AzADApplication -Force
+        }
+    }
+
+    Context "ReplyUrls" {
+        BeforeEach { 
+            $app1 = New-AzADApplication -DisplayName "AzureAdApplicationManagementTestApp1" -IdentifierUris "https://AzureAdApplicationManagementTestApp1"
+            $sp1 = Get-AzADApplication -ObjectId $app1.ObjectId | New-AzADServicePrincipal
+            Start-Sleep 15
+        }
+
+        It "Given no ReplyUrls should skip update" {
+            $result = Update-AadApplication -ObjectId $app1.ObjectId
+
+            $result | Should -BeNullOrEmpty -Not
+            $result.ServicePrincipal.ReplyUrls | Should -BeNullOrEmpty
+        }
+
+        It "Given empty ReplyUrls should throw error" {
+            { Update-AadApplication -ObjectId $app1.ObjectId -ReplyUrls "" } | Should -Throw "zzz Cannot validate argument on parameter 'ReplyUrls'. The argument is null or empty. Provide an argument that is not null or empty, and then try the command again."
+        }
+
+        It "Given ReplyUrls should update value" {
+            $result = Update-AadApplication -ObjectId $app1.ObjectId -ReplyUrls "https://sampleurl.info"
+
+            $result | Should -BeNullOrEmpty -Not
+            $result.Application | Should -BeNullOrEmpty -Not
+            $result.Application.ReplyUrls | Should -Be "https://sampleurl.info"
+        }
+
+        It "Given new ReplyUrls should update old ReplyUrls value" {
+            $result = Update-AadApplication -ObjectId $app1.ObjectId -ReplyUrls "https://old.info"
+            $result = Update-AadApplication -ObjectId $app1.ObjectId -ReplyUrls "https://sampleurl.info"
+
+            $result | Should -BeNullOrEmpty -Not
+            $result.Application | Should -BeNullOrEmpty -Not
+            $result.Application.ReplyUrls | Should -Be "https://sampleurl.info"
         }
         
         AfterEach { 

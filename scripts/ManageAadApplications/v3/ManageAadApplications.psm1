@@ -134,7 +134,7 @@ function Update-AadApplication {
         [ValidateNotNullOrEmpty()]
         [string]$HomePageUrl,
         [bool]$AvailableToOtherTenants,
-        # [string[]]$ReplyUrls,
+        [string[]]$ReplyUrls,
         [string]$ResourceAccessFilePath,
         [string]$AppRolesFilePath
         # [string[]]$Owners,
@@ -236,10 +236,10 @@ function Update-AadApplication {
         $sp = Set-AzureADServicePrincipal -ObjectId $sp.Id -Homepage $HomePageUrl
     }
 
-    # if ($PSBoundParameters.ContainsKey('ReplyUrls')) {
-    #     Write-Verbose "Update ReplyUrls"
-    #     $app = Update-AzADApplication -ObjectId $app.ObjectId -IdentifierUris $IdentifierUri -ReplyUrls $ReplyUrls        
-    # }
+    if ($PSBoundParameters.ContainsKey('ReplyUrls')) {
+        Write-Verbose "Update ReplyUrls"
+        $app = Update-AzADApplication -ObjectId $app.ObjectId -ReplyUrls $ReplyUrls        
+    }
 
     if ($PSBoundParameters.ContainsKey('AvailableToOtherTenants')) {
         Write-Verbose "Update AvailableToOtherTenants"
