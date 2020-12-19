@@ -136,8 +136,8 @@ function Update-AadApplication {
         [bool]$AvailableToOtherTenants,
         [string[]]$ReplyUrls,
         [string]$ResourceAccessFilePath,
-        [string]$AppRolesFilePath
-        # [string[]]$Owners,
+        [string]$AppRolesFilePath,
+        [string[]]$Owners,
         # [Object[]]$Secrets,
         # [bool]$Oauth2AllowImplicitFlow,
         # [bool]$AppRoleAssignmentRequired
@@ -274,57 +274,57 @@ function Update-AadApplication {
         }
     }
     
-    # if ($PSBoundParameters.ContainsKey('Owners')) {
-    #     Write-Verbose "Update owners of the application. Current owners are:"
-    #     $currentOwners = Get-AzureADApplicationOwner -ObjectId $app.ObjectId -All $True
-    #     $currentOwners | Select-Object ObjectId, DisplayName, UserPrincipalName | Format-Table | Write-Host
+    if ($PSBoundParameters.ContainsKey('Owners')) {
+        Write-Verbose "Update owners of the application. Current owners are:"
+        $currentOwners = Get-AzureADApplicationOwner -ObjectId $app.ObjectId -All $True
+        $currentOwners | Select-Object ObjectId, DisplayName, UserPrincipalName | Format-Table | Write-Verbose
 
-    #     # Retrieve owner ObjectId based on UserPrincipalName
-    #     $ownerObjectIds = @()
-    #     foreach ($owner in $Owners) {
-    #         Write-Verbose "Check if owner is an Object Id or UserPrincipalName"
-    #         $result = New-Guid
-    #         if ([Guid]::TryParse($owner, [ref] $result)) {
-    #             Write-Verbose "Owner is an Object Id so add it to the list as desired owners"
-    #             $ownerObjectIds += $owner
-    #         }
-    #         else {
-    #             Write-Verbose "Owner is an UserPrincipalName so search for the user and add the ObjectId of the user to the list as desired owners"
-    #             $user = Get-AzADUser -UserPrincipalName $owner
-    #             $ownerObjectIds += $user.Id
-    #         }
-    #     }
+        # Retrieve owner ObjectId based on UserPrincipalName
+        $ownerObjectIds = @()
+        foreach ($owner in $Owners) {
+            Write-Verbose "Check if owner is an Object Id or UserPrincipalName"
+            $result = New-Guid
+            if ([Guid]::TryParse($owner, [ref] $result)) {
+                Write-Verbose "Owner is an Object Id so add it to the list as desired owners"
+                $ownerObjectIds += $owner
+            }
+            else {
+                Write-Verbose "Owner is an UserPrincipalName so search for the user and add the ObjectId of the user to the list as desired owners"
+                $user = Get-AzADUser -UserPrincipalName $owner
+                $ownerObjectIds += $user.Id
+            }
+        }
 
-    #     # Add missing owners
-    #     foreach ($owner in $ownerObjectIds) {
-    #         if ($null -eq $currentOwners -or $($currentOwners.ObjectId).Contains($owner) -eq $false) {
-    #             Write-Verbose "Add applicationowner $owner"
-    #             Add-AzureADApplicationOwner -ObjectId $app.ObjectId -RefObjectId $owner
-    #             Add-AzureADServicePrincipalOwner -ObjectId $sp.Id -RefObjectId $owner
-    #         }
-    #         else {
-    #             Write-Verbose "Don't add $owner as owner because is already owner"
-    #         }
-    #     }
+        # Add missing owners
+        foreach ($owner in $ownerObjectIds) {
+            if ($null -eq $currentOwners -or $($currentOwners.ObjectId).Contains($owner) -eq $false) {
+                Write-Verbose "Add applicationowner $owner"
+                Add-AzureADApplicationOwner -ObjectId $app.ObjectId -RefObjectId $owner
+                Add-AzureADServicePrincipalOwner -ObjectId $sp.Id -RefObjectId $owner
+            }
+            else {
+                Write-Verbose "Don't add $owner as owner because is already owner"
+            }
+        }
 
-    #     if ($null -ne $currentOwners) {
-    #         # Remove owners that should not be owner anymore
-    #         foreach ($currentOwner in $currentOwners.ObjectId) {
-    #             if ($ownerObjectIds.Contains($currentOwner) -eq $false) {
-    #                 Write-Verbose "Remove applicationowner $currentOwner"
-    #                 Remove-AzureADApplicationOwner -ObjectId $app.ObjectId -OwnerId $currentOwner
-    #                 Remove-AzureADServicePrincipalOwner -ObjectId $sp.Id -OwnerId $currentOwner
-    #             }
-    #             else {
-    #                 Write-Verbose "Don't remove owner $currentOwner because must stay owner"
-    #             }
-    #         }
-    #     }
+        if ($null -ne $currentOwners) {
+            # Remove owners that should not be owner anymore
+            foreach ($currentOwner in $currentOwners.ObjectId) {
+                if ($ownerObjectIds.Contains($currentOwner) -eq $false) {
+                    Write-Verbose "Remove applicationowner $currentOwner"
+                    Remove-AzureADApplicationOwner -ObjectId $app.ObjectId -OwnerId $currentOwner
+                    Remove-AzureADServicePrincipalOwner -ObjectId $sp.Id -OwnerId $currentOwner
+                }
+                else {
+                    Write-Verbose "Don't remove owner $currentOwner because must stay owner"
+                }
+            }
+        }
         
-    #     Write-Information "Owners of the application are now:"
-    #     $currentOwners = Get-AzureADApplicationOwner -ObjectId $app.ObjectId -All $True
-    #     $currentOwners | Select-Object ObjectId, DisplayName, UserPrincipalName | Format-Table | Write-Host
-    # }
+        Write-Information "Owners of the application are now:"
+        $currentOwners = Get-AzureADApplicationOwner -ObjectId $app.ObjectId -All $True
+        $currentOwners | Select-Object ObjectId, DisplayName, UserPrincipalName | Format-Table | Write-Information
+    }
     
     # if ($PSBoundParameters.ContainsKey('Secrets')) {
     #     if ($Secrets) { 

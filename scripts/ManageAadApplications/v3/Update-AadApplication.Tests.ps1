@@ -250,7 +250,7 @@ Describe 'Update-AadApplication' {
             $result = Update-AadApplication -ObjectId $app1.ObjectId
 
             $result | Should -BeNullOrEmpty -Not
-            $result.ServicePrincipal.ReplyUrls | Should -BeNullOrEmpty
+            $result.Application.ReplyUrls | Should -BeNullOrEmpty
         }
 
         It "Given empty ReplyUrls should throw error" {
@@ -272,6 +272,47 @@ Describe 'Update-AadApplication' {
             $result | Should -BeNullOrEmpty -Not
             $result.Application | Should -BeNullOrEmpty -Not
             $result.Application.ReplyUrls | Should -Be "https://sampleurl.info"
+        }
+        
+        AfterEach { 
+            Get-AzADApplication -ObjectId $app1.ObjectId | Remove-AzADApplication -Force
+        }
+    }
+
+    Context "Owners" {
+        BeforeEach { 
+            $app1 = New-AzADApplication -DisplayName "AzureAdApplicationManagementTestApp1" -IdentifierUris "https://AzureAdApplicationManagementTestApp1"
+            $sp1 = Get-AzADApplication -ObjectId $app1.ObjectId | New-AzADServicePrincipal
+            Start-Sleep 15
+        }
+
+        It "Given no Owners should skip update" {
+            $result = Update-AadApplication -ObjectId $app1.ObjectId
+
+            $result | Should -BeNullOrEmpty -Not
+            $result.Application.Owners | Should -BeNullOrEmpty -Not
+            $result.ServicPrincipal.Owners | Should -BeNullOrEmpty -Not
+        }
+
+        It "Given empty Owners should throw error" {
+            { Update-AadApplication -ObjectId $app1.ObjectId -Owners "" } | Should -Throw "zzz Cannot validate argument on parameter 'Owners'. The argument is null or empty. Provide an argument that is not null or empty, and then try the command again."
+        }
+
+        It "Given Owners should update value" {
+            $result = Update-AadApplication -ObjectId $app1.ObjectId -Owners "test.user1@ralphjansenoutlook.onmicrosoft.com"
+
+            $result | Should -BeNullOrEmpty -Not
+            $result.Application | Should -BeNullOrEmpty -Not
+            $result.Application.Owners | Should -Be "test.user1@ralphjansenoutlook.onmicrosoft.com"
+        }
+
+        It "Given new Owners should update old Owners value" {
+            $result = Update-AadApplication -ObjectId $app1.ObjectId -Owners "test.user3@ralphjansenoutlook.onmicrosoft.com"
+            $result = Update-AadApplication -ObjectId $app1.ObjectId -Owners "test.user1@ralphjansenoutlook.onmicrosoft.com"
+
+            $result | Should -BeNullOrEmpty -Not
+            $result.Application | Should -BeNullOrEmpty -Not
+            $result.Application.Owners | Should -Be "test.user1@ralphjansenoutlook.onmicrosoft.com"
         }
         
         AfterEach { 
