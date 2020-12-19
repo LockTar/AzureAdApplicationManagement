@@ -299,20 +299,56 @@ Describe 'Update-AadApplication' {
         }
 
         It "Given Owners should update value" {
-            $result = Update-AadApplication -ObjectId $app1.ObjectId -Owners "test.user1@ralphjansenoutlook.onmicrosoft.com"
+            $result = Update-AadApplication -ObjectId $app1.ObjectId -Owners "bf41f70e-be3c-473a-b594-1e7c57b28da4"
 
             $result | Should -BeNullOrEmpty -Not
             $result.Application | Should -BeNullOrEmpty -Not
-            $result.Application.Owners | Should -Be "test.user1@ralphjansenoutlook.onmicrosoft.com"
+            $result.Application.Owners | Should -Be "bf41f70e-be3c-473a-b594-1e7c57b28da4"
+            $result.ServicePrincipal.Owners | Should -Be "bf41f70e-be3c-473a-b594-1e7c57b28da4"
         }
 
         It "Given new Owners should update old Owners value" {
-            $result = Update-AadApplication -ObjectId $app1.ObjectId -Owners "test.user3@ralphjansenoutlook.onmicrosoft.com"
-            $result = Update-AadApplication -ObjectId $app1.ObjectId -Owners "test.user1@ralphjansenoutlook.onmicrosoft.com"
+            $result = Update-AadApplication -ObjectId $app1.ObjectId -Owners "1dbbdd07-9978-489f-b676-6c084a890b49"
+            $result = Update-AadApplication -ObjectId $app1.ObjectId -Owners "bf41f70e-be3c-473a-b594-1e7c57b28da4"
 
             $result | Should -BeNullOrEmpty -Not
             $result.Application | Should -BeNullOrEmpty -Not
-            $result.Application.Owners | Should -Be "test.user1@ralphjansenoutlook.onmicrosoft.com"
+            $result.Application.Owners | Should -Be "bf41f70e-be3c-473a-b594-1e7c57b28da4"
+            $result.ServicePrincipal.Owners | Should -Be "bf41f70e-be3c-473a-b594-1e7c57b28da4"
+        }
+        
+        AfterEach { 
+            Get-AzADApplication -ObjectId $app1.ObjectId | Remove-AzADApplication -Force
+        }
+    }
+
+    Context "Secrets" {
+        BeforeEach { 
+            $app1 = New-AzADApplication -DisplayName "AzureAdApplicationManagementTestApp1" -IdentifierUris "https://AzureAdApplicationManagementTestApp1"
+            $sp1 = Get-AzADApplication -ObjectId $app1.ObjectId | New-AzADServicePrincipal
+            Start-Sleep 15
+        }
+
+        It "Given no Secrets should skip update" {
+            $result = Update-AadApplication -ObjectId $app1.ObjectId
+
+            $result | Should -BeNullOrEmpty -Not
+            $result.Application.Secrets | Should -BeNullOrEmpty -Not
+        }
+
+        It "Given empty Secrets should throw error" {
+            { Update-AadApplication -ObjectId $app1.ObjectId -Secrets "" } | Should -Throw "zzz Cannot validate argument on parameter 'Secrets'. The argument is null or empty. Provide an argument that is not null or empty, and then try the command again."
+        }
+
+        It "Given Secrets should update value" {
+            $secrets = '[{ ''Description'': ''testkey'', ''EndDate'': ''01/12/2022'' }]'
+            $secretsArray = $secrets | ConvertFrom-Json
+
+            # Check output for the above secret because will not send to output for security reasons
+            $result = Update-AadApplication -ObjectId $app1.ObjectId -Secrets $secretsArray
+
+            $result | Should -BeNullOrEmpty -Not
+            $result.Application | Should -BeNullOrEmpty -Not
         }
         
         AfterEach { 

@@ -326,40 +326,38 @@ function Update-AadApplication {
         $currentOwners | Select-Object ObjectId, DisplayName, UserPrincipalName | Format-Table | Write-Information
     }
     
-    # if ($PSBoundParameters.ContainsKey('Secrets')) {
-    #     if ($Secrets) { 
-    #         # Check for existing secrets and remove them so they can be re-created
-    #         Write-Verbose "Checking for existing secrets"
-    #         $appKeySecrets = Get-AzureADApplicationPasswordCredential -ObjectId $app.ObjectId
+    if ($PSBoundParameters.ContainsKey('Secrets')) {
+        # Check for existing secrets and remove them so they can be re-created
+        Write-Verbose "Checking for existing secrets"
+        $appKeySecrets = Get-AzureADApplicationPasswordCredential -ObjectId $app.ObjectId
 
-    #         if ($appKeySecrets) {
-    #             foreach ($existingSecret in $appKeySecrets) {
-    #                 foreach ($secret in $Secrets) {
-    #                     $stringDescription = $secret.Description | Out-String
-    #                     $trimmedStringDescription = $stringDescription -replace [Environment]::NewLine, "";
+        if ($appKeySecrets) {
+            foreach ($existingSecret in $appKeySecrets) {
+                foreach ($secret in $Secrets) {
+                    $stringDescription = $secret.Description | Out-String
+                    $trimmedStringDescription = $stringDescription -replace [Environment]::NewLine, "";
 
-    #                     if ([System.Text.Encoding]::ASCII.GetString($existingSecret.CustomKeyIdentifier) -eq $trimmedStringDescription) {
-    #                         Write-Verbose "Removing existing key with description: $trimmedStringDescription"
-    #                         Remove-AzureADApplicationPasswordCredential  -ObjectId $app.ObjectId -KeyId $existingSecret.KeyId
-    #                     }
-    #                 }
-    #             }
-    #         }
+                    if ([System.Text.Encoding]::ASCII.GetString($existingSecret.CustomKeyIdentifier) -eq $trimmedStringDescription) {
+                        Write-Verbose "Removing existing key with description: $trimmedStringDescription"
+                        Remove-AzureADApplicationPasswordCredential -ObjectId $app.ObjectId -KeyId $existingSecret.KeyId
+                    }
+                }
+            }
+        }
 
-    #         # Create new secrets
-    #         foreach ($secret in $Secrets) {
-    #             $endDate = [datetime]::ParseExact($secret.EndDate, 'dd/MM/yyyy', [Globalization.CultureInfo]::InvariantCulture)
+        # Create new secrets
+        foreach ($secret in $Secrets) {
+            $endDate = [datetime]::ParseExact($secret.EndDate, 'dd/MM/yyyy', [Globalization.CultureInfo]::InvariantCulture)
                 
-    #             $stringDescription = $secret.Description | Out-String
-    #             $trimmedStringDescription = $stringDescription -replace [Environment]::NewLine, "";
+            $stringDescription = $secret.Description | Out-String
+            $trimmedStringDescription = $stringDescription -replace [Environment]::NewLine, "";
                 
-    #             Write-Verbose "Creating new key with description: $trimmedStringDescription and end date $endDate"
-    #             $appKeySecret = New-AzureADApplicationPasswordCredential -ObjectId $app.ObjectId -CustomKeyIdentifier $trimmedStringDescription -EndDate $endDate
+            Write-Verbose "Creating new key with description: $trimmedStringDescription and end date $endDate"
+            $appKeySecret = New-AzureADApplicationPasswordCredential -ObjectId $app.ObjectId -CustomKeyIdentifier $trimmedStringDescription -EndDate $endDate
                 
-    #             Write-Host "##vso[task.setvariable variable=Secret.$trimmedStringDescription;isOutput=true;issecret=true]$($appKeySecret.Value)"
-    #         }
-    #     }
-    # }
+            Write-Host "##vso[task.setvariable variable=Secret.$trimmedStringDescription;isOutput=true;issecret=true]$($appKeySecret.Value)"
+        }
+    }
 
     Write-Verbose "Sleep so updates are processed"
     Start-Sleep 10
