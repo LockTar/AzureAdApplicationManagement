@@ -134,10 +134,15 @@ function Update-AadApplication {
         [ValidateNotNullOrEmpty()]
         [string]$HomePageUrl,
         [bool]$AvailableToOtherTenants,
+        [ValidateNotNullOrEmpty()]
         [string[]]$ReplyUrls,
+        [ValidateNotNullOrEmpty()]
         [string]$ResourceAccessFilePath,
+        [ValidateNotNullOrEmpty()]
         [string]$AppRolesFilePath,
+        [ValidateNotNullOrEmpty()]
         [string[]]$Owners,
+        [ValidateNotNullOrEmpty()]
         [Object[]]$Secrets,
         [bool]$Oauth2AllowImplicitFlow,
         [bool]$AppRoleAssignmentRequired
@@ -231,7 +236,7 @@ function Update-AadApplication {
     if ($PSBoundParameters.ContainsKey('HomePageUrl')) {
         Write-Verbose "Update HomePageUrl"
         $app = Update-AzADApplication -ObjectId $app.ObjectId -HomePage $HomePageUrl
-
+        Start-Sleep 15
         Write-Verbose "Update HomePageUrl for service principal"
         $sp = Set-AzureADServicePrincipal -ObjectId $sp.Id -Homepage $HomePageUrl
     }
@@ -321,11 +326,7 @@ function Update-AadApplication {
                     Write-Verbose "Don't remove owner $currentOwner because must stay owner"
                 }
             }
-        }
-        
-        Write-Information "Owners of the application are now:"
-        $currentOwners = Get-AzureADApplicationOwner -ObjectId $app.ObjectId -All $True
-        $currentOwners | Select-Object ObjectId, DisplayName, UserPrincipalName | Format-Table | Write-Information
+        }        
     }
     
     if ($PSBoundParameters.ContainsKey('Secrets')) {
@@ -368,6 +369,7 @@ function Update-AadApplication {
     $app = Get-AzADApplication -ObjectId $app.ObjectId
     $appOld = Get-AzureADApplication -ObjectId $app.ObjectId
     $sp = Get-AzADServicePrincipal -ApplicationId $app.ApplicationId
+    $currentOwners = Get-AzureADApplicationOwner -ObjectId $app.ObjectId -All $True
 
     Write-Host "##vso[task.setvariable variable=ObjectId;]$($app.ObjectId)"
     Write-Host "##vso[task.setvariable variable=ApplicationId;]$($app.ApplicationId)"
@@ -381,6 +383,7 @@ function Update-AadApplication {
         ServicePrincipal       = $sp
         RequiredResourceAccess = $appOld.RequiredResourceAccess
         AppRoles               = $appOld.AppRoles
+        Owners                 = $currentOwners
     }
                     
     $result

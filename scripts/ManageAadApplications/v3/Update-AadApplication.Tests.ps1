@@ -1,4 +1,5 @@
 #Invoke-Pester -Output Detailed .\Update-AadApplication.Tests.ps1
+#$result | ConvertTo-Json -Depth 15 | Write-Host
 
 BeforeAll { 
     Remove-Module ManageAadApplications
@@ -176,26 +177,24 @@ Describe 'Update-AadApplication' {
         }
 
         It "Given empty HomePage should throw error" {
-            { Update-AadApplication -ObjectId $app1.ObjectId -HomePage "" } | Should -Throw "Cannot validate argument on parameter 'HomePage'. The argument is null or empty. Provide an argument that is not null or empty, and then try the command again."
-        }        
+            { Update-AadApplication -ObjectId $app1.ObjectId -HomePageUrl "" } | Should -Throw "Cannot validate argument on parameter 'HomePageUrl'. The argument is null or empty. Provide an argument that is not null or empty, and then try the command again."
+        }
 
         It "Given HomePage should update value" {
-            $result = Update-AadApplication -ObjectId $app1.ObjectId -HomePage "https://sampleurl.info"
-
+            $result = Update-AadApplication -ObjectId $app1.ObjectId -HomePageUrl "https://sampleurl.info"
+            
             $result | Should -BeNullOrEmpty -Not
             $result.Application | Should -BeNullOrEmpty -Not
             $result.Application.HomePage | Should -Be "https://sampleurl.info"
-            $result.ServicePrincipal.HomePage | Should -Be "https://sampleurl.info"
         }
 
         It "Given new HomePage should update old HomePage value" {
-            $result = Update-AadApplication -ObjectId $app1.ObjectId -HomePage "https://old.info"
-            $result = Update-AadApplication -ObjectId $app1.ObjectId -HomePage "https://sampleurl.info"
+            $result = Update-AadApplication -ObjectId $app1.ObjectId -HomePageUrl "https://old.info"
+            $result = Update-AadApplication -ObjectId $app1.ObjectId -HomePageUrl "https://sampleurl.info"
 
             $result | Should -BeNullOrEmpty -Not
             $result.Application | Should -BeNullOrEmpty -Not
             $result.Application.HomePage | Should -Be "https://sampleurl.info"
-            $result.ServicePrincipal.HomePage | Should -Be "https://sampleurl.info"
         }
         
         AfterEach { 
@@ -205,7 +204,7 @@ Describe 'Update-AadApplication' {
 
     Context "AvailableToOtherTenants" {
         BeforeEach { 
-            $app1 = New-AzADApplication -DisplayName "AzureAdApplicationManagementTestApp1" -IdentifierUris "https://AzureAdApplicationManagementTestApp1"
+            $app1 = New-AzADApplication -DisplayName "AzureAdApplicationManagementTestApp1" -IdentifierUris "https://ralphjansenoutlook.onmicrosoft.com/AzureAdApplicationManagementTestApp1"
             $sp1 = Get-AzADApplication -ObjectId $app1.ObjectId | New-AzADServicePrincipal
             Start-Sleep 15
         }
@@ -254,7 +253,7 @@ Describe 'Update-AadApplication' {
         }
 
         It "Given empty ReplyUrls should throw error" {
-            { Update-AadApplication -ObjectId $app1.ObjectId -ReplyUrls "" } | Should -Throw "zzz Cannot validate argument on parameter 'ReplyUrls'. The argument is null or empty. Provide an argument that is not null or empty, and then try the command again."
+            { Update-AadApplication -ObjectId $app1.ObjectId -ReplyUrls "" } | Should -Throw "Cannot validate argument on parameter 'ReplyUrls'. The argument is null or empty. Provide an argument that is not null or empty, and then try the command again."
         }
 
         It "Given ReplyUrls should update value" {
@@ -290,12 +289,11 @@ Describe 'Update-AadApplication' {
             $result = Update-AadApplication -ObjectId $app1.ObjectId
 
             $result | Should -BeNullOrEmpty -Not
-            $result.Application.Owners | Should -BeNullOrEmpty -Not
-            $result.ServicPrincipal.Owners | Should -BeNullOrEmpty -Not
+            $result.Owners | Should -BeNullOrEmpty
         }
 
         It "Given empty Owners should throw error" {
-            { Update-AadApplication -ObjectId $app1.ObjectId -Owners "" } | Should -Throw "zzz Cannot validate argument on parameter 'Owners'. The argument is null or empty. Provide an argument that is not null or empty, and then try the command again."
+            { Update-AadApplication -ObjectId $app1.ObjectId -Owners "" } | Should -Throw "Cannot validate argument on parameter 'Owners'. The argument is null or empty. Provide an argument that is not null or empty, and then try the command again."
         }
 
         It "Given Owners should update value" {
@@ -303,8 +301,7 @@ Describe 'Update-AadApplication' {
 
             $result | Should -BeNullOrEmpty -Not
             $result.Application | Should -BeNullOrEmpty -Not
-            $result.Application.Owners | Should -Be "bf41f70e-be3c-473a-b594-1e7c57b28da4"
-            $result.ServicePrincipal.Owners | Should -Be "bf41f70e-be3c-473a-b594-1e7c57b28da4"
+            $result.Owners[0].ObjectId | Should -Be "bf41f70e-be3c-473a-b594-1e7c57b28da4"
         }
 
         It "Given new Owners should update old Owners value" {
@@ -313,8 +310,7 @@ Describe 'Update-AadApplication' {
 
             $result | Should -BeNullOrEmpty -Not
             $result.Application | Should -BeNullOrEmpty -Not
-            $result.Application.Owners | Should -Be "bf41f70e-be3c-473a-b594-1e7c57b28da4"
-            $result.ServicePrincipal.Owners | Should -Be "bf41f70e-be3c-473a-b594-1e7c57b28da4"
+            $result.Owners[0].ObjectId | Should -Be "bf41f70e-be3c-473a-b594-1e7c57b28da4"
         }
         
         AfterEach { 
