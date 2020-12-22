@@ -369,6 +369,7 @@ function Update-AadApplication {
     $app = Get-AzADApplication -ObjectId $app.ObjectId
     $appOld = Get-AzureADApplication -ObjectId $app.ObjectId
     $sp = Get-AzADServicePrincipal -ApplicationId $app.ApplicationId
+    $spOld = Get-AzureADServicePrincipal -ObjectId $sp.Id
     $currentOwners = Get-AzureADApplicationOwner -ObjectId $app.ObjectId -All $True
 
     Write-Host "##vso[task.setvariable variable=ObjectId;]$($app.ObjectId)"
@@ -379,11 +380,13 @@ function Update-AadApplication {
     Write-Host "##vso[task.setvariable variable=ServicePrincipalObjectId;]$($sp.Id)"
 
     $result = [PSCustomObject]@{
-        Application            = $app
-        ServicePrincipal       = $sp
-        RequiredResourceAccess = $appOld.RequiredResourceAccess
-        AppRoles               = $appOld.AppRoles
-        Owners                 = $currentOwners
+        Application                 = $app
+        ServicePrincipal            = $sp
+        RequiredResourceAccess      = $appOld.RequiredResourceAccess
+        AppRoles                    = $appOld.AppRoles
+        Owners                      = $currentOwners
+        SpAppRoleAssignmentRequired = $spOld.AppRoleAssignmentRequired
+        AppOauth2AllowImplicitFlow  = $appOld.Oauth2AllowImplicitFlow
     }
                     
     $result

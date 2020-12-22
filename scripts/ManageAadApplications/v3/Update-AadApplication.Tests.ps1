@@ -329,11 +329,10 @@ Describe 'Update-AadApplication' {
             $result = Update-AadApplication -ObjectId $app1.ObjectId
 
             $result | Should -BeNullOrEmpty -Not
-            $result.Application.Secrets | Should -BeNullOrEmpty -Not
         }
 
         It "Given empty Secrets should throw error" {
-            { Update-AadApplication -ObjectId $app1.ObjectId -Secrets "" } | Should -Throw "zzz Cannot validate argument on parameter 'Secrets'. The argument is null or empty. Provide an argument that is not null or empty, and then try the command again."
+            { Update-AadApplication -ObjectId $app1.ObjectId -Secrets "" } | Should -Throw "Cannot validate argument on parameter 'Secrets'. The argument is null or empty. Provide an argument that is not null or empty, and then try the command again."
         }
 
         It "Given Secrets should update value" {
@@ -363,7 +362,7 @@ Describe 'Update-AadApplication' {
             $result = Update-AadApplication -ObjectId $app1.ObjectId
 
             $result | Should -BeNullOrEmpty -Not
-            $result.Application.AppRoleAssignmentRequired | Should -Be $false
+            $result.SpAppRoleAssignmentRequired | Should -Be $false
         }
 
         It "Given AppRoleAssignmentRequired should update value" {
@@ -371,7 +370,7 @@ Describe 'Update-AadApplication' {
 
             $result | Should -BeNullOrEmpty -Not
             $result.Application | Should -BeNullOrEmpty -Not
-            $result.Application.AppRoleAssignmentRequired | Should -Be $true
+            $result.SpAppRoleAssignmentRequired | Should -Be $true
         }
 
         It "Given new AppRoleAssignmentRequired should update old AppRoleAssignmentRequired value" {
@@ -380,7 +379,7 @@ Describe 'Update-AadApplication' {
 
             $result | Should -BeNullOrEmpty -Not
             $result.Application | Should -BeNullOrEmpty -Not
-            $result.Application.AppRoleAssignmentRequired | Should -Be $false
+            $result.SpAppRoleAssignmentRequired | Should -Be $false
         }
         
         AfterEach { 
@@ -399,7 +398,7 @@ Describe 'Update-AadApplication' {
             $result = Update-AadApplication -ObjectId $app1.ObjectId
 
             $result | Should -BeNullOrEmpty -Not
-            $result.Application.Oauth2AllowImplicitFlow | Should -Be $false
+            $result.AppOauth2AllowImplicitFlow | Should -Be $false
         }
 
         It "Given Oauth2AllowImplicitFlow should update value" {
@@ -407,7 +406,7 @@ Describe 'Update-AadApplication' {
 
             $result | Should -BeNullOrEmpty -Not
             $result.Application | Should -BeNullOrEmpty -Not
-            $result.Application.Oauth2AllowImplicitFlow | Should -Be $true
+            $result.AppOauth2AllowImplicitFlow | Should -Be $true
         }
 
         It "Given new Oauth2AllowImplicitFlow should update old Oauth2AllowImplicitFlow value" {
@@ -416,7 +415,7 @@ Describe 'Update-AadApplication' {
 
             $result | Should -BeNullOrEmpty -Not
             $result.Application | Should -BeNullOrEmpty -Not
-            $result.Application.Oauth2AllowImplicitFlow | Should -Be $false
+            $result.AppOauth2AllowImplicitFlow | Should -Be $false
         }
         
         AfterEach { 
