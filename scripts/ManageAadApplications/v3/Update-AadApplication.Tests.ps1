@@ -49,7 +49,7 @@ Describe 'Update-AadApplication' {
         }
 
         It "Given empty ResourceAccessFilePath should throw error" {
-            { Update-AadApplication -ObjectId $app1.ObjectId -ResourceAccessFilePath "" } | Should -Throw "Invalid file path for ResourceAccessFilePath"
+            { Update-AadApplication -ObjectId $app1.ObjectId -ResourceAccessFilePath "" } | Should -Throw "Cannot validate argument on parameter 'ResourceAccessFilePath'. The argument is null or empty. Provide an argument that is not null or empty, and then try the command again."
         }
 
         It "Given invalid ResourceAccessFilePath should throw error" {
@@ -78,7 +78,7 @@ Describe 'Update-AadApplication' {
         }
 
         It "Given empty AppRolesFilePath should throw error" {
-            { Update-AadApplication -ObjectId $app1.ObjectId -AppRolesFilePath "" } | Should -Throw "Invalid file path for AppRolesFilePath"
+            { Update-AadApplication -ObjectId $app1.ObjectId -AppRolesFilePath "" } | Should -Throw "Cannot validate argument on parameter 'AppRolesFilePath'. The argument is null or empty. Provide an argument that is not null or empty, and then try the command again."
         }
 
         It "Given invalid AppRolesFilePath should throw error" {
