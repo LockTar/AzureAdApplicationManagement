@@ -114,7 +114,6 @@ try
     $deployServicePrincipalId = (Get-AzADServicePrincipal -ApplicationId $clientId).Id
     $ownersArray += $deployServicePrincipalId
 
-    Import-Module $PSScriptRoot\scripts\Set-AadApplication.psm1
     Import-Module $PSScriptRoot\scripts\ManageAadApplications.psm1
 
     if ($createIfNotExist) {
@@ -138,13 +137,10 @@ try
 
     Set-AadApplication `
         -ObjectId $objectId `
-        -Name $name `
-        -AppIdUri $appIdUri `
+        -DisplayName $name `
+        -IdentifierUri $appIdUri `
         -HomePageUrl $homePageUrl `
-        -LogoutUrl $logoutUrl `
-        -TermsOfServiceUrl $termsOfServiceUrl `
-        -PrivacyStatementUrl $privacyStatementUrl `
-        -MultiTenant $multiTenant `
+        -AvailableToOtherTenants $multiTenant `
         -ReplyUrls $replyUrlsArray `
         -ResourceAccessFilePath $resourceAccessFilePath `
         -AppRolesFilePath $appRolesFilePath `
@@ -152,6 +148,11 @@ try
         -Secrets $secretsArray `
         -Oauth2AllowImplicitFlow $oauth2AllowImplicitFlow `
         -AppRoleAssignmentRequired $appRoleAssignmentRequired
+        
+        # Not used...
+        # -LogoutUrl $logoutUrl `
+        # -TermsOfServiceUrl $termsOfServiceUrl `
+        # -PrivacyStatementUrl $privacyStatementUrl `
 }
 finally {
     Remove-EndpointSecrets
