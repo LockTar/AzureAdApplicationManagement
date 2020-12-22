@@ -236,7 +236,7 @@ function Update-AadApplication {
     if ($PSBoundParameters.ContainsKey('HomePageUrl')) {
         Write-Verbose "Update HomePageUrl"
         $app = Update-AzADApplication -ObjectId $app.ObjectId -HomePage $HomePageUrl
-        Start-Sleep 15
+        Start-Sleep 30
         Write-Verbose "Update HomePageUrl for service principal"
         $sp = Set-AzureADServicePrincipal -ObjectId $sp.Id -Homepage $HomePageUrl
     }
