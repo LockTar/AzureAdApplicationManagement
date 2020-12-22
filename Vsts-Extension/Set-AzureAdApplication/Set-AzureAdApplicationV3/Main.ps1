@@ -135,7 +135,7 @@ try
         $objectId = $result.Application.ObjectId
     }
 
-    Set-AadApplication `
+    Update-AadApplication `
         -ObjectId $objectId `
         -DisplayName $name `
         -IdentifierUri $appIdUri `
