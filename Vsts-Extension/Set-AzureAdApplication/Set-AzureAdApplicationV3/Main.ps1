@@ -127,6 +127,9 @@ try
             # Because this is a newly created and IdentifierUri from task is empty, use the generated IdentifierUri in new cmdlet
             if ([string]::IsNullOrWhiteSpace($appIdUri)) {
                 $appIdUri = $resultNew.Application.IdentifierUris[0]
+                Write-Verbose "Newly generated IdentifierUri: $appIdUri"
+
+                $resultNew | ConvertTo-Json -Depth 15 | Write-Host
             }
 
             $secondsToWait = 10
