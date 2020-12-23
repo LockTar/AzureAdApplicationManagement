@@ -122,7 +122,12 @@ try
 
         if (!$result.Application) {
             Write-Verbose "Application doesn't exist. Create the application '$name'"
-            New-AadApplication -DisplayName $name
+            $resultNew = New-AadApplication -DisplayName $name
+            
+            # Because this is a newly created and IdentifierUri from task is empty, use the generated IdentifierUri in new cmdlet
+            if ([string]::IsNullOrWhiteSpace($appIdUri)) {
+                $appIdUri = $resultNew.Application.IdentifierUris[0]
+            }
 
             $secondsToWait = 10
             Write-Verbose "Application '$name' is created but wait $secondsToWait seconds so Azure AD can process it and we can set all the properties"
