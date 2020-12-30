@@ -77,7 +77,7 @@
             "type": "string",
             "label": "Home page URL",
             "defaultValue": "",
-            "required": false,
+            "required": true,
             "groupName": "AzureDetails",
             "helpMarkDown": "Provide the Home page URL of the Azure AD Application."
         },
