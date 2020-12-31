@@ -136,8 +136,6 @@ try {
         if ([string]::IsNullOrWhiteSpace($appIdUri)) {
             $appIdUri = $result.Application.IdentifierUris[0]
             Write-Verbose "Newly generated IdentifierUri: $appIdUri"
-
-            $result | ConvertTo-Json -Depth 15 | Write-Host
         }
 
         # The app already exists or is just created. Use the ObjectId to update "set" it further.
