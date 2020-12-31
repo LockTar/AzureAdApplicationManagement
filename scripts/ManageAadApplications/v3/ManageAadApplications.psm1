@@ -259,9 +259,14 @@ function Update-AadApplication {
             # This can happen with 'SET' ADO task
             Write-Verbose "Skip update ReplyUrls because both are null"
         }
-        else {    
-            Write-Verbose "Update ReplyUrls"
-            $app = Update-AzADApplication -ObjectId $app.ObjectId -ReplyUrls $ReplyUrls        
+        else {
+            if ([string]::IsNullOrWhiteSpace($ReplyUrls)) {
+                throw "ReplyUrls can not be an empty string"
+            }
+            else {                
+                Write-Verbose "Update ReplyUrls"
+                $app = Update-AzADApplication -ObjectId $app.ObjectId -ReplyUrls $ReplyUrls        
+            }
         }
     }
 

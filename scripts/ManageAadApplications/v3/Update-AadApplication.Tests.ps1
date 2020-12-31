@@ -295,7 +295,7 @@ Describe 'Update-AadApplication' {
         It "Given app with ReplyUrls, set empty ReplyUrls should throw error" {
             Update-AadApplication -ObjectId $app1.ObjectId -ReplyUrls "https://sampleurl.info"
 
-            { Update-AadApplication -ObjectId $app1.ObjectId -ReplyUrls "" } | Should -Throw "Cannot validate argument on parameter 'ObjectId'. The argument is null or empty. Provide an argument that is not null or empty, and then try the command again."
+            { Update-AadApplication -ObjectId $app1.ObjectId -ReplyUrls "" } | Should -Throw "ReplyUrls can not be an empty string"
         }
 
         It "Given app with ReplyUrls, set null as ReplyUrls should remove them" {

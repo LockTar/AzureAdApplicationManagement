@@ -37,6 +37,11 @@ switch ($replyUrlsMethod) {
     }
 }
 
+if ($replyUrlsArray.Count -eq 0) {
+    Write-Verbose "Set ReplyUrls to null because there is nothing in the task"
+    $replyUrlsArray = $null
+}
+
 # Create pretty array for optional owners array
 $ownersArray = @()
 switch ($ownersMethod) {
