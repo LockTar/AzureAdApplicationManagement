@@ -278,9 +278,10 @@ Describe 'Update-AadApplication' {
 
         It "Given app without ReplyUrls, set null as ReplyUrls should leave the app as is" {
             $result = Update-AadApplication -ObjectId $app1.ObjectId -ReplyUrls $null
+
             $result | Should -BeNullOrEmpty -Not
             $result.Application | Should -BeNullOrEmpty -Not
-            $result.Application.ReplyUrls | Should -BeNullOrEmpty -Not
+            $result.Application.ReplyUrls | Should -BeNullOrEmpty
         }
 
         It "Given app without ReplyUrls, set empty as ReplyUrls should leave the app as is" {
