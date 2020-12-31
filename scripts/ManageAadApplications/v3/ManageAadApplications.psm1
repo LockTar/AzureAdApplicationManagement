@@ -277,7 +277,8 @@ function Update-AadApplication {
    
     if ($PSBoundParameters.ContainsKey('AppRoleAssignmentRequired')) {
         Write-Verbose "Update Tags and AppRoleAssignmentRequired"
-        Set-AzureADServicePrincipal -ObjectId $sp.Id -Tags "WindowsAzureActiveDirectoryIntegratedApp" -AppRoleAssignmentRequired $AppRoleAssignmentRequired
+        Write-Verbose "Update Tags and AppRoleAssignmentRequired for id $($sp.Id)"
+        # Set-AzureADServicePrincipal -ObjectId $sp.Id -Tags "WindowsAzureActiveDirectoryIntegratedApp" -AppRoleAssignmentRequired $AppRoleAssignmentRequired
     }
 
     if ($PSBoundParameters.ContainsKey('Oauth2AllowImplicitFlow')) {
