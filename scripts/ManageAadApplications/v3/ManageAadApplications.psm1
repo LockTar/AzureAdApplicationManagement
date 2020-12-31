@@ -131,10 +131,8 @@ function Update-AadApplication {
         [string]$DisplayName,
         [ValidateNotNullOrEmpty()]
         [string]$IdentifierUri,
-        [ValidateNotNullOrEmpty()]
-        [string]$HomePageUrl,
+        [string]$HomePage,
         [bool]$AvailableToOtherTenants,
-        [ValidateNotNullOrEmpty()]
         [string[]]$ReplyUrls,
         [ValidateNotNullOrEmpty()]
         [string]$ResourceAccessFilePath,
@@ -233,17 +231,31 @@ function Update-AadApplication {
         $app = Update-AzADApplication -ObjectId $app.ObjectId -IdentifierUris $IdentifierUri
     }
 
-    if ($PSBoundParameters.ContainsKey('HomePageUrl')) {
-        Write-Verbose "Update HomePageUrl"
-        $app = Update-AzADApplication -ObjectId $app.ObjectId -HomePage $HomePageUrl
-        Start-Sleep 30
-        Write-Verbose "Update HomePageUrl for service principal"
-        $sp = Set-AzureADServicePrincipal -ObjectId $sp.Id -Homepage $HomePageUrl
+    if ($PSBoundParameters.ContainsKey('HomePage')) {
+        if ([string]::IsNullOrWhiteSpace($app.HomePage) -and [string]::IsNullOrWhiteSpace($HomePage)) {
+            # This can happen with 'SET' ADO task
+            Write-Verbose "Skip update HomePage because both are null"
+            break;
+        }
+        else {    
+            Write-Verbose "Update HomePage"
+            $app = Update-AzADApplication -ObjectId $app.ObjectId -HomePage $HomePage
+            Start-Sleep 30
+            Write-Verbose "Update HomePage for service principal"
+            $sp = Set-AzureADServicePrincipal -ObjectId $sp.Id -Homepage $HomePage
+        }
     }
 
     if ($PSBoundParameters.ContainsKey('ReplyUrls')) {
-        Write-Verbose "Update ReplyUrls"
-        $app = Update-AzADApplication -ObjectId $app.ObjectId -ReplyUrls $ReplyUrls        
+        if ([string]::IsNullOrWhiteSpace($app.ReplyUrls) -and [string]::IsNullOrWhiteSpace($ReplyUrls)) {
+            # This can happen with 'SET' ADO task
+            Write-Verbose "Skip update ReplyUrls because both are null"
+            break;
+        }
+        else {    
+            Write-Verbose "Update ReplyUrls"
+            $app = Update-AzADApplication -ObjectId $app.ObjectId -ReplyUrls $ReplyUrls        
+        }
     }
 
     if ($PSBoundParameters.ContainsKey('AvailableToOtherTenants')) {
