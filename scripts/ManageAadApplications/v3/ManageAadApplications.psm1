@@ -232,7 +232,7 @@ function Update-AadApplication {
         $app = Update-AzADApplication -ObjectId $app.ObjectId -DisplayName $DisplayName
 
         Write-Verbose "Update DisplayName for service principal"
-        $sp = Update-AzADServicePrincipal -ObjectId $sp.Id -DisplayName $DisplayName
+        Update-AzADServicePrincipal -ObjectId $sp.Id -DisplayName $DisplayName
     }
 
     if ($PSBoundParameters.ContainsKey('IdentifierUri')) {        
@@ -249,8 +249,8 @@ function Update-AadApplication {
             Write-Verbose "Update HomePage"
             $app = Update-AzADApplication -ObjectId $app.ObjectId -HomePage $HomePage
             Start-Sleep 30
-            Write-Verbose "Update HomePage for service principal $($sp.Id)"
-            #Set-AzureADServicePrincipal -ObjectId $sp.Id -Homepage $HomePage
+            Write-Verbose "Update HomePage for service principal"
+            Set-AzureADServicePrincipal -ObjectId $sp.Id -Homepage $HomePage
         }
     }
 
@@ -277,7 +277,6 @@ function Update-AadApplication {
    
     if ($PSBoundParameters.ContainsKey('AppRoleAssignmentRequired')) {
         Write-Verbose "Update Tags and AppRoleAssignmentRequired"
-        Write-Verbose "Update Tags and AppRoleAssignmentRequired for id $($sp.Id)"
         Set-AzureADServicePrincipal -ObjectId $sp.Id -Tags "WindowsAzureActiveDirectoryIntegratedApp" -AppRoleAssignmentRequired $AppRoleAssignmentRequired
     }
 

@@ -383,7 +383,7 @@ Describe 'Update-AadApplication' {
         }
 
         It "Given empty Secrets should skip update" {
-            { Update-AadApplication -ObjectId $app1.ObjectId -Secrets "" -Verbose } | Should -Throw -Not
+            { Update-AadApplication -ObjectId $app1.ObjectId -Secrets "" } | Should -Throw -Not
         }
 
         It "Given Secrets should update value" {
@@ -417,11 +417,14 @@ Describe 'Update-AadApplication' {
         }
 
         It "Given AppRoleAssignmentRequired should update value" {
-            $result = Update-AadApplication -ObjectId $app1.ObjectId -AppRoleAssignmentRequired $true
+            $result = Update-AadApplication -ObjectId $app1.ObjectId -DisplayName "AzureAdApplicationManagementTestApp2" -AppRoleAssignmentRequired $true -HomePage "https://test.com"
 
             $result | Should -BeNullOrEmpty -Not
             $result.Application | Should -BeNullOrEmpty -Not
             $result.SpAppRoleAssignmentRequired | Should -Be $true
+            $result.Application.DisplayName | Should -Be "AzureAdApplicationManagementTestApp2"
+            $result.ServicePrincipal.DisplayName | Should -Be "AzureAdApplicationManagementTestApp2"
+            $result.Application.HomePage | Should -Be "https://test.com"
         }
 
         It "Given new AppRoleAssignmentRequired should update old AppRoleAssignmentRequired value" {
