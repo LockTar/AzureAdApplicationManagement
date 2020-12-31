@@ -44,6 +44,10 @@ In order to use these tasks, a **prerequisite must be done** otherwise you will 
           {
             "id": "7ab1d382-f21e-4acd-a863-ba3e13f7da61",
             "type": "Role"
+          },
+          {
+            "id": "18a4783c-866b-4cc7-a460-3d5e5662c884",
+            "type": "Role"
           }
         ]
       }
