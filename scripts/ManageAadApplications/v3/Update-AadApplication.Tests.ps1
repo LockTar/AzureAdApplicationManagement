@@ -390,7 +390,7 @@ Describe 'Update-AadApplication' {
             $secrets = '[{ ''Description'': ''testkey'', ''EndDate'': ''01/12/2022'' }]'
             $secretsArray = $secrets | ConvertFrom-Json
 
-            Check output for the above secret because will not send to output for security reasons
+            # Check output for the above secret because will not send to output for security reasons
             $result = Update-AadApplication -ObjectId $app1.ObjectId -Secrets $secretsArray
 
             $result | Should -BeNullOrEmpty -Not
