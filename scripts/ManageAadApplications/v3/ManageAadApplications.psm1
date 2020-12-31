@@ -133,14 +133,11 @@ function Update-AadApplication {
         [string]$IdentifierUri,
         [string]$HomePage,
         [bool]$AvailableToOtherTenants,
-        [string[]]$ReplyUrls,
-        [ValidateNotNullOrEmpty()]
+        [string[]]$ReplyUrls,        
         [string]$ResourceAccessFilePath,
-        [ValidateNotNullOrEmpty()]
         [string]$AppRolesFilePath,
         [ValidateNotNullOrEmpty()]
         [string[]]$Owners,
-        [ValidateNotNullOrEmpty()]
         [Object[]]$Secrets,
         [bool]$Oauth2AllowImplicitFlow,
         [bool]$AppRoleAssignmentRequired
@@ -156,63 +153,75 @@ function Update-AadApplication {
        
     # Prepare ResourceAccess
     if ($PSBoundParameters.ContainsKey('ResourceAccessFilePath')) {
-        [System.Collections.ArrayList]$requiredResourceAccess = @()
-        if (![string]::IsNullOrWhiteSpace($ResourceAccessFilePath) -and (Test-Path $ResourceAccessFilePath) -and ($ResourceAccessFilePath -Like "*.json")) {            
-            Write-Verbose "Get the resources and permissions for app registration and convert into json object"
-            $resourceAccessInJson = Get-Content $ResourceAccessFilePath -Raw | ConvertFrom-Json
-        
-            Write-Verbose "Loop through all resources and permissions"
-            foreach ($resourceInJson in $resourceAccessInJson) {
-                Write-Verbose "Create new 'Microsoft.Open.AzureAD.Model.RequiredResourceAccess' object and set '$($resourceInJson.resourceAppId)' as the ResourceAppId"
-                $resource = New-Object -TypeName "Microsoft.Open.AzureAD.Model.RequiredResourceAccess"
-                $resource.ResourceAppId = $resourceInJson.resourceAppId
-            
-                Write-Verbose "Create new 'System.Collections.Generic.List[Microsoft.Open.AzureAD.Model.ResourceAccess]' object for ResourceAccess"
-                $resource.ResourceAccess = New-Object System.Collections.Generic.List[Microsoft.Open.AzureAD.Model.ResourceAccess]
-                foreach ($resourceAccessInJson in $resourceInJson.resourceAccess) {
-                    Write-Verbose "Create new 'Microsoft.Open.AzureAD.Model.ResourceAccess' object and set '$($resourceAccessInJson.id),$($resourceAccessInJson.type)'. Add this ResourceAccess to the list"
-                    $resourceAccess = New-Object -TypeName "Microsoft.Open.AzureAD.Model.ResourceAccess" -ArgumentList $resourceAccessInJson.id, $resourceAccessInJson.type
-                    $resource.ResourceAccess.Add($resourceAccess)
-                }
-            
-                $requiredResourceAccess.Add($resource)
-            }
-        
-            Write-Verbose "All resources with permissions are created and ready to set to the application"
+        if ([string]::IsNullOrWhiteSpace($ResourceAccessFilePath)) {
+            # This can happen with 'SET' ADO task
+            Write-Verbose "Skip update ResourceAccess because no file is given"
         }
-        else {
-            throw "Invalid file path for ResourceAccessFilePath"
+        else {        
+            [System.Collections.ArrayList]$requiredResourceAccess = @()
+            if ((Test-Path $ResourceAccessFilePath) -and ($ResourceAccessFilePath -Like "*.json")) {            
+                Write-Verbose "Get the resources and permissions for app registration and convert into json object"
+                $resourceAccessInJson = Get-Content $ResourceAccessFilePath -Raw | ConvertFrom-Json
+        
+                Write-Verbose "Loop through all resources and permissions"
+                foreach ($resourceInJson in $resourceAccessInJson) {
+                    Write-Verbose "Create new 'Microsoft.Open.AzureAD.Model.RequiredResourceAccess' object and set '$($resourceInJson.resourceAppId)' as the ResourceAppId"
+                    $resource = New-Object -TypeName "Microsoft.Open.AzureAD.Model.RequiredResourceAccess"
+                    $resource.ResourceAppId = $resourceInJson.resourceAppId
+            
+                    Write-Verbose "Create new 'System.Collections.Generic.List[Microsoft.Open.AzureAD.Model.ResourceAccess]' object for ResourceAccess"
+                    $resource.ResourceAccess = New-Object System.Collections.Generic.List[Microsoft.Open.AzureAD.Model.ResourceAccess]
+                    foreach ($resourceAccessInJson in $resourceInJson.resourceAccess) {
+                        Write-Verbose "Create new 'Microsoft.Open.AzureAD.Model.ResourceAccess' object and set '$($resourceAccessInJson.id),$($resourceAccessInJson.type)'. Add this ResourceAccess to the list"
+                        $resourceAccess = New-Object -TypeName "Microsoft.Open.AzureAD.Model.ResourceAccess" -ArgumentList $resourceAccessInJson.id, $resourceAccessInJson.type
+                        $resource.ResourceAccess.Add($resourceAccess)
+                    }
+            
+                    $requiredResourceAccess.Add($resource)
+                }
+        
+                Write-Verbose "All resources with permissions are created and ready to set to the application"
+            }
+            else {
+                throw "Invalid file path for ResourceAccessFilePath"
+            }
         }
     }
     
     # Prepare AppRoles
     if ($PSBoundParameters.ContainsKey('AppRolesFilePath')) {
-        $appRoles = $app.AppRoles
-        # Write-Verbose "App Roles before updating to the new roles:"
-        # Write-Host $appRoles
-
-        if (![string]::IsNullOrWhiteSpace($AppRolesFilePath) -and (Test-Path $AppRolesFilePath) -and ($AppRolesFilePath -Like "*.json")) {
-            Write-Verbose "Get the approles for app registration and convert into json object"
-            $appRolesInJson = Get-Content $AppRolesFilePath -Raw | ConvertFrom-Json
-            $appRoles = New-Object System.Collections.Generic.List[Microsoft.Open.AzureAD.Model.AppRole]
-
-            Write-Verbose "Loop through all approles"
-            foreach ($appRoleInJson in $appRolesInJson) {
-                $appRole = New-Object Microsoft.Open.AzureAD.Model.AppRole
-                $appRole.AllowedMemberTypes = $appRoleInJson.allowedMemberTypes
-                $appRole.DisplayName = $appRoleInJson.displayName
-                $appRole.Id = $appRoleInJson.id
-                $appRole.IsEnabled = $appRoleInJson.isEnabled
-                $appRole.Description = $appRoleInJson.description
-                $appRole.Value = $appRoleInJson.value
-                
-                $appRoles.Add($appRole)
-            }
-
-            Write-Verbose "All approles are created and ready to set to the application"     
+        if ([string]::IsNullOrWhiteSpace($AppRolesFilePath)) {
+            # This can happen with 'SET' ADO task
+            Write-Verbose "Skip update AppRoles because no file is given"
         }
-        else {
-            throw "Invalid file path for AppRolesFilePath"
+        else { 
+            $appRoles = $app.AppRoles
+            # Write-Verbose "App Roles before updating to the new roles:"
+            # Write-Host $appRoles
+
+            if ((Test-Path $AppRolesFilePath) -and ($AppRolesFilePath -Like "*.json")) {
+                Write-Verbose "Get the approles for app registration and convert into json object"
+                $appRolesInJson = Get-Content $AppRolesFilePath -Raw | ConvertFrom-Json
+                $appRoles = New-Object System.Collections.Generic.List[Microsoft.Open.AzureAD.Model.AppRole]
+
+                Write-Verbose "Loop through all approles"
+                foreach ($appRoleInJson in $appRolesInJson) {
+                    $appRole = New-Object Microsoft.Open.AzureAD.Model.AppRole
+                    $appRole.AllowedMemberTypes = $appRoleInJson.allowedMemberTypes
+                    $appRole.DisplayName = $appRoleInJson.displayName
+                    $appRole.Id = $appRoleInJson.id
+                    $appRole.IsEnabled = $appRoleInJson.isEnabled
+                    $appRole.Description = $appRoleInJson.description
+                    $appRole.Value = $appRoleInJson.value
+                
+                    $appRoles.Add($appRole)
+                }
+
+                Write-Verbose "All approles are created and ready to set to the application"     
+            }
+            else {
+                throw "Invalid file path for AppRolesFilePath"
+            }
         }
     }
 
@@ -235,7 +244,6 @@ function Update-AadApplication {
         if ([string]::IsNullOrWhiteSpace($app.HomePage) -and [string]::IsNullOrWhiteSpace($HomePage)) {
             # This can happen with 'SET' ADO task
             Write-Verbose "Skip update HomePage because both are null"
-            break;
         }
         else {    
             Write-Verbose "Update HomePage"
@@ -250,7 +258,6 @@ function Update-AadApplication {
         if ([string]::IsNullOrWhiteSpace($app.ReplyUrls) -and [string]::IsNullOrWhiteSpace($ReplyUrls)) {
             # This can happen with 'SET' ADO task
             Write-Verbose "Skip update ReplyUrls because both are null"
-            break;
         }
         else {    
             Write-Verbose "Update ReplyUrls"
@@ -274,22 +281,34 @@ function Update-AadApplication {
     }
 
     if ($PSBoundParameters.ContainsKey('ResourceAccessFilePath')) {
-        if ((Test-Path $ResourceAccessFilePath) -and ($ResourceAccessFilePath -Like "*.json")) {
-            Write-Verbose "Update RequiredResourceAccess"
-            Set-AzureADApplication -ObjectId $app.ObjectId -RequiredResourceAccess $requiredResourceAccess
-        }        
+        if ([string]::IsNullOrWhiteSpace($ResourceAccessFilePath)) {
+            # This can happen with 'SET' ADO task
+            Write-Verbose "Skip update ResourceAccess because no file is given"
+        }
         else {
-            throw "Invalid file path for ResourceAccessFilePath"
+            if ((Test-Path $ResourceAccessFilePath) -and ($ResourceAccessFilePath -Like "*.json")) {
+                Write-Verbose "Update RequiredResourceAccess"
+                Set-AzureADApplication -ObjectId $app.ObjectId -RequiredResourceAccess $requiredResourceAccess
+            }        
+            else {
+                throw "Invalid file path for ResourceAccessFilePath"
+            }
         }
     }
 
     if ($PSBoundParameters.ContainsKey('AppRolesFilePath')) {
-        if ((Test-Path $AppRolesFilePath) -and ($AppRolesFilePath -Like "*.json")) {
-            Write-Verbose "Update AppRoles"
-            Set-AzureADApplication -ObjectId $app.ObjectId -AppRoles $appRoles        
+        if ([string]::IsNullOrWhiteSpace($AppRolesFilePath)) {
+            # This can happen with 'SET' ADO task
+            Write-Verbose "Skip update AppRoles because no file is given"
         }
-        else {
-            throw "Invalid file path for AppRolesFilePath"
+        else { 
+            if ((Test-Path $AppRolesFilePath) -and ($AppRolesFilePath -Like "*.json")) {
+                Write-Verbose "Update AppRoles"
+                Set-AzureADApplication -ObjectId $app.ObjectId -AppRoles $appRoles        
+            }
+            else {
+                throw "Invalid file path for AppRolesFilePath"
+            }
         }
     }
     
@@ -342,35 +361,37 @@ function Update-AadApplication {
     }
     
     if ($PSBoundParameters.ContainsKey('Secrets')) {
-        # Check for existing secrets and remove them so they can be re-created
-        Write-Verbose "Checking for existing secrets"
-        $appKeySecrets = Get-AzureADApplicationPasswordCredential -ObjectId $app.ObjectId
+        if ($Secrets) {
+            # Check for existing secrets and remove them so they can be re-created
+            Write-Verbose "Checking for existing secrets"
+            $appKeySecrets = Get-AzureADApplicationPasswordCredential -ObjectId $app.ObjectId
 
-        if ($appKeySecrets) {
-            foreach ($existingSecret in $appKeySecrets) {
-                foreach ($secret in $Secrets) {
-                    $stringDescription = $secret.Description | Out-String
-                    $trimmedStringDescription = $stringDescription -replace [Environment]::NewLine, "";
+            if ($appKeySecrets) {
+                foreach ($existingSecret in $appKeySecrets) {
+                    foreach ($secret in $Secrets) {
+                        $stringDescription = $secret.Description | Out-String
+                        $trimmedStringDescription = $stringDescription -replace [Environment]::NewLine, "";
 
-                    if ([System.Text.Encoding]::ASCII.GetString($existingSecret.CustomKeyIdentifier) -eq $trimmedStringDescription) {
-                        Write-Verbose "Removing existing key with description: $trimmedStringDescription"
-                        Remove-AzureADApplicationPasswordCredential -ObjectId $app.ObjectId -KeyId $existingSecret.KeyId
+                        if ([System.Text.Encoding]::ASCII.GetString($existingSecret.CustomKeyIdentifier) -eq $trimmedStringDescription) {
+                            Write-Verbose "Removing existing key with description: $trimmedStringDescription"
+                            Remove-AzureADApplicationPasswordCredential -ObjectId $app.ObjectId -KeyId $existingSecret.KeyId
+                        }
                     }
                 }
             }
-        }
 
-        # Create new secrets
-        foreach ($secret in $Secrets) {
-            $endDate = [datetime]::ParseExact($secret.EndDate, 'dd/MM/yyyy', [Globalization.CultureInfo]::InvariantCulture)
+            # Create new secrets
+            foreach ($secret in $Secrets) {
+                $endDate = [datetime]::ParseExact($secret.EndDate, 'dd/MM/yyyy', [Globalization.CultureInfo]::InvariantCulture)
                 
-            $stringDescription = $secret.Description | Out-String
-            $trimmedStringDescription = $stringDescription -replace [Environment]::NewLine, "";
+                $stringDescription = $secret.Description | Out-String
+                $trimmedStringDescription = $stringDescription -replace [Environment]::NewLine, "";
                 
-            Write-Verbose "Creating new key with description: $trimmedStringDescription and end date $endDate"
-            $appKeySecret = New-AzureADApplicationPasswordCredential -ObjectId $app.ObjectId -CustomKeyIdentifier $trimmedStringDescription -EndDate $endDate
+                Write-Verbose "Creating new key with description: $trimmedStringDescription and end date $endDate"
+                $appKeySecret = New-AzureADApplicationPasswordCredential -ObjectId $app.ObjectId -CustomKeyIdentifier $trimmedStringDescription -EndDate $endDate
                 
-            Write-Host "##vso[task.setvariable variable=Secret.$trimmedStringDescription;isOutput=true;issecret=true]$($appKeySecret.Value)"
+                Write-Host "##vso[task.setvariable variable=Secret.$trimmedStringDescription;isOutput=true;issecret=true]$($appKeySecret.Value)"
+            }
         }
     }
 

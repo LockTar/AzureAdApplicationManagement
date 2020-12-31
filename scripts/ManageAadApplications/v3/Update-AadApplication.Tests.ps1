@@ -48,8 +48,8 @@ Describe 'Update-AadApplication' {
             Start-Sleep 15
         }
 
-        It "Given empty ResourceAccessFilePath should throw error" {
-            { Update-AadApplication -ObjectId $app1.ObjectId -ResourceAccessFilePath "" } | Should -Throw "Cannot validate argument on parameter 'ResourceAccessFilePath'. The argument is null or empty. Provide an argument that is not null or empty, and then try the command again."
+        It "Given empty ResourceAccessFilePath should skip update" {
+            { Update-AadApplication -ObjectId $app1.ObjectId -ResourceAccessFilePath "" } | Should -Throw -Not
         }
 
         It "Given invalid ResourceAccessFilePath should throw error" {
@@ -78,7 +78,7 @@ Describe 'Update-AadApplication' {
         }
 
         It "Given empty AppRolesFilePath should throw error" {
-            { Update-AadApplication -ObjectId $app1.ObjectId -AppRolesFilePath "" } | Should -Throw "Cannot validate argument on parameter 'AppRolesFilePath'. The argument is null or empty. Provide an argument that is not null or empty, and then try the command again."
+            { Update-AadApplication -ObjectId $app1.ObjectId -AppRolesFilePath "" } | Should -Throw -Not
         }
 
         It "Given invalid AppRolesFilePath should throw error" {
@@ -176,21 +176,45 @@ Describe 'Update-AadApplication' {
             $result.ServicePrincipal.HomePage | Should -BeNullOrEmpty
         }
 
-        It "Given empty HomePage should throw error" {
-            { Update-AadApplication -ObjectId $app1.ObjectId -HomePageUrl "" } | Should -Throw "Cannot validate argument on parameter 'HomePageUrl'. The argument is null or empty. Provide an argument that is not null or empty, and then try the command again."
+        It "Given app without HomePage, set HomePage to null should leave the app as is" {
+            $result = Update-AadApplication -ObjectId $app1.ObjectId -HomePage $null            
+
+            $result | Should -BeNullOrEmpty -Not
+            $result.Application.HomePage | Should -BeNullOrEmpty
+            $result.ServicePrincipal.HomePage | Should -BeNullOrEmpty
         }
 
-        It "Given HomePage should update value" {
-            $result = Update-AadApplication -ObjectId $app1.ObjectId -HomePageUrl "https://sampleurl.info"
+        It "Given app without HomePage, set HomePage to empty string should leave the app as is" {
+            $result = Update-AadApplication -ObjectId $app1.ObjectId -HomePage ""
+
+            $result | Should -BeNullOrEmpty -Not
+            $result.Application.HomePage | Should -BeNullOrEmpty
+            $result.ServicePrincipal.HomePage | Should -BeNullOrEmpty
+        }
+
+        It "Given app with HomePage, set HomePage to null should throw error" {
+            Update-AadApplication -ObjectId $app1.ObjectId -HomePage "https://sampleurl.info"
+            
+            { Update-AadApplication -ObjectId $app1.ObjectId -HomePage $null } | Should -Throw "Cannot validate argument on parameter 'HomePage'. The argument is null or empty. Provide an argument that is not null or empty, and then try the command again."
+        }
+
+        It "Given app with HomePage, set HomePage to empty string should throw error" {
+            Update-AadApplication -ObjectId $app1.ObjectId -HomePage "https://sampleurl.info"
+
+            { Update-AadApplication -ObjectId $app1.ObjectId -HomePage "" } | Should -Throw "Cannot validate argument on parameter 'HomePage'. The argument is null or empty. Provide an argument that is not null or empty, and then try the command again."
+        }
+
+        It "Given app without HomePage, set HomePage with correct value should update value" {
+            $result = Update-AadApplication -ObjectId $app1.ObjectId -HomePage "https://sampleurl.info"
             
             $result | Should -BeNullOrEmpty -Not
             $result.Application | Should -BeNullOrEmpty -Not
             $result.Application.HomePage | Should -Be "https://sampleurl.info"
         }
 
-        It "Given new HomePage should update old HomePage value" {
-            $result = Update-AadApplication -ObjectId $app1.ObjectId -HomePageUrl "https://old.info"
-            $result = Update-AadApplication -ObjectId $app1.ObjectId -HomePageUrl "https://sampleurl.info"
+        It "Given app with HomePage, set new HomePage should update old value" {
+            $result = Update-AadApplication -ObjectId $app1.ObjectId -HomePage "https://old.info"
+            $result = Update-AadApplication -ObjectId $app1.ObjectId -HomePage "https://sampleurl.info"
 
             $result | Should -BeNullOrEmpty -Not
             $result.Application | Should -BeNullOrEmpty -Not
@@ -252,11 +276,37 @@ Describe 'Update-AadApplication' {
             $result.Application.ReplyUrls | Should -BeNullOrEmpty
         }
 
-        It "Given empty ReplyUrls should throw error" {
-            { Update-AadApplication -ObjectId $app1.ObjectId -ReplyUrls "" } | Should -Throw "Cannot validate argument on parameter 'ReplyUrls'. The argument is null or empty. Provide an argument that is not null or empty, and then try the command again."
+        It "Given app without ReplyUrls, set null as ReplyUrls should leave the app as is" {
+            $result = Update-AadApplication -ObjectId $app1.ObjectId -ReplyUrls $null
+            $result | Should -BeNullOrEmpty -Not
+            $result.Application | Should -BeNullOrEmpty -Not
+            $result.Application.ReplyUrls | Should -BeNullOrEmpty -Not
         }
 
-        It "Given ReplyUrls should update value" {
+        It "Given app without ReplyUrls, set empty as ReplyUrls should leave the app as is" {
+            $result = Update-AadApplication -ObjectId $app1.ObjectId -ReplyUrls ""
+
+            $result | Should -BeNullOrEmpty -Not
+            $result.Application | Should -BeNullOrEmpty -Not
+            $result.Application.ReplyUrls | Should -BeNullOrEmpty
+        }
+
+        It "Given app with ReplyUrls, set empty ReplyUrls should throw error" {
+            Update-AadApplication -ObjectId $app1.ObjectId -ReplyUrls "https://sampleurl.info"
+
+            { Update-AadApplication -ObjectId $app1.ObjectId -ReplyUrls "" } | Should -Throw "Cannot validate argument on parameter 'ObjectId'. The argument is null or empty. Provide an argument that is not null or empty, and then try the command again."
+        }
+
+        It "Given app with ReplyUrls, set null as ReplyUrls should remove them" {
+            Update-AadApplication -ObjectId $app1.ObjectId -ReplyUrls "https://sampleurl.info"
+
+            $result = Update-AadApplication -ObjectId $app1.ObjectId -ReplyUrls $null
+            $result | Should -BeNullOrEmpty -Not
+            $result.Application | Should -BeNullOrEmpty -Not
+            $result.Application.ReplyUrls | Should -BeNullOrEmpty -Not
+        }
+
+        It "Given app without ReplyUrls, set ReplyUrls should update value" {
             $result = Update-AadApplication -ObjectId $app1.ObjectId -ReplyUrls "https://sampleurl.info"
 
             $result | Should -BeNullOrEmpty -Not
@@ -264,7 +314,7 @@ Describe 'Update-AadApplication' {
             $result.Application.ReplyUrls | Should -Be "https://sampleurl.info"
         }
 
-        It "Given new ReplyUrls should update old ReplyUrls value" {
+        It "Given app with ReplyUrls, set new ReplyUrls should update old value" {
             $result = Update-AadApplication -ObjectId $app1.ObjectId -ReplyUrls "https://old.info"
             $result = Update-AadApplication -ObjectId $app1.ObjectId -ReplyUrls "https://sampleurl.info"
 
@@ -331,15 +381,15 @@ Describe 'Update-AadApplication' {
             $result | Should -BeNullOrEmpty -Not
         }
 
-        It "Given empty Secrets should throw error" {
-            { Update-AadApplication -ObjectId $app1.ObjectId -Secrets "" } | Should -Throw "Cannot validate argument on parameter 'Secrets'. The argument is null or empty. Provide an argument that is not null or empty, and then try the command again."
+        It "Given empty Secrets should skip update" {
+            { Update-AadApplication -ObjectId $app1.ObjectId -Secrets "" -Verbose } | Should -Throw -Not
         }
 
         It "Given Secrets should update value" {
             $secrets = '[{ ''Description'': ''testkey'', ''EndDate'': ''01/12/2022'' }]'
             $secretsArray = $secrets | ConvertFrom-Json
 
-            # Check output for the above secret because will not send to output for security reasons
+            Check output for the above secret because will not send to output for security reasons
             $result = Update-AadApplication -ObjectId $app1.ObjectId -Secrets $secretsArray
 
             $result | Should -BeNullOrEmpty -Not
