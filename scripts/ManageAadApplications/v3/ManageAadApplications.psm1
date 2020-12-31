@@ -250,7 +250,7 @@ function Update-AadApplication {
             $app = Update-AzADApplication -ObjectId $app.ObjectId -HomePage $HomePage
             Start-Sleep 30
             Write-Verbose "Update HomePage for service principal"
-            $sp = Set-AzureADServicePrincipal -ObjectId $sp.Id -Homepage $HomePage
+            Set-AzureADServicePrincipal -ObjectId $sp.Id -Homepage $HomePage
         }
     }
 
