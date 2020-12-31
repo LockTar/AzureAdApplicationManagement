@@ -115,7 +115,7 @@ try {
 
         if (!$result.Application) {
             Write-Verbose "Application doesn't exist. Create the application '$name'"
-            $resultNew = New-AadApplication -DisplayName $name
+            New-AadApplication -DisplayName $name
             
             $secondsToWait = 10
             Write-Verbose "Application '$name' is created but wait $secondsToWait seconds so Azure AD can process it and we can set all the properties"
@@ -129,10 +129,10 @@ try {
         # because the app is already created (second time pipeline runs) but the parameter is still not given and the IdentifierUri from task is empty, 
         # use the newly generated or already existing IdentifierUri in update cmdlet
         if ([string]::IsNullOrWhiteSpace($appIdUri)) {
-            $appIdUri = $resultNew.Application.IdentifierUris[0]
+            $appIdUri = $result.Application.IdentifierUris[0]
             Write-Verbose "Newly generated IdentifierUri: $appIdUri"
 
-            $resultNew | ConvertTo-Json -Depth 15 | Write-Host
+            $result | ConvertTo-Json -Depth 15 | Write-Host
         }
 
         # The app already exists or is just created. Use the ObjectId to update "set" it further.
