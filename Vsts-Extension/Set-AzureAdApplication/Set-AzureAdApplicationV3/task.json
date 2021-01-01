@@ -15,7 +15,7 @@
         "Minor": 1,
         "Patch": 0
     },
-    "preview": "true",
+    "preview": "false",
     "instanceNameFormat": "Set Azure AD Application",
     "groups": [{
         "name": "AzureDetails",
@@ -155,7 +155,7 @@
         },
         {
             "name": "resourceAccessFilePath",
-            "type": "filePath",
+            "type": "string",
             "label": "Required Resource Access",
             "defaultValue": "",
             "required": false,
@@ -164,7 +164,7 @@
         },
         {
             "name": "appRolesFilePath",
-            "type": "filePath",
+            "type": "string",
             "label": "AppRoles",
             "defaultValue": "",
             "required": false,

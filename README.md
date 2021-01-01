@@ -8,6 +8,7 @@ This Azure DevOps extension contains the following tasks:
 
 - Get Azure AD Application
 - Set Azure AD Application (recommended)
+- Update Azure AD Application
 - Remove Azure AD Application
 
 In order to use these tasks, follow the **prerequisite** steps in the [Get Started](#get-started) section.
@@ -43,6 +44,10 @@ In order to use these tasks, a **prerequisite must be done** otherwise you will 
         "resourceAccess": [
           {
             "id": "7ab1d382-f21e-4acd-a863-ba3e13f7da61",
+            "type": "Role"
+          },
+          {
+            "id": "18a4783c-866b-4cc7-a460-3d5e5662c884",
             "type": "Role"
           }
         ]

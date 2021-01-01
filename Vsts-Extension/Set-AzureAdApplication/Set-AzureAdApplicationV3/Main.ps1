@@ -5,7 +5,7 @@ $createIfNotExist = Get-VstsInput -Name createIfNotExist -AsBool
 $objectId = Get-VstsInput -Name objectId
 $name = Get-VstsInput -Name name -Require
 $appIdUri = Get-VstsInput -Name appIdUri
-$homePageUrl = Get-VstsInput -Name homePageUrl
+$homePageUrl = Get-VstsInput -Name homePageUrl 
 $logoutUrl = Get-VstsInput -Name logoutUrl
 $termsOfServiceUrl = Get-VstsInput -Name termsOfServiceUrl
 $privacyStatementUrl = Get-VstsInput -Name privacyStatementUrl
@@ -24,34 +24,33 @@ $appRoleAssignmentRequired = Get-VstsInput -Name appRoleAssignmentRequired -AsBo
 
 # Create pretty array for optional replyurls array
 $replyUrlsArray = @()
-switch ($replyUrlsMethod)
-{
-    "Singleline"
-    {
+switch ($replyUrlsMethod) {
+    "Singleline" {
         if ($replyUrlsSingleLine -ne "") {
             $replyUrlsArray = $replyUrlsSingleLine.Split(";")
         }
     }
-    "Multiline"
-    {
+    "Multiline" {
         if ($replyUrlsMultiLine -ne "") {
             $replyUrlsArray = $replyUrlsMultiLine.Split("`n")
         }
     }
 }
 
+if ($replyUrlsArray.Count -eq 0) {
+    Write-Verbose "Set ReplyUrls to null because there is nothing in the task"
+    $replyUrlsArray = $null
+}
+
 # Create pretty array for optional owners array
 $ownersArray = @()
-switch ($ownersMethod)
-{
-    "Singleline"
-    {
+switch ($ownersMethod) {
+    "Singleline" {
         if ($ownersSingleLine -ne "") {
             $ownersArray = $ownersSingleLine.Split(";")
         }
     }
-    "Multiline"
-    {
+    "Multiline" {
         if ($ownersMultiLine -ne "") {
             $ownersArray = $ownersMultiLine.Split("`n")
         }
@@ -59,7 +58,7 @@ switch ($ownersMethod)
 }
 
 $secretsArray
-if($secrets) {
+if ($secrets) {
     # Create JSON array for secrets
     $secretsArray = $secrets | ConvertFrom-Json
 }
@@ -73,8 +72,7 @@ CleanUp-PSModulePathForHostedAgent
 Import-Module $PSScriptRoot\ps_modules\VstsAzureHelpers_
 Import-Module $PSScriptRoot\ps_modules\CustomAzureDevOpsAzureHelpers\CustomAzureDevOpsAzureHelpers.psm1
 
-try 
-{
+try {
     # Login
     Initialize-PackageProvider
     Initialize-Module -Name "Az.Accounts" -RequiredVersion "2.1.2"
@@ -114,7 +112,6 @@ try
     $deployServicePrincipalId = (Get-AzADServicePrincipal -ApplicationId $clientId).Id
     $ownersArray += $deployServicePrincipalId
 
-    Import-Module $PSScriptRoot\scripts\Set-AadApplication.psm1
     Import-Module $PSScriptRoot\scripts\ManageAadApplications.psm1
 
     if ($createIfNotExist) {
@@ -124,27 +121,33 @@ try
         if (!$result.Application) {
             Write-Verbose "Application doesn't exist. Create the application '$name'"
             New-AadApplication -DisplayName $name
-
+            
             $secondsToWait = 10
             Write-Verbose "Application '$name' is created but wait $secondsToWait seconds so Azure AD can process it and we can set all the properties"
             Start-Sleep -Seconds $secondsToWait
+            
+            Write-Verbose "Get the application '$name' again so we have the ObjectId to alter the application"
+            $result = Get-AadApplication -DisplayName $name
         }
 
-        Write-Verbose "Get the application '$name' again so we have the ObjectId to alter the application"
-        $result = Get-AadApplication -DisplayName $name
+        # Because this is a newly created app or 
+        # because the app is already created (second time pipeline runs) but the parameter is still not given and the IdentifierUri from task is empty, 
+        # use the newly generated or already existing IdentifierUri in update cmdlet
+        if ([string]::IsNullOrWhiteSpace($appIdUri)) {
+            $appIdUri = $result.Application.IdentifierUris[0]
+            Write-Verbose "Newly generated IdentifierUri: $appIdUri"
+        }
 
+        # The app already exists or is just created. Use the ObjectId to update "set" it further.
         $objectId = $result.Application.ObjectId
     }
 
-    Set-AadApplication `
+    Update-AadApplication `
         -ObjectId $objectId `
-        -Name $name `
-        -AppIdUri $appIdUri `
-        -HomePageUrl $homePageUrl `
-        -LogoutUrl $logoutUrl `
-        -TermsOfServiceUrl $termsOfServiceUrl `
-        -PrivacyStatementUrl $privacyStatementUrl `
-        -MultiTenant $multiTenant `
+        -DisplayName $name `
+        -IdentifierUri $appIdUri `
+        -HomePage $homePageUrl `
+        -AvailableToOtherTenants $multiTenant `
         -ReplyUrls $replyUrlsArray `
         -ResourceAccessFilePath $resourceAccessFilePath `
         -AppRolesFilePath $appRolesFilePath `
@@ -152,6 +155,11 @@ try
         -Secrets $secretsArray `
         -Oauth2AllowImplicitFlow $oauth2AllowImplicitFlow `
         -AppRoleAssignmentRequired $appRoleAssignmentRequired
+        
+    # Not used...
+    # -LogoutUrl $logoutUrl `
+    # -TermsOfServiceUrl $termsOfServiceUrl `
+    # -PrivacyStatementUrl $privacyStatementUrl `
 }
 finally {
     Remove-EndpointSecrets

@@ -13,9 +13,6 @@ var paths = {
   code : {
     root : '../',
     scripts : '../scripts/',
-    setAzureAdApplication : {
-      v3 : '../scripts/Set-AzureAdApplication/v3/'
-    },
     manageAadApplications : {
       v3 : '../scripts/ManageAadApplications/v3/'
     },
@@ -57,10 +54,6 @@ function buildScriptFilesAzureADApplication() {
     .pipe(gulp.dest(paths.extension.setAzureAdApplication.v3));
   gulp.src(paths.code.scripts + 'Utility.ps1')
     .pipe(gulp.dest(paths.extension.setAzureAdApplication.v3));
-
-  console.log('Fill ' + paths.extension.setAzureAdApplication.v3 + ' scripts from ' + paths.code.setAzureAdApplication.v3);
-  gulp.src(paths.code.setAzureAdApplication.v3 + '**/*')
-    .pipe(gulp.dest(paths.extension.setAzureAdApplication.v3 + 'scripts'));
   
   console.log('Fill ' + paths.extension.setAzureAdApplication.v3 + ' scripts from ' + paths.code.manageAadApplications.v3);
   return gulp.src(paths.code.manageAadApplications.v3 + 'ManageAadApplications.psm1')
