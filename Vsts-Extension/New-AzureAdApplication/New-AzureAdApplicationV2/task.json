@@ -16,6 +16,7 @@
         "Patch": 0
     },
     "preview": "false",
+    "deprecated": true,
     "instanceNameFormat": "New Azure AD Application",
     "groups": [{
         "name": "AzureDetails",
