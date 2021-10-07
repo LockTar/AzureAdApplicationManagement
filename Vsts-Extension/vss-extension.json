@@ -26,16 +26,6 @@
     ],
     "contributions": [
         {
-            "id": "New-Azure-AD-Application",
-            "type": "ms.vss-distributed-task.task",
-            "targets": [
-                "ms.vss-distributed-task.tasks"
-            ],
-            "properties": {
-                "name": "New-AzureAdApplication"
-            }
-        },
-        {
             "id": "Get-Azure-AD-Application",
             "type": "ms.vss-distributed-task.task",
             "targets": [
@@ -81,10 +71,7 @@
             "path": "node_modules/vss-web-extension-sdk/lib",
             "addressable": true,
             "packagePath": "lib"
-        },
-        {
-            "path": "New-AzureAdApplication"
-        },
+        },        
         {
             "path": "Get-AzureAdApplication"
         },

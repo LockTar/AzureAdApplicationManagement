@@ -62,6 +62,18 @@ In order to use these tasks, a **prerequisite must be done** otherwise you will 
 
 ## Release notes
 
+### V3.2
+
+- Delete v2 tasks from extension
+- Update all NPM dependencies
+- Update PowerShell Az Module to version 6.4.0 (latest and same as hosted agent)
+- Update PowerShell AzureAD Module to version 2.0.2.140 (latest)
+- Update readme with 'Contribute' section
+
+### V3.1
+
+- Mark v2 tasks as deprecated
+
 ### V3
 
 - Migrated (were possible) to the new Az Modules
@@ -97,3 +109,28 @@ Add-AzureADApplicationOwner -ObjectId $objectIdOfApplicationToChange -RefObjectI
 
 Microsoft introduced YAML build pipelines a while ago. But there is now a **preview** for multi stage pipelines as well. See the Samples folder for a generic setup to use Azure Pipelines multi stage pipeline for build and release.
 Don't forget to enable the preview feature!
+
+## Contribute
+
+### Prepare
+
+1. Clone repository
+2. Install gulp with `npm install gulp -g`
+3. Navigate to folder `Vsts-Extension` in PowerShell 7.x
+4. Install npm packages with `npm install`
+5. Install PowerShell Module `Az` (All AzureRm modules should be removed from your system as stated in the Az documentation)
+6. Optional: Install `Pester` for running PowerShell test scripts with `Install-Module -Name Pester -Force -SkipPublisherCheck`
+
+### Build
+
+1. Navigate to folder `Vsts-Extension` in PowerShell 7.x
+2. Run gulp with following commands: 
+    - `gulp build` Build all tasks and set the dependencies in the tasks
+    - `gulp clean` Clean all tasks
+    - `gulp reset` First does a `clean` and then a `build`
+    - `gulp build/clean/reset:taskname` in example `gulp build:GetAdApplication` for only building the GetAdApplication task
+
+### Test
+
+1. Navigate in PowerShell 7.x to `./scripts/ManageAadApplications/v3`
+2. Run pester tests for the `ManageAadApplications` PowerShell Module. Use for this the `*.Tests.ps1` files in the `ManageAadApplications` folder. See comment at the top of the screen. In example `Invoke-Pester -Output Detailed .\Get-AadApplication.Tests.ps1`
