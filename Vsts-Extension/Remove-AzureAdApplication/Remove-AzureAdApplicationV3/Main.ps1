@@ -17,8 +17,8 @@ Import-Module $PSScriptRoot\ps_modules\CustomAzureDevOpsAzureHelpers\CustomAzure
 try {
     # Login
     Initialize-PackageProvider
-    Initialize-Module -Name "Az.Accounts" -RequiredVersion "2.1.2"
-    Initialize-Module -Name "Az.Resources" -RequiredVersion "3.0.0"
+    Initialize-Module -Name "Az.Accounts" -RequiredVersion "2.5.3"
+    Initialize-Module -Name "Az.Resources" -RequiredVersion "4.3.1"
 
     $connectedServiceName = Get-VstsInput -Name ConnectedServiceNameARM -Require
     $endpoint = Get-VstsEndpoint -Name $connectedServiceName -Require

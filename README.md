@@ -65,7 +65,9 @@ In order to use these tasks, a **prerequisite must be done** otherwise you will 
 ### V3.2
 
 - Delete v2 tasks from extension
-- Update all dependencies
+- Update all NPM dependencies
+- Update PowerShell Az Module to version 6.4.0 (latest and same as hosted agent)
+- Update PowerShell AzureAD Module to version 2.0.2.140 (latest)
 - Update readme with 'Contribute' section
 
 ### V3.1
