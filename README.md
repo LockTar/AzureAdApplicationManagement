@@ -62,6 +62,16 @@ In order to use these tasks, a **prerequisite must be done** otherwise you will 
 
 ## Release notes
 
+### V3.2
+
+- Delete v2 tasks from extension
+- Update all dependencies
+- Update readme with 'Contribute' section
+
+### V3.1
+
+- Mark v2 tasks as deprecated
+
 ### V3
 
 - Migrated (were possible) to the new Az Modules
@@ -97,3 +107,15 @@ Add-AzureADApplicationOwner -ObjectId $objectIdOfApplicationToChange -RefObjectI
 
 Microsoft introduced YAML build pipelines a while ago. But there is now a **preview** for multi stage pipelines as well. See the Samples folder for a generic setup to use Azure Pipelines multi stage pipeline for build and release.
 Don't forget to enable the preview feature!
+
+## Contribute
+
+1. Clone repository
+2. Install gulp with `npm install gulp -g`
+3. Navigate to folder `Vsts-Extension` in PowerShell (Core)
+4. Install npm packages with `npm install`
+5. Run gulp with following commands: 
+    - `gulp build` Build all tasks and set the dependencies in the tasks
+    - `gulp clean` Clean all tasks
+    - `gulp reset` First does a `clean` and then a `build`
+    - `gulp build/clean/reset:taskname` in example `gulp build:GetAdApplication` for only building the GetAdApplication task
