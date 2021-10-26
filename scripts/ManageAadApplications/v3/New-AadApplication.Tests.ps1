@@ -45,13 +45,14 @@ Describe 'New-AadApplication' {
         }
 
         It "Given an identifieruri should return application and service principal with given identifieruri" {
-            $result = New-AadApplication -DisplayName "AzureAdApplicationManagementTestApp1" -IdentifierUri "https://SampleIdentifier"
+            $TenantId = "Put your tenantid here"
+            $result = New-AadApplication -DisplayName "AzureAdApplicationManagementTestApp1" -IdentifierUri "api://$TenantId/AzureAdApplicationManagementTestApp1"
             
             $result | Should -BeNullOrEmpty -Not
             $result.Application | Should -BeNullOrEmpty -Not
             $result.ServicePrincipal | Should -BeNullOrEmpty -Not
             $result.Application.DisplayName | Should -Be "AzureAdApplicationManagementTestApp1"
-            $result.Application.IdentifierUris[0] | Should -Be "https://SampleIdentifier"
+            $result.Application.IdentifierUris[0] | Should -Be "api://$TenantId/AzureAdApplicationManagementTestApp1"
             $result.ServicePrincipal.DisplayName | Should -Be "AzureAdApplicationManagementTestApp1"
         }
         
