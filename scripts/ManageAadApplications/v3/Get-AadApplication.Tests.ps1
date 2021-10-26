@@ -8,7 +8,7 @@ BeforeAll {
 Describe 'Get-AadApplication' {
     Context "No parameter names" {
         BeforeAll { 
-            $app1 = New-AzADApplication -DisplayName "AzureAdApplicationManagementTestApp1" -IdentifierUris "https://AzureAdApplicationManagementTestApp1"
+            $app1 = New-AzADApplication -DisplayName "AzureAdApplicationManagementTestApp1"
             $sp1 = Get-AzADApplication -ObjectId $app1.ObjectId | New-AzADServicePrincipal
         }
 
@@ -29,7 +29,7 @@ Describe 'Get-AadApplication' {
 
     Context "Parameter ObjectId" {
         BeforeAll { 
-            $app2 = New-AzADApplication -DisplayName "AzureAdApplicationManagementTestApp2" -IdentifierUris "https://AzureAdApplicationManagementTestApp2"
+            $app2 = New-AzADApplication -DisplayName "AzureAdApplicationManagementTestApp2"
             $sp2 = Get-AzADApplication -ObjectId $app2.ObjectId | New-AzADServicePrincipal
         }
 
@@ -62,7 +62,7 @@ Describe 'Get-AadApplication' {
 
     Context "Parameter ApplicationId" {
         BeforeAll { 
-            $app3 = New-AzADApplication -DisplayName "AzureAdApplicationManagementTestApp3" -IdentifierUris "https://AzureAdApplicationManagementTestApp3"
+            $app3 = New-AzADApplication -DisplayName "AzureAdApplicationManagementTestApp3"
             $sp3 = Get-AzADApplication -ObjectId $app3.ObjectId | New-AzADServicePrincipal
         }
         
@@ -95,7 +95,7 @@ Describe 'Get-AadApplication' {
 
     Context "Parameter DisplayName" {
         BeforeAll { 
-            $app4 = New-AzADApplication -DisplayName "AzureAdApplicationManagementTestApp4" -IdentifierUris "https://AzureAdApplicationManagementTestApp4"
+            $app4 = New-AzADApplication -DisplayName "AzureAdApplicationManagementTestApp4"
             $sp4 = Get-AzADApplication -ObjectId $app4.ObjectId | New-AzADServicePrincipal
         }
 
