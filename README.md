@@ -62,6 +62,11 @@ In order to use these tasks, a **prerequisite must be done** otherwise you will 
 
 ## Release notes
 
+### V3.3
+
+- Update Az module to version 6.5.0 (hosted agent [pull request](https://github.com/actions/virtual-environments/pull/4349) is made)
+- Fix issue [#63](https://github.com/LockTar/AzureAdApplicationManagement/issues/63)
+
 ### V3.2
 
 - Delete v2 tasks from extension
