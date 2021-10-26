@@ -9,7 +9,7 @@ BeforeAll {
 Describe 'Update-AadApplication' {
     Context "ObjectId" {
         BeforeEach { 
-            $app1 = New-AzADApplication -DisplayName "AzureAdApplicationManagementTestApp1" -IdentifierUris "https://AzureAdApplicationManagementTestApp1"
+            $app1 = New-AzADApplication -DisplayName "AzureAdApplicationManagementTestApp1"
             $sp1 = Get-AzADApplication -ObjectId $app1.ObjectId | New-AzADServicePrincipal
             Start-Sleep 15
         }
@@ -43,7 +43,7 @@ Describe 'Update-AadApplication' {
 
     Context "ResourceAccessFilePath" {
         BeforeEach { 
-            $app1 = New-AzADApplication -DisplayName "AzureAdApplicationManagementTestApp1" -IdentifierUris "https://AzureAdApplicationManagementTestApp1"
+            $app1 = New-AzADApplication -DisplayName "AzureAdApplicationManagementTestApp1"
             $sp1 = Get-AzADApplication -ObjectId $app1.ObjectId | New-AzADServicePrincipal
             Start-Sleep 15
         }
@@ -72,7 +72,7 @@ Describe 'Update-AadApplication' {
 
     Context "AppRolesFilePath" {
         BeforeEach { 
-            $app1 = New-AzADApplication -DisplayName "AzureAdApplicationManagementTestApp1" -IdentifierUris "https://AzureAdApplicationManagementTestApp1"
+            $app1 = New-AzADApplication -DisplayName "AzureAdApplicationManagementTestApp1"
             $sp1 = Get-AzADApplication -ObjectId $app1.ObjectId | New-AzADServicePrincipal
             Start-Sleep 15
         }
@@ -102,7 +102,7 @@ Describe 'Update-AadApplication' {
 
     Context "DisplayName" {
         BeforeEach { 
-            $app1 = New-AzADApplication -DisplayName "AzureAdApplicationManagementTestApp1" -IdentifierUris "https://AzureAdApplicationManagementTestApp1"
+            $app1 = New-AzADApplication -DisplayName "AzureAdApplicationManagementTestApp1"
             $sp1 = Get-AzADApplication -ObjectId $app1.ObjectId | New-AzADServicePrincipal
             Start-Sleep 15
         }
@@ -133,7 +133,7 @@ Describe 'Update-AadApplication' {
 
     Context "IdentifierUri" {
         BeforeEach { 
-            $app1 = New-AzADApplication -DisplayName "AzureAdApplicationManagementTestApp1" -IdentifierUris "https://AzureAdApplicationManagementTestApp1"
+            $app1 = New-AzADApplication -DisplayName "AzureAdApplicationManagementTestApp1"
             $sp1 = Get-AzADApplication -ObjectId $app1.ObjectId | New-AzADServicePrincipal
             Start-Sleep 15
         }
@@ -149,11 +149,11 @@ Describe 'Update-AadApplication' {
         }        
 
         It "Given IdentifierUri should update value" {
-            $result = Update-AadApplication -ObjectId $app1.ObjectId -IdentifierUri "http://foo123"
+            $result = Update-AadApplication -ObjectId $app1.ObjectId -IdentifierUri "https://ralphjansenoutlook.onmicrosoft.com/AzureAdApplicationManagementTestApp1"
 
             $result | Should -BeNullOrEmpty -Not
             $result.Application | Should -BeNullOrEmpty -Not
-            $result.Application.IdentifierUris | Should -Be "http://foo123"
+            $result.Application.IdentifierUris | Should -Be "https://ralphjansenoutlook.onmicrosoft.com/AzureAdApplicationManagementTestApp1"
         }
         
         AfterEach { 
@@ -163,7 +163,7 @@ Describe 'Update-AadApplication' {
 
     Context "HomePage" {
         BeforeEach { 
-            $app1 = New-AzADApplication -DisplayName "AzureAdApplicationManagementTestApp1" -IdentifierUris "https://AzureAdApplicationManagementTestApp1"
+            $app1 = New-AzADApplication -DisplayName "AzureAdApplicationManagementTestApp1"
             $sp1 = Get-AzADApplication -ObjectId $app1.ObjectId | New-AzADServicePrincipal
             Start-Sleep 15
         }
@@ -264,7 +264,7 @@ Describe 'Update-AadApplication' {
 
     Context "ReplyUrls" {
         BeforeEach { 
-            $app1 = New-AzADApplication -DisplayName "AzureAdApplicationManagementTestApp1" -IdentifierUris "https://AzureAdApplicationManagementTestApp1"
+            $app1 = New-AzADApplication -DisplayName "AzureAdApplicationManagementTestApp1"
             $sp1 = Get-AzADApplication -ObjectId $app1.ObjectId | New-AzADServicePrincipal
             Start-Sleep 15
         }
@@ -301,10 +301,7 @@ Describe 'Update-AadApplication' {
         It "Given app with ReplyUrls, set null as ReplyUrls should remove them" {
             Update-AadApplication -ObjectId $app1.ObjectId -ReplyUrls "https://sampleurl.info"
 
-            $result = Update-AadApplication -ObjectId $app1.ObjectId -ReplyUrls $null
-            $result | Should -BeNullOrEmpty -Not
-            $result.Application | Should -BeNullOrEmpty -Not
-            $result.Application.ReplyUrls | Should -BeNullOrEmpty -Not
+            { Update-AadApplication -ObjectId $app1.ObjectId -ReplyUrls $null } | Should -Throw "ReplyUrls can not be an empty string"
         }
 
         It "Given app without ReplyUrls, set ReplyUrls should update value" {
@@ -331,7 +328,7 @@ Describe 'Update-AadApplication' {
 
     Context "Owners" {
         BeforeEach { 
-            $app1 = New-AzADApplication -DisplayName "AzureAdApplicationManagementTestApp1" -IdentifierUris "https://AzureAdApplicationManagementTestApp1"
+            $app1 = New-AzADApplication -DisplayName "AzureAdApplicationManagementTestApp1"
             $sp1 = Get-AzADApplication -ObjectId $app1.ObjectId | New-AzADServicePrincipal
             Start-Sleep 15
         }
@@ -371,7 +368,7 @@ Describe 'Update-AadApplication' {
 
     Context "Secrets" {
         BeforeEach { 
-            $app1 = New-AzADApplication -DisplayName "AzureAdApplicationManagementTestApp1" -IdentifierUris "https://AzureAdApplicationManagementTestApp1"
+            $app1 = New-AzADApplication -DisplayName "AzureAdApplicationManagementTestApp1"
             $sp1 = Get-AzADApplication -ObjectId $app1.ObjectId | New-AzADServicePrincipal
             Start-Sleep 15
         }
@@ -404,7 +401,7 @@ Describe 'Update-AadApplication' {
 
     Context "AppRoleAssignmentRequired" {
         BeforeEach { 
-            $app1 = New-AzADApplication -DisplayName "AzureAdApplicationManagementTestApp1" -IdentifierUris "https://AzureAdApplicationManagementTestApp1"
+            $app1 = New-AzADApplication -DisplayName "AzureAdApplicationManagementTestApp1"
             $sp1 = Get-AzADApplication -ObjectId $app1.ObjectId | New-AzADServicePrincipal
             Start-Sleep 15
         }
@@ -443,7 +440,7 @@ Describe 'Update-AadApplication' {
 
     Context "Oauth2AllowImplicitFlow" {
         BeforeEach { 
-            $app1 = New-AzADApplication -DisplayName "AzureAdApplicationManagementTestApp1" -IdentifierUris "https://AzureAdApplicationManagementTestApp1"
+            $app1 = New-AzADApplication -DisplayName "AzureAdApplicationManagementTestApp1"
             $sp1 = Get-AzADApplication -ObjectId $app1.ObjectId | New-AzADServicePrincipal
             Start-Sleep 15
         }

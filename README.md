@@ -62,6 +62,11 @@ In order to use these tasks, a **prerequisite must be done** otherwise you will 
 
 ## Release notes
 
+### V3.3
+
+- Update Az module to version 6.5.0 (hosted agent [pull request](https://github.com/actions/virtual-environments/pull/4349) is made)
+- Fix issue [#63](https://github.com/LockTar/AzureAdApplicationManagement/issues/63) of new identifier uri validation rules
+
 ### V3.2
 
 - Delete v2 tasks from extension
@@ -116,14 +121,15 @@ Don't forget to enable the preview feature!
 
 1. Clone repository
 2. Install gulp with `npm install gulp -g`
-3. Navigate to folder `Vsts-Extension` in PowerShell 7.x
+3. Navigate to folder `Vsts-Extension` in PowerShell version of your choice 5.1 (old PowerShell module is still being used)
 4. Install npm packages with `npm install`
-5. Install PowerShell Module `Az` (All AzureRm modules should be removed from your system as stated in the Az documentation)
-6. Optional: Install `Pester` for running PowerShell test scripts with `Install-Module -Name Pester -Force -SkipPublisherCheck`
+5. Install PowerShell Module `Az` (All AzureRm modules should be removed from your system as stated in the Az documentation) in PowerShell 5.1 (old PowerShell module is still being used)
+6. Install PowerShell Module `AzureAD` in PowerShell 5.1 (old PowerShell module is still being used)
+7. Optional: Install `Pester` for running PowerShell test scripts with `Install-Module -Name Pester -Force -SkipPublisherCheck` in PowerShell 5.1 (old PowerShell module is still being used)
 
 ### Build
 
-1. Navigate to folder `Vsts-Extension` in PowerShell 7.x
+1. Navigate to folder `Vsts-Extension` in PowerShell version of your choice
 2. Run gulp with following commands: 
     - `gulp build` Build all tasks and set the dependencies in the tasks
     - `gulp clean` Clean all tasks
@@ -132,5 +138,6 @@ Don't forget to enable the preview feature!
 
 ### Test
 
-1. Navigate in PowerShell 7.x to `./scripts/ManageAadApplications/v3`
+1. Navigate in PowerShell 5.1 (old PowerShell module is still being used) to `./scripts/ManageAadApplications/v3`
+2. Login into the `Az` and `AzureAD` PowerShell module with the commands `Connect-AzAccount` and `Connect-AzureAD`. Login with a test user that doesn't have a `Global Administrator` role. If you use a Global admin, the owner won't be set and some tests will fail.
 2. Run pester tests for the `ManageAadApplications` PowerShell Module. Use for this the `*.Tests.ps1` files in the `ManageAadApplications` folder. See comment at the top of the screen. In example `Invoke-Pester -Output Detailed .\Get-AadApplication.Tests.ps1`

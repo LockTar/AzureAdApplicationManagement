@@ -8,7 +8,7 @@ BeforeAll {
 Describe 'Remove-AadApplication' {
     Context "Remove by ObjectId" {
         BeforeEach { 
-            $app1 = New-AzADApplication -DisplayName "AzureAdApplicationManagementTestApp1" -IdentifierUris "https://AzureAdApplicationManagementTestApp1"
+            $app1 = New-AzADApplication -DisplayName "AzureAdApplicationManagementTestApp1"
             $sp1 = Get-AzADApplication -ObjectId $app1.ObjectId | New-AzADServicePrincipal
         }
         
@@ -43,7 +43,7 @@ Describe 'Remove-AadApplication' {
 
     Context "Remove by ApplicationId" {
         BeforeEach { 
-            $app1 = New-AzADApplication -DisplayName "AzureAdApplicationManagementTestApp1" -IdentifierUris "https://AzureAdApplicationManagementTestApp1"
+            $app1 = New-AzADApplication -DisplayName "AzureAdApplicationManagementTestApp1"
             $sp1 = Get-AzADApplication -ObjectId $app1.ObjectId | New-AzADServicePrincipal
         }
         
