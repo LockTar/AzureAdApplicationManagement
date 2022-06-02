@@ -7,7 +7,7 @@
     "del": "^6.0.0",
     "gulp": "^4.0.2",
     "gulp-hub": "github:frankwallis/gulp-hub#4.2.0",
-    "npm": "^8.1.4",
+    "npm": "^8.11.0",
     "tfx-cli": "^0.9.3",
     "vss-web-extension-sdk": "^5.141.0"
   },
