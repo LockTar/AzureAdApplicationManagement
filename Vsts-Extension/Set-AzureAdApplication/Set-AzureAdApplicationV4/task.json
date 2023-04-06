@@ -118,7 +118,7 @@
             "helpMarkDown": "Designates whether users in externa; organisations are allowed to grant your app access to data in their organization\u0027s directory."
         },
         {
-            "name": "webRedirectUrisMethod",
+            "name": "redirectUrisMethod",
             "type": "pickList",
             "label": "Reply URLs Method",
             "defaultValue": "Multiline",
