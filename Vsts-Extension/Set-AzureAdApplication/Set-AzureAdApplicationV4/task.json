@@ -15,7 +15,7 @@
         "Minor": 0,
         "Patch": 0
     },
-    "preview": "false",
+    "preview": "true",
     "instanceNameFormat": "Set Azure AD Application",
     "groups": [{
         "name": "AzureDetails",
