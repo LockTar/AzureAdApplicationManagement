@@ -65,8 +65,8 @@ if ($secrets) {
 
 
 # Cleanup hosted agent with AzureRM modules
-. "$PSScriptRoot\Utility.ps1"
-CleanUp-PSModulePathForHostedAgent
+# . "$PSScriptRoot\Utility.ps1"
+# CleanUp-PSModulePathForHostedAgent
 
 # Initialize Azure helpers
 Import-Module $PSScriptRoot\ps_modules\VstsAzureHelpers_
@@ -86,6 +86,7 @@ try {
     # Initialize-Module -Name "AzureAD" -RequiredVersion "2.0.2.140"
     # Initialize-AzureAD
 
+    Initialize-MsGraph
 
     Write-Verbose "Input variables are: "
     Write-Verbose "createIfNotExist: $createIfNotExist"
