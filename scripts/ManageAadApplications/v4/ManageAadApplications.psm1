@@ -131,7 +131,7 @@ function Update-AadApplication {
         [ValidateNotNullOrEmpty()]
         [string[]]$Owners,
         [Object[]]$Secrets,
-        [bool]$Oauth2AllowImplicitFlow,
+        [bool]$EnableAccessTokenIssuance,
         [bool]$AppRoleAssignmentRequired
     )
 
@@ -299,12 +299,12 @@ function Update-AadApplication {
         Update-MgServicePrincipal -ServicePrincipalId $sp.Id -BodyParameter $servicePrincipalUpdate
     }
 
-    if ($PSBoundParameters.ContainsKey('Oauth2AllowImplicitFlow')) {
-        Write-Verbose "Update Oauth2AllowImplicitFlow"
+    if ($PSBoundParameters.ContainsKey('EnableAccessTokenIssuance')) {
+        Write-Verbose "Update EnableAccessTokenIssuance"
         $params = @{
             Web = @{
                 ImplicitGrantSettings = @{
-                    EnableAccessTokenIssuance = $Oauth2AllowImplicitFlow
+                    EnableAccessTokenIssuance = $EnableAccessTokenIssuance
                 }
             }
         }
@@ -457,7 +457,7 @@ function Update-AadApplication {
         AppRoles                    = $app.AppRoles
         Owners                      = $currentOwners
         SpAppRoleAssignmentRequired = $sp.AppRoleAssignmentRequired
-        AppOauth2AllowImplicitFlow  = $app.Web.ImplicitGrantSettings.EnableAccessTokenIssuance
+        AppEnableAccessTokenIssuance  = $app.Web.ImplicitGrantSettings.EnableAccessTokenIssuance
     }
     
     $result

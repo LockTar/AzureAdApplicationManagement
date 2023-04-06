@@ -65,13 +65,13 @@ Describe 'New-AadApplication' {
         }
 
         It "Given an identifieruri should return application and service principal with given identifieruri" {
-            $result = New-AadApplication -DisplayName "$appName" -IdentifierUri "https://dev.panikbutton.eu/AzureAdApplicationManagementTestApp1" # Revert to ralph
+            $result = New-AadApplication -DisplayName "$appName" -IdentifierUri "https://ralphjansenoutlook.onmicrosoft.com/AzureAdApplicationManagementTestApp1" # Revert to ralph
             
             $result | Should -BeNullOrEmpty -Not
             $result.Application | Should -BeNullOrEmpty -Not
             $result.ServicePrincipal | Should -BeNullOrEmpty -Not
             $result.Application.DisplayName | Should -Be "$appName"
-            $result.Application.IdentifierUris[0] | Should -Be "https://dev.panikbutton.eu/AzureAdApplicationManagementTestApp1" # Revert to ralph
+            $result.Application.IdentifierUris[0] | Should -Be "https://ralphjansenoutlook.onmicrosoft.com/AzureAdApplicationManagementTestApp1" # Revert to ralph
             $result.ServicePrincipal.DisplayName | Should -Be "$appName"
         }
         
