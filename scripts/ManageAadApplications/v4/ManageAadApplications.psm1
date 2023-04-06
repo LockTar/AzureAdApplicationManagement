@@ -71,7 +71,7 @@ function Get-AadApplication {
         } 
         "ApplicationId" { 
             Write-Verbose "Get application $ApplicationId"
-            $app = Get-MgApplication  -Filter "AppId eq '$ApplicationId'"
+            $app = Get-MgApplication -Filter "AppId eq '$ApplicationId'"
         }
         "DisplayName" { 
             Write-Verbose "Get application $DisplayName"
@@ -400,13 +400,14 @@ function Update-AadApplication {
             Write-Verbose "Checking for existing secrets"
             $appKeySecrets = $app.passwordCredentials
 
+            # Remove existing secret (if it exists) so we can create a new one
             if ($appKeySecrets) {
-                foreach ($existingSecret in $appKeySecrets) {
-                    foreach ($secret in $Secrets) {
+                foreach ($existingSecret in $appKeySecrets) { # Check for each existing secret
+                    foreach ($secret in $Secrets) { # Check for each secret that we want to add
                         $stringDescription = $secret.Description | Out-String
                         $trimmedStringDescription = $stringDescription -replace [Environment]::NewLine, "";
 
-                        if ([System.Text.Encoding]::ASCII.GetString($existingSecret.CustomKeyIdentifier) -eq $trimmedStringDescription) {
+                        if ([System.Text.Encoding]::ASCII.GetString($existingSecret.DisplayName) -eq $trimmedStringDescription) {
                             Write-Verbose "Removing existing key with description: $trimmedStringDescription"
                             Remove-MgApplicationPassword -ApplicationId  $app.Id -KeyId $existingSecret.KeyId
                         }

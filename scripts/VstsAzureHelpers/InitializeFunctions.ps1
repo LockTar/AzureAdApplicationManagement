@@ -54,7 +54,8 @@ function Initialize-AzureSubscriptionAD {
     Write-VstsSetSecret -Value $token
 
     Write-Verbose "##[command] Connect-AzureAD -AadAccessToken $token -AccountId $clientId -TenantId $tenantId"
-    $null = Connect-AzureAD -AadAccessToken $token -AccountId $clientId -TenantId $tenantId
+    # $null = Connect-AzureAD -AadAccessToken $token -AccountId $clientId -TenantId $tenantId # v3
+    $null = Connect-MgGraph -AccessToken $token -ClientId $clientId -TenantId $tenantId # v4
 }
 
 function Set-UserAgent {

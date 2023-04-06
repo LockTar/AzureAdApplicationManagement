@@ -465,6 +465,21 @@ Describe 'Update-AadApplication' {
             $result | Should -BeNullOrEmpty -Not
             $result.Application | Should -BeNullOrEmpty -Not
         }
+
+        It "Given Secrets should update existing secret" {
+            $secretsOld = '[{ ''Description'': ''testkeyold'', ''EndDate'': ''01/12/2024'' }]'
+            $secretsNew = '[{ ''Description'': ''testkeynew'', ''EndDate'': ''01/12/2024'' }]'
+            
+            $secretsArrayOld = $secretsOld | ConvertFrom-Json
+            $secretsArrayNew = $secretsNew | ConvertFrom-Json
+`
+            # Check output for the above secret because will not send to output for security reasons
+            $result = Update-AadApplication -ObjectId $app1.Id -Secrets $secretsArrayOld
+            $result = Update-AadApplication -ObjectId $app1.Id -Secrets $secretsArrayNew
+
+            $result | Should -BeNullOrEmpty -Not
+            $result.Application | Should -BeNullOrEmpty -Not
+        }
         
         AfterEach { 
             $appToRemove = Get-MgApplication -ApplicationId $app1.Id
