@@ -33,7 +33,7 @@ function New-AadApplication {
     Write-Host "##vso[task.setvariable variable=ApplicationId;]$($app.AppId)"
     Write-Host "##vso[task.setvariable variable=Name;]$($app.DisplayName)"
     Write-Host "##vso[task.setvariable variable=AppIdUri;]$($app.IdentifierUris[0])"
-    Write-Host "##vso[task.setvariable variable=HomePageUrl;]$($app.HomePageUrl)"
+    Write-Host "##vso[task.setvariable variable=HomePageUrl;]$($app.Web.HomePageUrl)"
     Write-Host "##vso[task.setvariable variable=SignInAudience;]$($app.SignInAudience)"
     Write-Host "##vso[task.setvariable variable=ServicePrincipalObjectId;]$($sp.Id)"
 
@@ -99,7 +99,7 @@ function Get-AadApplication {
         Write-Host "##vso[task.setvariable variable=ApplicationId;]$($app.AppId)"
         Write-Host "##vso[task.setvariable variable=Name;]$($app.DisplayName)"
         Write-Host "##vso[task.setvariable variable=AppIdUri;]$($app.IdentifierUris[0])"
-        Write-Host "##vso[task.setvariable variable=HomePageUrl;]$($app.HomePageUrl)"
+        Write-Host "##vso[task.setvariable variable=HomePageUrl;]$($app.Web.HomePageUrl)"
         Write-Host "##vso[task.setvariable variable=SignInAudience;]$($app.SignInAudience)"
         Write-Host "##vso[task.setvariable variable=ServicePrincipalObjectId;]$($sp.Id)"
 
