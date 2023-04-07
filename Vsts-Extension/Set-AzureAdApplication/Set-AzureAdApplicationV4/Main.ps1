@@ -9,7 +9,7 @@ $webHomePageURl = Get-VstsInput -Name webHomePageURl
 $logoutUrl = Get-VstsInput -Name logoutUrl
 $termsOfServiceUrl = Get-VstsInput -Name termsOfServiceUrl
 $privacyStatementUrl = Get-VstsInput -Name privacyStatementUrl
-$signInAudience = Get-VstsInput -Name signInAudience
+$signInAudience = Get-VstsInput -Name signInAudience -Require
 $redirectUrisMethod = Get-VstsInput -Name redirectUrisMethod -Require
 $webRedirectUrisSingleLine = Get-VstsInput -Name webRedirectUrisSingleLine
 $webRedirectUrisMultiLine = Get-VstsInput -Name webRedirectUrisMultiLine
@@ -140,7 +140,7 @@ try {
         }
 
         # The app already exists or is just created. Use the ObjectId to update "set" it further.
-        $objectId = $result.Application.ObjectId
+        $objectId = $result.Application.Id
     }
 
     Update-AadApplication `

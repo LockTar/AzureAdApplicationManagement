@@ -113,7 +113,7 @@
             "type": "string",
             "label": "SignInAudience",
             "defaultValue": "AzureADMyOrg",
-            "required": false,
+            "required": true,
             "groupName": "AzureDetails",
             "helpMarkDown": "Designates whether users in external organisations are allowed to grant your app access to data in their organization\u0027s directory."
         },
