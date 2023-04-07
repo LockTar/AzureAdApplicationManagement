@@ -110,7 +110,7 @@ try {
     $serviceName = Get-VstsInput -Name ConnectedServiceNameARM -Require
     $endpoint = Get-VstsEndpoint -Name $serviceName -Require
     $clientId = $endpoint.Auth.Parameters.ServicePrincipalId
-    $deployServicePrincipalId = (Get-MgApplication -ApplicationId $clientId).Id
+    $deployServicePrincipalId = (Get-MgServicePrincipal -Filter "AppId eq '$clientId'" ).Id
     $ownersArray += $deployServicePrincipalId
 
     Import-Module $PSScriptRoot\scripts\ManageAadApplications.psm1
