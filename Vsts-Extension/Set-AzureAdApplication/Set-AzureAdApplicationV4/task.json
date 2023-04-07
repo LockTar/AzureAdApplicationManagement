@@ -73,9 +73,9 @@
             "helpMarkDown": "Provide the App Id Uri of the Azure AD Application."
         },
         {
-            "name": "webHomePageUrl",
+            "name": "homePageUrl",
             "type": "string",
-            "label": "Web Home page URL",
+            "label": "Home page URL",
             "defaultValue": "",
             "required": false,
             "groupName": "AzureDetails",
@@ -252,7 +252,7 @@
             "description": "The App Id Uri of the Azure AD Application"
         },
         {
-            "name": "WebHomePageUrl",
+            "name": "HomePageUrl",
             "description": "The Home page URL of the Azure AD Application"
         },
         {
