@@ -120,11 +120,11 @@
         {
             "name": "redirectUrisMethod",
             "type": "pickList",
-            "label": "Reply URLs Method",
+            "label": "Redirect URLs Method",
             "defaultValue": "Multiline",
             "required": true,
             "groupName": "AzureDetails",
-            "helpMarkDown": "Choose the method to supply the reply urls.",
+            "helpMarkDown": "Choose the method to supply the redirect uris.",
             "properties": {
                 "EditableOptions": "False"
             },
@@ -136,21 +136,21 @@
         {
             "name": "webRedirectUrisSingleLine",
             "type": "string",
-            "label": "Reply URLs",
+            "label": "Redirect URLs",
             "defaultValue": "",
             "required": false,
             "groupName": "AzureDetails",
-            "helpMarkDown": "A list of reply urls separated by ';' character.",
+            "helpMarkDown": "A list of redirect urls separated by ';' character.",
             "visibleRule": "redirectUrisMethod = Singleline"
         },
         {
             "name": "webRedirectUrisMultiLine",
             "type": "multiLine",
-            "label": "Reply URLs",
+            "label": "Redirect URLs",
             "defaultValue": "",
             "required": false,
             "groupName": "AzureDetails",
-            "helpMarkDown": "A list of reply urls.",
+            "helpMarkDown": "A list of redirect urls.",
             "visibleRule": "redirectUrisMethod = Multiline"
         },
         {
