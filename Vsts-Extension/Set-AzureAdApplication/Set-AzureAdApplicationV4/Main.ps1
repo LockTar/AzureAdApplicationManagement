@@ -10,7 +10,7 @@ $logoutUrl = Get-VstsInput -Name logoutUrl
 $termsOfServiceUrl = Get-VstsInput -Name termsOfServiceUrl
 $privacyStatementUrl = Get-VstsInput -Name privacyStatementUrl
 $signInAudience = Get-VstsInput -Name signInAudience -AsString
-$webRedirectUrisMethod = Get-VstsInput -Name webRedirectUrisMethod -Require
+$redirectUrisMethod = Get-VstsInput -Name redirectUrisMethod -Require
 $webRedirectUrisSingleLine = Get-VstsInput -Name webRedirectUrisSingleLine
 $webRedirectUrisMultiLine = Get-VstsInput -Name webRedirectUrisMultiLine
 $resourceAccessFilePath = Get-VstsInput -Name resourceAccessFilePath
@@ -24,7 +24,7 @@ $appRoleAssignmentRequired = Get-VstsInput -Name appRoleAssignmentRequired -AsBo
 
 # Create pretty array for optional webRedirectUris array
 $webRedirectUris = @()
-switch ($webRedirectUrisMethod) {
+switch ($redirectUrisMethod) {
     "Singleline" {
         if ($webRedirectUrisSingleLine -ne "") {
             $webRedirectUris = $webRedirectUrisSingleLine.Split(";")
@@ -65,8 +65,8 @@ if ($secrets) {
 
 
 # Cleanup hosted agent with AzureRM modules
-. "$PSScriptRoot\Utility.ps1"
-CleanUp-PSModulePathForHostedAgent
+# . "$PSScriptRoot\Utility.ps1"
+# CleanUp-PSModulePathForHostedAgent
 
 # Initialize Azure helpers
 Import-Module $PSScriptRoot\ps_modules\VstsAzureHelpers_
@@ -86,6 +86,7 @@ try {
     # Initialize-Module -Name "AzureAD" -RequiredVersion "2.0.2.140"
     # Initialize-AzureAD
 
+    Initialize-MsGraph
 
     Write-Verbose "Input variables are: "
     Write-Verbose "createIfNotExist: $createIfNotExist"

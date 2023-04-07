@@ -47,6 +47,24 @@ function Initialize-AzureAD {
     }
 }
 
+function Initialize-MsGraph {
+    [CmdletBinding()]
+    param()
+    Trace-VstsEnteringInvocation $MyInvocation
+    try {
+        $serviceName = Get-VstsInput -Name ConnectedServiceNameARM -Require
+
+        Write-Verbose "Get endpoint $serviceName"
+        $endpoint = Get-VstsEndpoint -Name $serviceName -Require
+
+        # Import/initialize the Microsoft Graph SDK module.
+        Initialize-MsGraphConnection -Endpoint $endpoint
+    }
+    finally {
+        Trace-VstsLeavingInvocation $MyInvocation
+    }
+}
+
 function Initialize-PackageProvider {
     [CmdletBinding()]
     param(
@@ -116,4 +134,4 @@ function Initialize-Module {
 }
 
 # Export only the public function.
-Export-ModuleMember -Function Initialize-AzureAD, Initialize-PackageProvider, Initialize-Module
+Export-ModuleMember -Function Initialize-MsGraph, Initialize-AzureAD, Initialize-PackageProvider, Initialize-Module
