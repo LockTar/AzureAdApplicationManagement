@@ -25,7 +25,7 @@ function cleanSetAzureAdApplication() {
   return del([
     paths.extension.setAzureAdApplication.v4 + 'scripts',
     paths.extension.setAzureAdApplication.v4 + 'CoreAz.ps1',
-    paths.extension.setAzureAdApplication.v4 + 'Utility.ps1',
+    // paths.extension.setAzureAdApplication.v4 + 'Utility.ps1',
     paths.extension.setAzureAdApplication.v4 + psModulesFolderName
   ]);
 }
@@ -52,8 +52,8 @@ function buildPsModulesSetAzureAdApplication() {
 function buildScriptFilesAzureADApplication() {
   gulp.src(paths.code.scripts + 'CoreAz.ps1')
     .pipe(gulp.dest(paths.extension.setAzureAdApplication.v4));
-  gulp.src(paths.code.scripts + 'Utility.ps1')
-    .pipe(gulp.dest(paths.extension.setAzureAdApplication.v4));
+  // gulp.src(paths.code.scripts + 'Utility.ps1')
+  //   .pipe(gulp.dest(paths.extension.setAzureAdApplication.v4));
   
   console.log('Fill ' + paths.extension.setAzureAdApplication.v4 + ' scripts from ' + paths.code.manageAadApplications.v4);
   return gulp.src(paths.code.manageAadApplications.v4 + 'ManageAadApplications.psm1')
