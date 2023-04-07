@@ -3,7 +3,7 @@
     "name": "Update-Azure-AD-Application",
     "friendlyName": "Update Azure AD Application",
     "description": "Update the properties given of an Azure AD Application",
-    "helpMarkDown": "Task version: #{Extension.Version}#",
+    "helpMarkDown": "Task version: #{queryExtensionVersion.Extension.Version}#",
     "category": "Deploy",
     "visibility": [
         "Release",

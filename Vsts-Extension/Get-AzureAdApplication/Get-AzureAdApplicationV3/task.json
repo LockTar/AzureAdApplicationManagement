@@ -3,7 +3,7 @@
     "name": "Get-Azure-AD-Application",
     "friendlyName": "Get Azure AD Application",
     "description": "Get an Azure AD Application based on ObjectId, ApplicationId or Name",
-    "helpMarkDown": "Task version: #{Extension.Version}#",
+    "helpMarkDown": "Task version: #{queryExtensionVersion.Extension.Version}#",
     "category": "Deploy",
     "visibility": [
         "Release",

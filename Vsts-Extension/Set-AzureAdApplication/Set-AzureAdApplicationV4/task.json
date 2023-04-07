@@ -3,7 +3,7 @@
     "name": "Set-Azure-AD-Application",
     "friendlyName": "Set Azure AD Application",
     "description": "Set all the properties of an Azure AD Application",
-    "helpMarkDown": "Task version: #{Extension.Version}#",
+    "helpMarkDown": "Task version: #{queryExtensionVersion.Extension.Version}#",
     "category": "Deploy",
     "visibility": [
         "Release",
@@ -115,7 +115,7 @@
             "defaultValue": "AzureADMyOrg",
             "required": false,
             "groupName": "AzureDetails",
-            "helpMarkDown": "Designates whether users in externa; organisations are allowed to grant your app access to data in their organization\u0027s directory."
+            "helpMarkDown": "Designates whether users in external organisations are allowed to grant your app access to data in their organization\u0027s directory."
         },
         {
             "name": "redirectUrisMethod",
