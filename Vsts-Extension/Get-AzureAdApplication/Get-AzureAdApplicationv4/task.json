@@ -11,11 +11,11 @@
     ],
     "author": "Ralph Jansen",
     "version": {
-        "Major": 4,
-        "Minor": 0,
+        "Major": 3,
+        "Minor": 3,
         "Patch": 0
     },
-    "preview": "true",
+    "preview": "false",
     "instanceNameFormat": "Get Azure AD Application",
     "groups": [{
         "name": "AzureDetails",
