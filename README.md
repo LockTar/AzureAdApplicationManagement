@@ -132,19 +132,58 @@ Set the [owner of the AD Application to the AD Application](#How-can-I-set-an-AD
 
 ### How can I set an AD Application as owner of an AD Application
 
-In order to set an AD Application as an owner, you will need to get the **underlying Service Principal**. You can use the following script to get the Service Principal and to set it as owner or you can [follow this blog post](https://www.locktar.nl/programming/powershell/add-azure-ad-application-as-owner-of-another-ad-application) for more information.
+In order to set an AD Application as an owner, you will need to get the **underlying Service Principal**. You can use the following script to get the Service Principal and to set it as owner.
 
 ```powershell
-$objectIdOfApplicationToChange = "976876-6567-49e0-ab8c-e40848205883"
-$objectIdOfApplicationThatNeedsToBeAdded = "98098897-86b9-4dc5-b447-c94138db3a61"
+# Login with permissions to change applications
+# Connect-MgGraph -Scopes "Application.ReadWrite.All"
 
-Add-AzureADApplicationOwner -ObjectId $objectIdOfApplicationToChange -RefObjectId (Get-AzureRmADApplication -ObjectId $objectIdOfApplicationThatNeedsToBeAdded | Get-AzureRmADServicePrincipal).Id
+$servicePrincipalObjectIdOfTheNewOwner =  'Your service connection service principal object id here'
+$applicationObjectIdsToAddOwnerTo =       $('A', 'B', 'C', '...')
+$servicePrincipalObjectIdsToAddOwnerTo =  $('A', 'B', 'C', '...')
+
+# Get the information of the new owner
+$newOwnerObject = Get-MgServicePrincipal -ServicePrincipalId $servicePrincipalObjectIdOfTheNewOwner
+Write-Host "New owner service principal information: Name $($newOwnerObject.DisplayName), Id $($newOwnerObject.Id)"
+
+$newOwner = @{
+  "@odata.id"= "https://graph.microsoft.com/v1.0/directoryObjects/$($newOwnerObject.Id)"
+}
+
+# Add owner to applications
+foreach ($applicationObjectIdToAddOwnerTo in $applicationObjectIdsToAddOwnerTo) {
+  $application = Get-MgApplication -ApplicationId $applicationObjectIdToAddOwnerTo
+  Write-Host "Receiving owner application information: Name $($application.DisplayName), Id $($application.Id)"
+
+  $currentMembers = Get-MgApplicationOwner -ApplicationId $applicationObjectIdToAddOwnerTo
+
+  if($currentMembers.Id -NotContains $servicePrincipalObjectIdOfTheNewOwner){ 
+    New-MgApplicationOwnerByRef -ApplicationId $applicationObjectIdToAddOwnerTo -BodyParameter $newOwner
+    Write-Host "$($servicePrincipalObjectIdOfTheNewOwner) added as owner"
+  } else {
+    Write-Host "$($servicePrincipalObjectIdOfTheNewOwner) already owner"
+  }
+}
+
+# Add owner to service principals
+foreach ($servicePrincipalObjectIdToAddOwnerTo in $servicePrincipalObjectIdsToAddOwnerTo) {
+  $servicePrincipal = Get-MgServicePrincipal -ServicePrincipalId $servicePrincipalObjectIdToAddOwnerTo
+  Write-Host "Receiving owner service principal: Name $($servicePrincipal.DisplayName), Id $($servicePrincipal.Id)"
+
+  $currentMembers = Get-MgServicePrincipalOwner -ServicePrincipalId $servicePrincipalObjectIdToAddOwnerTo 
+
+  if($currentMembers.Id -NotContains $servicePrincipalObjectIdOfTheNewOwner){ 
+    New-MgServicePrincipalOwnerByRef -ServicePrincipalId $servicePrincipalObjectIdToAddOwnerTo -BodyParameter $newOwner
+    Write-Host "$($servicePrincipalObjectIdOfTheNewOwner) added as owner"
+  } else {
+    Write-Host "$($servicePrincipalObjectIdOfTheNewOwner) already owner"
+  }
+}
 ```
 
 ### How can I use Azure Pipelines and YAML for these tasks
 
-Microsoft introduced YAML build pipelines a while ago. But there is now a **preview** for multi stage pipelines as well. See the Samples folder for a generic setup to use Azure Pipelines multi stage pipeline for build and release.
-Don't forget to enable the preview feature!
+See the Samples folder for a generic setup to use Azure Pipelines multi stage pipeline for build and release.
 
 ## Contribute
 
