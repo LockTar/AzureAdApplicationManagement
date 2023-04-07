@@ -417,7 +417,7 @@ function Update-AadApplication {
 
             # Create new secrets
             foreach ($secret in $Secrets) {
-                $endDate = [datetime]::ParseExact($secret.EndDate, 'dd/MM/yyyy', [Globalization.CultureInfo]::InvariantCulture)
+                $endDate = [datetime]::ParseExact($secret.EndDate, 'yyyy-MM-dd', [Globalization.CultureInfo]::InvariantCulture)
                 
                 $stringDescription = $secret.Description | Out-String
                 $trimmedStringDescription = $stringDescription -replace [Environment]::NewLine, "";
