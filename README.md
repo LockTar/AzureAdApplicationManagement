@@ -2,7 +2,7 @@
 
 [![Build status](https://ralphjansen.visualstudio.com/AzureAdApplicationManagement/_apis/build/status/Vsts-Extension?branchName=master)](https://ralphjansen.visualstudio.com/AzureAdApplicationManagement/_build/latest?definitionId=12&branchName=master) [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=LockTar_AzureAdApplicationManagement&metric=alert_status)](https://sonarcloud.io/dashboard?id=LockTar_AzureAdApplicationManagement)
 
-Azure AD Application Management with Azure DevOps pipeline tasks. These Azure DevOps tasks are created with and tested on **Hosted windows-2019** agents.
+Azure AD Application Management with Azure DevOps pipeline tasks. These Azure DevOps tasks are created with and tested on **Hosted windows-latest** agents.
 
 This Azure DevOps extension contains the following tasks:
 
@@ -22,8 +22,36 @@ In order to use these tasks, a **prerequisite must be done** otherwise you will 
 3. In the Azure portal, navigate to **App Registrations**
 4. Select the created app registration. If you can't find it, you probably don't have the right permissions. You can still find the app registration by changing the tab to **All applications**.
 5. Check the **Owners** of the selected app registration (application). If your not an owner, find an **owner** or a **Global Administrator** (you will need a Global Admin in the next steps).
-6. Set the **API Permissions** at least with the following permissions **Azure Active Directory Graph** with the **application** permissions **Manage apps that this app creates or owns (Application.ReadWrite.OwnedBy)** and **Read directory data (Directory.Read.All)**. When you save this, this will result in the following array in the **manifest**:
+6. Set the **API Permissions** at least with the following permissions below depending on the task versions you use.
 
+    ### V4 extension tasks (Preview)
+    Permissions: 
+    
+    Alter you manifest manually by adding the following permissions below. They stand for **Microsoft Graph (00000003-0000-0000-c000-000000000000)** with the **application** permissions **Manage apps that this app creates or owns (Application.ReadWrite.OwnedBy)** and **Read directory data (Directory. Read.All)**. When you save this, this will result in the following array in the **manifest**:
+    
+    ```json
+    "requiredResourceAccess": [
+      {
+        "resourceAppId": "00000003-0000-0000-c000-000000000000",
+        "resourceAccess": [
+          {
+            "id": "7ab1d382-f21e-4acd-a863-ba3e13f7da61",
+            "type": "Role"
+          },
+          {
+            "id": "18a4783c-866b-4cc7-a460-3d5e5662c884",
+            "type": "Role"
+          }
+        ]
+      }
+    ]
+    ```
+    
+    ### V3 extension tasks
+    Permissions: 
+    
+    Alter you manifest manually by adding the following permissions below. They stand for **Azure Active Directory Graph (00000002-0000-0000-c000-000000000000)** and **Microsoft Graph (00000003-0000-0000-c000-000000000000)** with the **application** permissions **Manage apps that this app creates or owns (Application.ReadWrite.OwnedBy)** and **Read directory data (Directory. Read.All)**. When you save this, this will result in the following array in the **manifest**:
+    
     ```json
     "requiredResourceAccess": [
       {
@@ -55,12 +83,15 @@ In order to use these tasks, a **prerequisite must be done** otherwise you will 
     ]
     ```
 
-**NOTE** The `resourceAppId` with value `00000003-0000-0000-c000-000000000000` is optional for now but will be needed in the future by Microsoft. Is exactly the same permissions as `resourceAppId` with value `00000002-0000-0000-c000-000000000000` and id `5778995a-e1bf-45b8-affa-663a9f3f4d04` but then with the new Microsoft Graph instead of the old Azure AD graph.
-
 7. **Very important** Request an Azure Global Administrator to hit the button **Grant admin consent for {your company}** in the **API permissions** view. This only has to be done once.
 8. Use any task of this extension.
 
 ## Release notes
+
+### V4
+
+- Create preview tasks for v4 based on the [Microsoft Graph PowerShell SDK](https://learn.microsoft.com/en-us/powershell/microsoftgraph/get-started?view=graph-powershell-1.0). See for more information issue [#62](https://github.com/LockTar/AzureAdApplicationManagement/issues/62)
+- End date of secret is now in `yyyy-MM-dd` format.
 
 ### V3.3
 
