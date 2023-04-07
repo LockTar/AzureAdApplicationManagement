@@ -141,7 +141,7 @@
             "required": false,
             "groupName": "AzureDetails",
             "helpMarkDown": "A list of reply urls separated by ';' character.",
-            "visibleRule": "webRedirectUrisMethod = Singleline"
+            "visibleRule": "redirectUrisMethod = Singleline"
         },
         {
             "name": "webRedirectUrisMultiLine",
@@ -151,7 +151,7 @@
             "required": false,
             "groupName": "AzureDetails",
             "helpMarkDown": "A list of reply urls.",
-            "visibleRule": "webRedirectUrisMethod = Multiline"
+            "visibleRule": "redirectUrisMethod = Multiline"
         },
         {
             "name": "resourceAccessFilePath",
