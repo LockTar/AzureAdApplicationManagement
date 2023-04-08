@@ -4,7 +4,7 @@
   "description": "A VSTS extension with build and release tasks to manage Azure AD Applications.",
   "main": "vss-extension.json",
   "devDependencies": {
-    "del": "^7.0.0",
+    "del": "^6.1.1",
     "gulp": "^4.0.2",
     "gulp-hub": "github:frankwallis/gulp-hub#4.2.0",
     "npm": "^9.6.4",
