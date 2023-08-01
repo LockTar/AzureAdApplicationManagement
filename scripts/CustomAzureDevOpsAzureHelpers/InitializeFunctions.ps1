@@ -58,8 +58,8 @@ function Initialize-MsGraphConnection {
     $token = $response.access_token
     Write-VstsSetSecret -Value $token
 
-    Write-Verbose "##[command] Connect-MgGraph -AccessToken (ConvertTo-SecureString $token -AsPlainText)"
-    $null = Connect-MgGraph -AccessToken (ConvertTo-SecureString $token -AsPlainText)
+    Write-Verbose "##[command] Connect-MgGraph -AccessToken (ConvertTo-SecureString $token -AsPlainText -Force)"
+    $null = Connect-MgGraph -AccessToken (ConvertTo-SecureString $token -AsPlainText -Force)
 }
 
 function Set-UserAgent {
